@@ -4,12 +4,17 @@
  */
 package com.mycompany.tp.dsw.model;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import main.java.com.mycompany.tp.dsw.patronObserver.Observer;
+
 /**
  *
  * @author Cristian
  */
-public class Cliente {
-    
+public class Cliente implements Observer<Estado> {
+
     private Integer id;
     private String nombre;
     private String cuit;
@@ -41,7 +46,7 @@ public class Cliente {
     public void setNombre(String nommbre) {
         this.nombre = nommbre;
     }
-    
+
     public String getCuit() {
         return cuit;
     }
@@ -69,8 +74,28 @@ public class Cliente {
     public Coordenada getCoordenada() {
         return coordenada;
     }
-    
+
     public void setCoordenada(Coordenada coordenada) {
         this.coordenada = coordenada;
     }
+
+    @Override
+    public void updateEstado(Observer<Pedido> pedidoObserver) {
+        Pedido pedido = pedidoObserver.get();
+        if (pedido.getEstado().equals(Estado.ENVIADO)) {
+            generarPago(pedido);
+        }
+    }
+
+    private Pago generarPago(Pedido pedido) {
+        Pago pago = new Pago(new MercadoPago("mialias"));
+        BigDecimal monto = pedido.total();
+
+        pago.setFecha(LocalDate.now());
+        pago.setMonto(monto);
+
+        pedido.setFormaPago(pago);
+
+    }
+
 }

@@ -36,6 +36,7 @@ import com.mycompany.tp.dsw.model.Coordenada;
 import com.mycompany.tp.dsw.model.Estado;
 import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.ItemPedido;
+import com.mycompany.tp.dsw.model.MercadoPago;
 import com.mycompany.tp.dsw.model.Pedido;
 import com.mycompany.tp.dsw.model.Plato;
 import com.mycompany.tp.dsw.model.TipoCategoria;
@@ -46,7 +47,7 @@ import com.mycompany.tp.dsw.model.Vendedor;
  * @author Cristian
  */
 public class TpDsw {
-        
+
         // Declaración de los DAOs
         private static final ClienteDao clienteDao = new ClienteMemory();
         private static final VendedorDao vendedorDao = new VendedorMemory();
@@ -57,26 +58,28 @@ public class TpDsw {
         private static final PlatoDao platoDao = new PlatoMemory();
         private static final ItemMenuDao itemMenuDao = new ItemMenuMemory();
 
-        public static void main(String[] args) throws ItemNoEncontradoException, ClienteNoEncontradoException, VendedorNoEncontradoException, CategoriaNoEncontradaException, PedidoNoEncontradoException {
+        public static void main(String[] args) throws ItemNoEncontradoException, ClienteNoEncontradoException,
+                        VendedorNoEncontradoException, CategoriaNoEncontradaException, PedidoNoEncontradoException {
                 inicializarDatos();
                 realizarOperaciones(); // Operaciones de la etapa 3
         }
-        private static void inicializarDatos() throws CategoriaNoEncontradaException, VendedorNoEncontradoException, ClienteNoEncontradoException, PedidoNoEncontradoException{
+
+        private static void inicializarDatos() throws CategoriaNoEncontradaException, VendedorNoEncontradoException,
+                        ClienteNoEncontradoException, PedidoNoEncontradoException {
                 inicializarCategorias();
 
                 inicializarVendedores();
-                
+
                 // Crear las bebidas y los platos
                 inicializarPlatos();
                 inicializarBebidas();
-                
-                
+
                 asignarListaItemMenuAVendedor();
-                //System.out.println(vendedorDao.toString());
+                // System.out.println(vendedorDao.toString());
                 inicializarClientes();
-                
+
                 // Armar la lista de items pedidos en el dao
-                // Vendedores 
+                // Vendedores
                 Vendedor vendedor1 = vendedorDao.buscarVendedorPorId(0);
                 Vendedor vendedor2 = vendedorDao.buscarVendedorPorId(1);
                 // Clientes
@@ -86,7 +89,8 @@ public class TpDsw {
                 pedir(cliente1, vendedor2);
                 pagar(cliente1);
         }
-        private static void realizarOperaciones() throws ItemNoEncontradoException{
+
+        private static void realizarOperaciones() throws ItemNoEncontradoException {
                 System.out.println("BUSCAR ITEMS PEDIDOS POR PRECIOS [2-10]");
                 System.out.println(itemsPedidoDao.buscarPorPrecios(new BigDecimal(2.0), new BigDecimal(10.0)));
                 System.out.println();
@@ -102,26 +106,28 @@ public class TpDsw {
                 System.out.println("ORDENAR ITEMS PEDIDOS POR PRECIOS (ascendente)");
                 System.out.println(itemsPedidoDao.ordenPorPrecio());
         }
-        private static void inicializarVendedores(){
-                //Coordenadas
+
+        private static void inicializarVendedores() {
+                // Coordenadas
                 Coordenada coordenada1 = new Coordenada(10.0, 20.0);
                 Coordenada coordenada2 = new Coordenada(30.0, 40.0);
                 Coordenada coordenada3 = new Coordenada(50.0, 60.0);
 
                 // Instanciando vendedores
-                vendedorDao.crearVendedor( new Vendedor(1, "Vendedor 1", "Calle Falsa 123", coordenada1));
-                vendedorDao.crearVendedor(new Vendedor(2, "Vendedor 2", "Avenida Siempre Viva 456", coordenada2)); 
+                vendedorDao.crearVendedor(new Vendedor(1, "Vendedor 1", "Calle Falsa 123", coordenada1));
+                vendedorDao.crearVendedor(new Vendedor(2, "Vendedor 2", "Avenida Siempre Viva 456", coordenada2));
                 vendedorDao.crearVendedor(new Vendedor(3, "Vendedor 3", "Plaza Principal 789", coordenada3));
         }
-        private static void asignarListaItemMenuAVendedor() throws VendedorNoEncontradoException{
+
+        private static void asignarListaItemMenuAVendedor() throws VendedorNoEncontradoException {
                 List<ItemMenu> items = itemMenuDao.obtenerTodosLosItemMenu();
                 Vendedor vendedor1 = vendedorDao.buscarVendedorPorId(0);
                 Vendedor vendedor2 = vendedorDao.buscarVendedorPorId(1);
-                List<ItemMenu> itemsV1= new ArrayList<>();
+                List<ItemMenu> itemsV1 = new ArrayList<>();
                 List<ItemMenu> itemsV2 = new ArrayList<>();
                 Integer iterador = 0;
                 for (ItemMenu itemMenu : items) {
-                        if (iterador % 2 == 0){
+                        if (iterador % 2 == 0) {
                                 itemMenu.setVendedor(vendedor1); // Setear al item su vendedor
                                 itemsV1.add(itemMenu); // Construir la lista del vendedor 1
                         } else {
@@ -134,110 +140,129 @@ public class TpDsw {
                 vendedor1.setItemsMenu(itemsV1);
                 vendedor2.setItemsMenu(itemsV2);
         }
-        private static void inicializarClientes(){
-                //Coordenada
+
+        private static void inicializarClientes() {
+                // Coordenada
                 Coordenada coordenada1 = new Coordenada(-31.628761, -60.701608);
 
                 // Instanciando un cliente
-                clienteDao.crearCliente(new Cliente(1, "Cliente 1", "cuit-1", "Calle falsa 4", "cliente1@gmail.com", coordenada1));
+                clienteDao.crearCliente(new Cliente(1, "Cliente 1", "cuit-1", "Calle falsa 4", "cliente1@gmail.com",
+                                coordenada1));
         }
-        private static void inicializarCategorias(){
-                categoriaDao.crearCategoria(new Categoria(1, "comidaVegana","Esta comida es vegana", TipoCategoria.COMIDA));
-                categoriaDao.crearCategoria(new Categoria(2, "comidaVegetariana","Esta comida es vegetariana, no apta veganos", TipoCategoria.COMIDA));
-                categoriaDao.crearCategoria(new Categoria(2, "comidaClasica","Esta comida no es apta para vegetarianos, ni apta para veganos", TipoCategoria.COMIDA));
-                categoriaDao.crearCategoria(new Categoria(3, "bebidaSinAlcohol","Esta bebida es sin alcohol", TipoCategoria.BEBIDA));
-                categoriaDao.crearCategoria(new Categoria(3, "bebidaConAlcohol","Esta bebida es con alcohol, prohibido consumo en menores", TipoCategoria.BEBIDA));
+
+        private static void inicializarCategorias() {
+                categoriaDao.crearCategoria(
+                                new Categoria(1, "comidaVegana", "Esta comida es vegana", TipoCategoria.COMIDA));
+                categoriaDao.crearCategoria(new Categoria(2, "comidaVegetariana",
+                                "Esta comida es vegetariana, no apta veganos", TipoCategoria.COMIDA));
+                categoriaDao.crearCategoria(new Categoria(2, "comidaClasica",
+                                "Esta comida no es apta para vegetarianos, ni apta para veganos",
+                                TipoCategoria.COMIDA));
+                categoriaDao.crearCategoria(new Categoria(3, "bebidaSinAlcohol", "Esta bebida es sin alcohol",
+                                TipoCategoria.BEBIDA));
+                categoriaDao.crearCategoria(new Categoria(3, "bebidaConAlcohol",
+                                "Esta bebida es con alcohol, prohibido consumo en menores", TipoCategoria.BEBIDA));
         }
+
         private static void inicializarBebidas() throws CategoriaNoEncontradaException, VendedorNoEncontradoException {
-        
+
                 // Obtención de las categorias
-                Categoria bebidaSinAlcohol = categoriaDao.obtenerCategoriaPorNombre("bebidaSinAlcohol") ;
+                Categoria bebidaSinAlcohol = categoriaDao.obtenerCategoriaPorNombre("bebidaSinAlcohol");
                 Categoria bebidaConAlcohol = categoriaDao.obtenerCategoriaPorNombre("bebidaConAlcohol");
 
-                //Obtencion del vendedor 
+                // Obtencion del vendedor
                 /*
-                Vendedor vendedor1 = vendedorDao.buscarVendedorPorId(0);
-                Vendedor vendedor2 = vendedorDao.buscarVendedorPorId(1);*/
-        
+                 * Vendedor vendedor1 = vendedorDao.buscarVendedorPorId(0);
+                 * Vendedor vendedor2 = vendedorDao.buscarVendedorPorId(1);
+                 */
+
                 bebidaDao.crearBebida(new Bebida("Jugo de Naranja", 0.0, 500.0, 0.5, 1,
-                        new BigDecimal("50.00"), "Jugo de Naranja sin azúcar", bebidaSinAlcohol));
-        
+                                new BigDecimal("50.00"), "Jugo de Naranja sin azúcar", bebidaSinAlcohol));
+
                 bebidaDao.crearBebida(new Bebida("Jugo de Manzana", 0.0, 500.0, 0.5, 2,
-                        new BigDecimal("50.00"), "Jugo de Manzana sin azúcar", bebidaSinAlcohol));
-        
+                                new BigDecimal("50.00"), "Jugo de Manzana sin azúcar", bebidaSinAlcohol));
+
                 bebidaDao.crearBebida(new Bebida("Cerveza Rubia", 5.0, 330.0, 0.33, 3,
-                        new BigDecimal("80.00"), "Cerveza rubia con un sabor suave y refrescante", bebidaConAlcohol));
-        
+                                new BigDecimal("80.00"), "Cerveza rubia con un sabor suave y refrescante",
+                                bebidaConAlcohol));
+
                 bebidaDao.crearBebida(new Bebida("Cerveza Negra", 7.0, 330.0, 0.33, 4,
-                        new BigDecimal("120.00"), "Cerveza negra con un sabor fuerte y tostado", bebidaConAlcohol));
-        
+                                new BigDecimal("120.00"), "Cerveza negra con un sabor fuerte y tostado",
+                                bebidaConAlcohol));
+
                 bebidaDao.crearBebida(new Bebida("Cerveza Lager", 5.0, 500.0, 500.0, 1,
-                        new BigDecimal("3.50"), "Cerveza rubia, refrescante y ligera.", bebidaConAlcohol));
-        
+                                new BigDecimal("3.50"), "Cerveza rubia, refrescante y ligera.", bebidaConAlcohol));
+
                 bebidaDao.crearBebida(new Bebida("Vino Tinto", 13.5, 750.0, 750.0, 2,
-                        new BigDecimal("15.00"), "Vino tinto malbec reserva.", bebidaConAlcohol));
-        
+                                new BigDecimal("15.00"), "Vino tinto malbec reserva.", bebidaConAlcohol));
+
                 bebidaDao.crearBebida(new Bebida("Coca-Cola", 0.0, 350.0, 350.0, 3,
-                        new BigDecimal("2.00"), "Refresco de cola con gas.", bebidaSinAlcohol));
-        
+                                new BigDecimal("2.00"), "Refresco de cola con gas.", bebidaSinAlcohol));
+
                 bebidaDao.crearBebida(new Bebida("Agua Mineral", 0.0, 500.0, 500.0, 4,
-                        new BigDecimal("1.50"), "Agua mineral natural sin gas.", bebidaSinAlcohol));
-        
+                                new BigDecimal("1.50"), "Agua mineral natural sin gas.", bebidaSinAlcohol));
+
                 bebidaDao.crearBebida(new Bebida("Gin Tonic", 40.0, 250.0, 250.0, 5,
-                        new BigDecimal("8.00"), "Gin tonic clásico con limón y hielo.", bebidaConAlcohol));
+                                new BigDecimal("8.00"), "Gin tonic clásico con limón y hielo.", bebidaConAlcohol));
         }
+
         public static void inicializarPlatos() throws CategoriaNoEncontradaException, VendedorNoEncontradoException {
-                
+
                 // Obtención de las categorias, hacer un dao de categoria
                 Categoria comidaVegana = categoriaDao.obtenerCategoriaPorNombre("comidaVegana");
                 Categoria comidaVegetariana = categoriaDao.obtenerCategoriaPorNombre("comidaVegetariana");
                 Categoria comidaClasica = categoriaDao.obtenerCategoriaPorNombre("comidaClasica");
 
-                //Obtencion del vendedor 
-                /*Vendedor vendedor1 = vendedorDao.buscarVendedorPorId(0);
-                Vendedor vendedor2 = vendedorDao.buscarVendedorPorId(1);*/
-                
+                // Obtencion del vendedor
+                /*
+                 * Vendedor vendedor1 = vendedorDao.buscarVendedorPorId(0);
+                 * Vendedor vendedor2 = vendedorDao.buscarVendedorPorId(1);
+                 */
+
                 platoDao.crearPlato(new Plato("Ensalada Vegana", 150.0, true, true, true, 0.25, 5,
-                        new BigDecimal("120.00"), "Ensalada de vegetales frescos", comidaVegana));
-                
+                                new BigDecimal("120.00"), "Ensalada de vegetales frescos", comidaVegana));
+
                 platoDao.crearPlato(new Plato("Hamburguesa Vegetariana", 450.0, true, true, false, 0.3, 6,
-                        new BigDecimal("200.00"), "Hamburguesa de lentejas con queso",
-                        comidaVegetariana));
-                
+                                new BigDecimal("200.00"), "Hamburguesa de lentejas con queso",
+                                comidaVegetariana));
+
                 platoDao.crearPlato(new Plato("Milanesa con pure", 680.0, false, false, false, 400.0, 3,
-                        new BigDecimal("18.75"), "Milanesa de ternera con puré casero.", comidaClasica));
-                
+                                new BigDecimal("18.75"), "Milanesa de ternera con puré casero.", comidaClasica));
+
                 platoDao.crearPlato(new Plato("Tarta de manzana", 250.0, false, true, false, 150.0, 4,
-                        new BigDecimal("8.00"), "Tarta de manzana casera con helado.", comidaClasica));
-                
+                                new BigDecimal("8.00"), "Tarta de manzana casera con helado.", comidaClasica));
+
                 platoDao.crearPlato(new Plato("Pizza Margarita", 500.0, false, true, true, 500.0, 5,
-                        new BigDecimal("20.00"), "Pizza Margarita con salsa de tomate y queso.",
-                        comidaVegetariana));
-                
+                                new BigDecimal("20.00"), "Pizza Margarita con salsa de tomate y queso.",
+                                comidaVegetariana));
+
                 platoDao.crearPlato(new Plato("Ensalada César", 320.5, true, true, true, 320.5, 5,
-                        new BigDecimal("15.00"), "Ensalada César con pollo.", comidaClasica));
+                                new BigDecimal("15.00"), "Ensalada César con pollo.", comidaClasica));
         }
-        public static void pedir(Cliente cliente, Vendedor vendedor) throws VendedorNoEncontradoException, ClienteNoEncontradoException, PedidoNoEncontradoException{
-                
-                //Crear el ticket pedido
+
+        public static void pedir(Cliente cliente, Vendedor vendedor) throws VendedorNoEncontradoException,
+                        ClienteNoEncontradoException, PedidoNoEncontradoException {
+
+                // Crear el ticket pedido
                 pedidoDao.crearPedido(new Pedido(0, Estado.RECIBIDO, cliente));
                 Integer clienteID = cliente.getId();
-                Pedido pedido1 = pedidoDao.filtrarPedidosPorCliente(clienteID).getLast(); 
+                Pedido pedido1 = pedidoDao.filtrarPedidosPorCliente(clienteID).getLast();
 
                 Random rand = new Random();
-                Integer cant = 1 + rand.nextInt(5); // Randomizador del 1 al 4
 
                 // Pedir todo lo que tiene el vendedor
-                List<ItemMenu> itemsMenu = itemMenuDao.filtrarPorVendedor(vendedor); 
+                List<ItemMenu> itemsMenu = itemMenuDao.filtrarPorVendedor(vendedor);
 
                 for (ItemMenu itemMenu : itemsMenu) {
                         // El id lo maneja el gestor
+                        Integer cant = 1 + rand.nextInt(5); // Randomizador del 1 al 4
                         ItemPedido itemPedido = new ItemPedido(0, cant, itemMenu, pedido1);
                         itemsPedidoDao.crearItemPedido(itemPedido);
                 }
-        }  
-        public static void pagar(Cliente cliente){
-                ServicioPago servicioPago = new ServicioPago();
+        }
+
+        public static void pagar(Cliente cliente) {
+                Pedido pedidoAPagar = pedidoDao.buscarPedidoPorId(0);
+
         }
 }
-
