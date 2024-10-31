@@ -1,5 +1,5 @@
-package main.java.com.mycompany.tp.dsw.patronObserver;
+package com.mycompany.tp.dsw.patronObserver;
 
 public interface Observer<T> {
-    public void updateEstado(T estadoPedido);
+    public void updateEstado(T pedido);
 }

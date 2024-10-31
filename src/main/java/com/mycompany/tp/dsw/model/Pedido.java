@@ -8,8 +8,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.com.mycompany.tp.dsw.patronObserver.Observable;
-import main.java.com.mycompany.tp.dsw.patronObserver.Observer;
+import com.mycompany.tp.dsw.patronObserver.Observable;
+import com.mycompany.tp.dsw.patronObserver.Observer;
 
 /**
  *
@@ -22,7 +22,7 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
     private Estado estado;
     private Cliente cliente;
     private Pago formaPago;
-    private List<Observer<Estado>> observadores = new ArrayList<>();
+    private List<Observer<Pedido>> observadores = new ArrayList<>();
 
     // ver luego en siguiente etapa el constructor
     public Pedido(Integer id, Estado estado, Cliente cliente) {

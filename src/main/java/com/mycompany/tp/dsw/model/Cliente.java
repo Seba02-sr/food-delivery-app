@@ -7,13 +7,13 @@ package com.mycompany.tp.dsw.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import main.java.com.mycompany.tp.dsw.patronObserver.Observer;
+import com.mycompany.tp.dsw.patronObserver.Observer;
 
 /**
  *
  * @author Cristian
  */
-public class Cliente implements Observer<Estado> {
+public class Cliente implements Observer<Pedido> {
 
     private Integer id;
     private String nombre;
@@ -80,22 +80,40 @@ public class Cliente implements Observer<Estado> {
     }
 
     @Override
-    public void updateEstado(Observer<Pedido> pedidoObserver) {
-        Pedido pedido = pedidoObserver.get();
+    public void updateEstado(Pedido pedido) {
+
+        System.out.println("Se le notifica a " + nombre + ": El estado de su pedido (ID: " + pedido.getId()
+                + ") ha cambiado a " + pedido.getEstado());
+
+        // Pedido pedido = pedidoObserver.get();
         if (pedido.getEstado().equals(Estado.ENVIADO)) {
             generarPago(pedido);
         }
     }
 
-    private Pago generarPago(Pedido pedido) {
-        Pago pago = new Pago(new MercadoPago("mialias"));
+    private void generarPago(Pedido pedido) {
+
         BigDecimal monto = pedido.total();
 
-        pago.setFecha(LocalDate.now());
-        pago.setMonto(monto);
+        if (monto.compareTo(BigDecimal.ZERO) > 0) {
+            throw new IllegalArgumentException("Monto negativo");
+        }
 
-        pedido.setFormaPago(pago);
+        if (pedido.getFormaPago() instanceof MercadoPago) {
+            MercadoPago mercadoPago = new MercadoPago("miAlias");
+            mercadoPago.setMonto(monto);
+            mercadoPago.setFecha(LocalDate.now());
+            pedido.setFormaPago(mercadoPago);
 
+        } else if (pedido.getFormaPago() instanceof Transferencia) {
+            Transferencia transferencia = new Transferencia("cbu123", "20-123456-3");
+            transferencia.setMonto(monto);
+            transferencia.setFecha(LocalDate.now());
+            pedido.setFormaPago(transferencia);
+
+        } else {
+            throw new IllegalArgumentException("Tipo de pago no seteado o no soportado");
+        }
     }
 
 }
