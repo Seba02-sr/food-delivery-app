@@ -114,9 +114,12 @@ public class TpDsw {
                 Coordenada coordenada3 = new Coordenada(50.0, 60.0);
 
                 // Instanciando vendedores
-                vendedorDao.crearVendedor(new Vendedor(1, "Vendedor 1", "Calle Falsa 123", coordenada1));
-                vendedorDao.crearVendedor(new Vendedor(2, "Vendedor 2", "Avenida Siempre Viva 456", coordenada2));
-                vendedorDao.crearVendedor(new Vendedor(3, "Vendedor 3", "Plaza Principal 789", coordenada3));
+                // vendedorDao.crearVendedor(new Vendedor(1, "Vendedor 1", "Calle Falsa 123",
+                // coordenada1));
+                // vendedorDao.crearVendedor(new Vendedor(2, "Vendedor 2", "Avenida Siempre Viva
+                // 456", coordenada2));
+                // vendedorDao.crearVendedor(new Vendedor(3, "Vendedor 3", "Plaza Principal
+                // 789", coordenada3));
         }
 
         private static void asignarListaItemMenuAVendedor() throws VendedorNoEncontradoException {
@@ -246,7 +249,7 @@ public class TpDsw {
                 // Crear el ticket pedido
                 pedidoDao.crearPedido(new Pedido(0, Estado.RECIBIDO, cliente));
                 Integer clienteID = cliente.getId();
-                Pedido pedido1 = pedidoDao.filtrarPedidosPorCliente(clienteID).getLast();
+                // Pedido pedido1 = pedidoDao.filtrarPedidosPorCliente(clienteID).getLast();
 
                 Random rand = new Random();
 
@@ -256,13 +259,13 @@ public class TpDsw {
                 for (ItemMenu itemMenu : itemsMenu) {
                         // El id lo maneja el gestor
                         Integer cant = 1 + rand.nextInt(5); // Randomizador del 1 al 4
-                        ItemPedido itemPedido = new ItemPedido(0, cant, itemMenu, pedido1);
-                        itemsPedidoDao.crearItemPedido(itemPedido);
+                        // ItemPedido itemPedido = new ItemPedido(0, cant, itemMenu, pedido1);
+                        // itemsPedidoDao.crearItemPedido(itemPedido);
                 }
         }
 
         public static void pagar(Cliente cliente) {
-                Pedido pedidoAPagar = pedidoDao.buscarPedidoPorId(0);
+                // Pedido pedidoAPagar = pedidoDao.buscarPedidoPorId(0);
 
         }
 }

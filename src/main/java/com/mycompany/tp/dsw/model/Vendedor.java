@@ -4,8 +4,11 @@
  */
 package com.mycompany.tp.dsw.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.mycompany.tp.dsw.dto.VendedorDto;
 
 /**
  * Vendedor = Restaurante
@@ -20,11 +23,15 @@ public class Vendedor {
     private Coordenada coordenada;
     private List<ItemMenu> itemsMenu;
 
-    public Vendedor(int id, String nombre, String direccion, Coordenada coordenada) {
-        this.id = id;
-        this.nombre = nombre;
-        this.direccion = direccion;
-        this.coordenada = coordenada;
+    private LocalDateTime fechaRegistro = LocalDateTime.now();
+    private Boolean activo = true;
+    private LocalDateTime fechaEliminacion = LocalDateTime.now();
+
+    public Vendedor(VendedorDto vendedorDto) {
+        this.id = vendedorDto.getId();
+        this.nombre = vendedorDto.getNombre();
+        this.direccion = vendedorDto.getDireccion();
+        this.coordenada = vendedorDto.getCoordenada();
         this.itemsMenu = new ArrayList<>();
     }
 
@@ -34,6 +41,30 @@ public class Vendedor {
         this.direccion = direccion;
         this.coordenada = coordenada;
         this.itemsMenu = itemsMenu;
+    }
+
+    public LocalDateTime getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
+    public LocalDateTime getFechaEliminacion() {
+        return fechaEliminacion;
+    }
+
+    public void setFechaEliminacion(LocalDateTime fechaEliminacion) {
+        this.fechaEliminacion = fechaEliminacion;
     }
 
     public List<ItemMenu> getItemsMenu() {

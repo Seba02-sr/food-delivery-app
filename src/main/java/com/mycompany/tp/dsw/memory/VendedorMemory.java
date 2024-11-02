@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.mycompany.tp.dsw.dao.VendedorDao;
+import com.mycompany.tp.dsw.dto.VendedorDto;
 import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
 import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.Vendedor;
@@ -16,11 +17,13 @@ public class VendedorMemory implements VendedorDao {
     /**
      * Crea y persiste un restaurante
      * - Manejo de id unicos con currentId
+     * - El parametro es del tipo VendedorDto, no Vendedor
      * 
-     * @param vendedor El objeto 'Vendedor' a persistir
+     * @param vendedorDto El objeto 'Vendedor' a persistir
      */
     @Override
-    public void crearVendedor(Vendedor vendedor) {
+    public void crearVendedor(VendedorDto vendedorDto) {
+        Vendedor vendedor = new Vendedor(vendedorDto);
         vendedor.setId(currentId++);
         vendedores.add(vendedor);
         System.out.println("Se creo un nuevo Vendedor con ID: " + vendedor.getId());

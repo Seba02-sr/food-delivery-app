@@ -2,11 +2,12 @@ package com.mycompany.tp.dsw.dao;
 
 import java.util.List;
 
+import com.mycompany.tp.dsw.dto.VendedorDto;
 import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
 import com.mycompany.tp.dsw.model.Vendedor;
 
 public interface VendedorDao {
-    void crearVendedor(Vendedor vendedor);
+    void crearVendedor(VendedorDto vendedor);
 
     Vendedor buscarVendedorPorNombre(String nombre) throws VendedorNoEncontradoException;
 
