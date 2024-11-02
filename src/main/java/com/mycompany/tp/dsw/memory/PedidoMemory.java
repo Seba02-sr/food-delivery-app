@@ -16,6 +16,12 @@ public class PedidoMemory implements PedidoDao {
     List<Pedido> pedidos = new ArrayList<>();
     private int currentID = 0;
 
+    /**
+     * Crea y persiste un pedido
+     * - Manejo de id unicos con currentID
+     * 
+     * @param pedido El pedido a persistir
+     */
     @Override
     public void crearPedido(Pedido pedido) {
         pedido.setId(currentID++);
@@ -23,9 +29,15 @@ public class PedidoMemory implements PedidoDao {
         System.out.println("Se creo un nuevo Pedido");
     }
 
+    /**
+     * Obtiene los pedidos, filtrados por cliente
+     * 
+     * @param clienteId El cliente al que se quiere buscar los pedidos
+     * @return Lista de los pedidos del cliente del @param
+     * @throws ClienteNoEncontradoException Si no encuentra el cliente
+     */
     @Override
     public List<Pedido> filtrarPedidosPorCliente(Integer clienteId) throws ClienteNoEncontradoException {
-        // Buscar un cliente con el id, si no se encuentra lanzar una excepcion
         List<Pedido> pedidosCliente = pedidos.stream()
                 .filter(p -> p.getCliente().getId().equals(clienteId))
                 .toList();
@@ -35,6 +47,13 @@ public class PedidoMemory implements PedidoDao {
         return pedidosCliente;
     }
 
+    /**
+     * Obtiene los pedidos, filtrados por estado
+     * - Estados: RECIBIDO, ACEPTADO, PREPARADO, ENVIADO, ENTREGADO
+     * 
+     * @param estado El estado a por filtrar
+     * @return Lista de pedidos que permanecen en el estado del @param
+     */
     @Override
     public List<Pedido> filtrarPedidoPorEstado(Estado estado) {
         List<Pedido> pedidosCliente = pedidos.stream()
@@ -43,19 +62,20 @@ public class PedidoMemory implements PedidoDao {
         return pedidosCliente;
     }
 
+    /**
+     * Modifica los datos de un pedido
+     * - Del objeto pedido pasado como parametro
+     * - Solo los datos a modificar permanecen no nulos
+     * 
+     * @param pedidoModificado El objeto pedido con los datos modificados
+     */
     @Override
     public void modificarPedido(Pedido pedidoModificado) {
-        // Buscar si existe el pedido
         Optional<Pedido> existePedido = pedidos.stream().filter(p -> p.getId().equals(pedidoModificado.getId()))
                 .findFirst();
-
-        // Los demas atributos no tiene sentido modificarlos
         Estado estadoModificado = pedidoModificado.getEstado();
         List<ItemPedido> itemsPedidoModificado = pedidoModificado.getItems();
 
-        // Se modifica solamente si no son null
-        // Ahorra tener que pasar un Pedido completo y solamente el id y los parametros
-        // a modificar
         existePedido.ifPresent(v -> {
             if (estadoModificado != null)
                 v.setEstado(estadoModificado);
@@ -65,16 +85,33 @@ public class PedidoMemory implements PedidoDao {
 
     }
 
+    /**
+     * Elimina un pedido, segun el id
+     * 
+     * @param id
+     */
     @Override
     public void eliminarPedido(Integer id) {
         pedidos.removeIf(p -> p.getId().equals(id));
     }
 
+    /**
+     * Obtiene una lista de todos los pedidos del sistema
+     * 
+     * @return Lista de los pedidos del sistema
+     */
     @Override
     public List<Pedido> getAllPedido() {
         return new ArrayList<>(pedidos);
     }
 
+    /**
+     * Obtiene los pedidos, filtrados por id
+     * 
+     * @param id El id del pedido a buscar
+     * @return El pedido correspondiente al id
+     * @throws PedidoNoEncontradoException Si no encuentra el pedido
+     */
     @Override
     public Pedido buscarPedidoPorId(Integer id) throws PedidoNoEncontradoException {
         return pedidos.stream()
@@ -83,8 +120,14 @@ public class PedidoMemory implements PedidoDao {
                 .orElseThrow(() -> new PedidoNoEncontradoException("No se ha encontrado pedido con ID: " + id));
     }
 
+    /**
+     * Obtiene los pedidos, filtrados por restaurante
+     * 
+     * @param idVendedor El id del restaurante a buscar sus pedidos
+     * @return Lista de los pedidos del restaurante del @param
+     */
     @Override
-    public List<Pedido> buscarPedidoPorVendedor(Integer idVendedor) throws PedidoNoEncontradoException {
+    public List<Pedido> buscarPedidoPorVendedor(Integer idVendedor) {
         return pedidos.stream()
                 .filter(p -> p.getEstado().equals(Estado.RECIBIDO) &&
                         !p.getItems().isEmpty() &&

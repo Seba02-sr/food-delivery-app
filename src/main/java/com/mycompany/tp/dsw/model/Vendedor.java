@@ -8,13 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Vendedor = Restaurante
+ * 
  * @author Cristian
  */
 public class Vendedor {
 
     private Integer id;
-    private String nombre; // vendedor = resurante
+    private String nombre;
     private String direccion;
     private Coordenada coordenada;
     private List<ItemMenu> itemsMenu;
@@ -75,8 +76,15 @@ public class Vendedor {
         this.coordenada = coordenada;
     }
 
+    /**
+     * Calculo de la distancia entre el Restaurante y el cliente
+     * - Implementado utilizando la formula de Haversine
+     * 
+     * @param cliente El cliente que quiere saber la distancia hacia el restaurante
+     * @return distancia en Kilometros
+     */
     public Double distancia(Cliente cliente) {
-        final int R = 6371; //radio de la tierra en km
+        final int R = 6371; // radio de la tierra en km
 
         Double latV = this.getCoordenada().getLatitud();
         Double lngV = this.getCoordenada().getLongitud();
@@ -88,12 +96,17 @@ public class Vendedor {
 
         Double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
                 + Math.cos(Math.toRadians(latV)) * Math.cos(Math.toRadians(latC))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+                        * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
 
         Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;
     }
 
+    /**
+     * Obtiene las bebidas del Restaurante
+     * 
+     * @return Lista de ItemMenu, del tipo Bebida
+     */
     public List<ItemMenu> getItemBebidas() {
         List<ItemMenu> listaBebidas = new ArrayList<>();
         for (ItemMenu item : this.itemsMenu) {
@@ -104,6 +117,12 @@ public class Vendedor {
         return listaBebidas;
     }
 
+    /**
+     * Obtiene las comidas del Restaurante
+     * - Comida = Plato
+     * 
+     * @return Lista de ItemMenu, del tipo Plato
+     */
     public List<ItemMenu> getItemComidas() {
         List<ItemMenu> listaComidas = new ArrayList<>();
         for (ItemMenu item : this.itemsMenu) {
@@ -114,16 +133,27 @@ public class Vendedor {
         return listaComidas;
     }
 
-    public List<ItemMenu> getItemComidasVeganas(){
+    /**
+     * Obtiene las comidas veganas del Restaurante
+     * - Si es vegano, es vegetariano
+     * 
+     * @return Lista de ItemMenu, del tipo Plato, particularidad vegana
+     */
+    public List<ItemMenu> getItemComidasVeganas() {
         List<ItemMenu> listaComidasVeganas = new ArrayList<>();
         for (ItemMenu item : this.itemsMenu) {
-            if (item.getCategoria().getTipo() == TipoCategoria.COMIDA && ((Plato)item).aptoVegano()) {
+            if (item.getCategoria().getTipo() == TipoCategoria.COMIDA && ((Plato) item).aptoVegano()) {
                 listaComidasVeganas.add(item);
             }
         }
         return listaComidasVeganas;
     }
 
+    /**
+     * Obtiene las bebidas sin alcohol del Restaurante
+     * 
+     * @return Lista de ItemMenu, del tipo Bebida, particularidad sin alcohol
+     */
     public List<ItemMenu> getItemBebidasSinAlcohol() {
         List<ItemMenu> listaBebidasSinAlcohol = new ArrayList<>();
         for (ItemMenu item : this.itemsMenu) {
@@ -142,8 +172,7 @@ public class Vendedor {
         for (ItemMenu itemMenu : itemsMenu) {
             listaItemString.append(itemMenu.toString()).append(" \n");
         }
-        return "Vendedor [id=" + id + ", nombre=" + nombre + ", items="+ listaItemString.toString() + "]";
+        return "Vendedor [id=" + id + ", nombre=" + nombre + ", items=" + listaItemString.toString() + "]";
     }
-    
 
 }

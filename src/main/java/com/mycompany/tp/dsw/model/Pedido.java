@@ -60,6 +60,13 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
         return estado;
     }
 
+    /**
+     * Setea nuevo estado del pedido y notifica a los observadores sobre el cambio.
+     * 
+     * 
+     * @param estado El nuevo estado a asignar
+     */
+
     public void setEstado(Estado estado) {
         this.estado = estado;
         notificarObservadores();
@@ -81,6 +88,13 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
         return formaPago;
     }
 
+    /**
+     * Calcula el costo total del pedido, segun el precio y la cantidad
+     * Aplica el recargo dependiendo la forma de pago.
+     * 
+     * @return El monto total una vez aplciado el recargo de la forma de pago.
+     */
+
     public BigDecimal total() {
         BigDecimal total = items.stream()
                 .map(item -> item.getItemMenu().getPrecio().multiply(new BigDecimal(item.getCantidad())))
@@ -88,11 +102,20 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
         return formaPago.pagar(total);
     }
 
+    /**
+     * Agrega un observador a la lista de observadores del pedido.
+     * 
+     * @param observer Es el observador que sera notificado
+     */
     @Override
     public void addObserver(Observer<Pedido> observer) {
         this.observadores.add(observer);
     }
 
+    /**
+     * Notifica a todos los observadores sobre el cambio en el estado
+     * Llama al metodo 'updateEstado' establecido en cada observador
+     */
     @Override
     public void notificarObservadores() {
 
@@ -101,6 +124,9 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
         }
     }
 
+    /**
+     * Devuelve el mismo pedido
+     */
     @Override
     public Pedido get() {
         return this;

@@ -79,17 +79,34 @@ public class Cliente implements Observer<Pedido> {
         this.coordenada = coordenada;
     }
 
+    /**
+     * Metodo que actua como observador del Cliente
+     * Ejecutado cuando se cambia el estado del pedido del cliente
+     * - Si el estado cambia a ENVIADO, se genera el PAGO correspondiente
+     * 
+     * @param pedido El pedido cuyo estado ha cambiado
+     */
+
     @Override
     public void updateEstado(Pedido pedido) {
 
         System.out.println("Se le notifica a " + nombre + ": El estado de su pedido (ID: " + pedido.getId()
                 + ") ha cambiado a " + pedido.getEstado());
 
-        // Pedido pedido = pedidoObserver.get();
         if (pedido.getEstado().equals(Estado.ENVIADO)) {
             generarPago(pedido);
         }
     }
+
+    /**
+     * Metodo que genera y configura el pago para el pedido del cliente
+     * - Dependiendo del metodo de pago, crea y lo establece al pedido
+     * - Soporta pagos MercadoPago y Transferencia
+     * 
+     * @param pedido El pedido por el cual se debera generar el pago
+     * @throws IllegalArgumentException Si el monto es negativo o si el tipo de pago
+     *                                  no es soportado
+     */
 
     private void generarPago(Pedido pedido) {
 

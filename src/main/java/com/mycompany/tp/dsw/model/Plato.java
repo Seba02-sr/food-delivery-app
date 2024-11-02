@@ -12,17 +12,16 @@ import java.math.BigDecimal;
  */
 public class Plato extends ItemMenu {
 
-    //private String nombre;
     private Double calorias;
     private Boolean aptoCeliaco;
     private Boolean aptoVegetariano;
     private Boolean aptoVegano;
     private Double peso;
 
-    public Plato(String nombre, Double calorias, Boolean aptoCeliaco, Boolean aptoVegetariano, Boolean aptoVegano, Double peso,
-            Integer id, BigDecimal precio, String descripcion, Categoria categoria, Vendedor vendedor) { //
-        super(id, nombre, descripcion, precio, categoria, vendedor); //
-        //this.nombre = nombre;
+    public Plato(String nombre, Double calorias, Boolean aptoCeliaco, Boolean aptoVegetariano, Boolean aptoVegano,
+            Double peso,
+            Integer id, BigDecimal precio, String descripcion, Categoria categoria, Vendedor vendedor) {
+        super(id, nombre, descripcion, precio, categoria, vendedor);
         this.calorias = calorias;
         this.aptoCeliaco = aptoCeliaco;
         this.aptoVegetariano = aptoVegetariano;
@@ -30,32 +29,16 @@ public class Plato extends ItemMenu {
         this.peso = peso;
     }
 
-    public Plato(String nombre, Double calorias, Boolean aptoCeliaco, Boolean aptoVegetariano, Boolean aptoVegano, Double peso,
-            Integer id, BigDecimal precio, String descripcion, Categoria categoria) { //
-        super(id, nombre, descripcion, precio, categoria); //
-        //this.nombre = nombre;
+    public Plato(String nombre, Double calorias, Boolean aptoCeliaco, Boolean aptoVegetariano, Boolean aptoVegano,
+            Double peso,
+            Integer id, BigDecimal precio, String descripcion, Categoria categoria) {
+        super(id, nombre, descripcion, precio, categoria);
         this.calorias = calorias;
         this.aptoCeliaco = aptoCeliaco;
         this.aptoVegetariano = aptoVegetariano;
         this.aptoVegano = aptoVegano;
         this.peso = peso;
     }
-
-   /* public Plato(Integer id, String nombre, String descripcion, BigDecimal precio, Categoria categoria,
-            Boolean aptoVegano, Vendedor vendedor) { //, Vendedor vendedor
-        super(id, nombre, descripcion, precio, categoria, vendedor); //, vendedor
-        this.aptoVegano = aptoVegano;
-    }*/
-
-    /* @Override
-    public String getNombre() {
-        return nombre;
-    }
-
-    @Override
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }*/
 
     public Double getCalorias() {
         return calorias;
@@ -69,16 +52,26 @@ public class Plato extends ItemMenu {
         return aptoVegetariano;
     }
 
+    /**
+     * Metodo que setea si el Plato es apto vegetariano
+     * - Plato que no es apto vegetariano, tampoco es apto vegano
+     * 
+     * @param aptoVegetariano
+     */
     public void setAptoVegetariano(Boolean aptoVegetariano) {
         this.aptoVegetariano = aptoVegetariano;
-        //si no es aptoVegetarioano, no va a ser aptoVegano
         if (!aptoVegetariano) {
             this.aptoVegano = false;
         }
     }
 
+    /**
+     * Es el valor del atributo, peso sin envase
+     * - NO CONFUNDIR CON LA REGLA DE NEGOCIO DE PESO ( metodo peso() )
+     * 
+     * @return
+     */
     public Double getPeso() {
-        //devuelve el valor del atributo, NO EL CALCULO SEGUN REGLA DE NEGOCIO --> ver metodo peso()
         return peso;
     }
 
@@ -94,46 +87,64 @@ public class Plato extends ItemMenu {
         this.aptoCeliaco = aptoCeliaco;
     }
 
+    /**
+     * Metodo que setea si el Plato es apto vegano
+     * - Plato que es apto vegano, tambien es apto vegetariano
+     * 
+     * @param aptoVegano
+     */
     public void setAptoVegano(Boolean aptoVegano) {
         this.aptoVegano = aptoVegano;
-        //Si el plato es vegano entonces tambien es vegetariano
         if (aptoVegano) {
             this.aptoVegetariano = true;
         }
     }
 
+    /**
+     * Metodo de la regla de negocio
+     * - Tiene en cuenta el peso del envase, 10%
+     * Formula -> <peso del plato> * 1.1
+     * 
+     * @return Valor del peso real, teniendo en cuenta el envase
+     */
     @Override
     public Double peso() {
-        //devuelve el peso del plato + 10% por envase
-        return this.peso * 1.1; 
+        return this.peso * 1.1;
     }
 
+    /**
+     * Indica si el item es de tipo Comida
+     * 
+     * @return 'true' siempre ya que es plato
+     */
     @Override
     public boolean esComida() {
-        return true; 
+        return true;
     }
 
+    /**
+     * Indica si el item es de tipo Bebida
+     * 
+     * @return 'false' siempre ya que es plato
+     */
     @Override
     public boolean esBebida() {
-        return false; 
+        return false;
     }
 
+    /**
+     * Regla de negocio
+     * - Igual a un getAptoVegano
+     */
     @Override
-    public boolean aptoVegano() { 
-        //es como tener getAptoVegano
+    public boolean aptoVegano() {
         return aptoVegano;
     }
 
-    /*@Override
-    public String toString() {
-        return "{ Plato: " + super.getNombre() + ". Es apto Celiaco? " + aptoCeliaco + ". Es apto vegetariano? " + aptoVegetariano
-                + ". Es apto vegano? " + aptoVegano + ". Precio:" + this.getPrecio() + " }";
-        
-    }*/
-
     @Override
     public String toString() {
-        return "ItemMenu [id=" + this.getId() + ", nombre=" + this.getNombre() +", vendedor=" + this.getVendedor().getId() + "]";
+        return "ItemMenu [id=" + this.getId() + ", nombre=" + this.getNombre() + ", vendedor="
+                + this.getVendedor().getId() + "]";
     }
 
 }

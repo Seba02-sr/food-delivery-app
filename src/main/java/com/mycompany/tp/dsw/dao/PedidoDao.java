@@ -7,7 +7,7 @@ import com.mycompany.tp.dsw.exception.PedidoNoEncontradoException;
 import com.mycompany.tp.dsw.model.Estado;
 import com.mycompany.tp.dsw.model.Pedido;
 
-public interface PedidoDao { // CRUD
+public interface PedidoDao {
     void crearPedido(Pedido pedido);
 
     List<Pedido> filtrarPedidosPorCliente(Integer clienteId) throws ClienteNoEncontradoException;

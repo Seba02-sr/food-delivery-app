@@ -14,13 +14,19 @@ import com.mycompany.tp.dsw.model.ItemPedido;
  *
  * @author User
  */
-public interface ItemsPedidoDao {// Hacer el CRUD y borrar setItemsPedido
-    
-    List<ItemPedido> buscarPorRestaurante(Integer id) throws ItemNoEncontradoException; // los restaurante son vendedores
-    List<ItemPedido> ordenPorPrecio() throws ItemNoEncontradoException; // ordena los itemsPedido por precio 
-    List<ItemPedido> buscarPorPrecios(BigDecimal min, BigDecimal max) throws ItemNoEncontradoException; 
-    List<ItemPedido> filtrarPorVendedor(String nombreVendedor) throws ItemNoEncontradoException; // le pasamos el nombre del Vendedor
+public interface ItemsPedidoDao {
+
+    List<ItemPedido> buscarPorRestaurante(Integer id) throws ItemNoEncontradoException;
+
+    List<ItemPedido> ordenPorPrecio() throws ItemNoEncontradoException;
+
+    List<ItemPedido> buscarPorPrecios(BigDecimal min, BigDecimal max) throws ItemNoEncontradoException;
+
+    List<ItemPedido> filtrarPorVendedor(String nombreVendedor) throws ItemNoEncontradoException;
+
     void setItemsPedido(List<ItemPedido> itemsPedido);
+
     List<ItemPedido> getAllItemsPedido();
+
     void crearItemPedido(ItemPedido itemPedido);
 }
