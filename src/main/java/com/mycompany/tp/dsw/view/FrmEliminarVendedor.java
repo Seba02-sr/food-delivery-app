@@ -4,17 +4,29 @@
  */
 package com.mycompany.tp.dsw.view;
 
+import com.mycompany.tp.dsw.dao.VendedorDao;
+import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
+import com.mycompany.tp.dsw.memory.VendedorMemory;
+import com.mycompany.tp.dsw.service.ValidarVendedor;
+import java.util.Map;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Usuario
  */
 public class FrmEliminarVendedor extends javax.swing.JFrame {
 
+    private final VendedorDao vendedorDao = new VendedorMemory();
     /**
      * Creates new form FrmEliminarVendedor
      */
     public FrmEliminarVendedor() {
         initComponents();
+        this.setTitle("Eliminar Vendedor");
+        this.setLocationRelativeTo(null);
+        this.setSize(440, 160);
+        this.setResizable(false);
     }
 
     /**
@@ -27,25 +39,75 @@ public class FrmEliminarVendedor extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        txtID = new javax.swing.JTextField();
+        btnEliminar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(440, 280));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
+        jPanel1.setPreferredSize(new java.awt.Dimension(440, 120));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, -1, -1));
+        jLabel6.setText("ID:");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 70, -1));
+
+        txtID.setForeground(new java.awt.Color(153, 153, 153));
+        txtID.setText("ID");
+        txtID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIDActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtID, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, 220, -1));
+
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 150, -1));
+
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 70, 150, -1));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIDActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        String idText = txtID.getText();
+        
+        Map<String, String> errores = ValidarVendedor.esEliminarValido(idText);
+        System.out.println("Errores encontrados: " + errores);
+        if (errores.isEmpty()){
+            try{
+                Integer id = Integer.parseInt(idText);
+                vendedorDao.eliminarVendedor(id);
+                JOptionPane.showMessageDialog(null, "Vendedor Eliminado exitosamente");
+            } catch(VendedorNoEncontradoException e){
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -58,7 +120,7 @@ public class FrmEliminarVendedor extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -83,6 +145,10 @@ public class FrmEliminarVendedor extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField txtID;
     // End of variables declaration//GEN-END:variables
 }

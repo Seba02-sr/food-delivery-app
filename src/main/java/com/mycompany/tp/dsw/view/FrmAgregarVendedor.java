@@ -36,6 +36,7 @@ public class FrmAgregarVendedor extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -51,7 +52,7 @@ public class FrmAgregarVendedor extends javax.swing.JFrame {
         txtNombre = new javax.swing.JTextField();
         txtDireccion = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMaximumSize(null);
         setMinimumSize(new java.awt.Dimension(440, 235));
         setResizable(false);
@@ -136,9 +137,9 @@ public class FrmAgregarVendedor extends javax.swing.JFrame {
         String latitudTexto = txtLatitud.getText();
         String longitudTexto = txtLongitud.getText();
 
-        VendedorDto vendedorDto = new VendedorDto(1, nombre, direccion, latitudTexto, longitudTexto);
+        VendedorDto vendedorDto = new VendedorDto(nombre, direccion, latitudTexto, longitudTexto);
 
-        Map<String, String> errores = ValidarVendedor.esValido(vendedorDto);
+        Map<String, String> errores = ValidarVendedor.esGuardarValido(vendedorDto);
         System.out.println("Errores encontrados: " + errores);
 
         if (errores.isEmpty()) {

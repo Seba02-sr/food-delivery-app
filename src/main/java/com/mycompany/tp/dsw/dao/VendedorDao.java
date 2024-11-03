@@ -11,7 +11,7 @@ public interface VendedorDao {
 
     Vendedor buscarVendedorPorNombre(String nombre) throws VendedorNoEncontradoException;
 
-    void modificarVendedor(Vendedor vendedor) throws VendedorNoEncontradoException;
+    void modificarVendedor(VendedorDto vendedor) throws VendedorNoEncontradoException;
 
     void eliminarVendedor(Integer id) throws VendedorNoEncontradoException;
 

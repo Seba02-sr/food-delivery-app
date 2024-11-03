@@ -18,14 +18,24 @@ public class VendedorDto {
      * Atributos para el manejo de los errores.
      * - Un string es mas facil manejar y permite null.
      * - El parseo de un null a Double no se puede.
+     * - Idem con Integer
      * 
-     * Al asegurarse que no contengan NULL, se parsea a Double y setea coordenada
+     * Al asegurarse que no contengan NULL, se parsea a Double/Integer
+     * Luego setear el atributo
      */
     private String longitud;
     private String latitud;
+    private String IdText;
 
-    public VendedorDto(Integer id, String nombre, String direccion, String latitud, String longitud) {
-        this.id = id;
+    public VendedorDto(String nombre, String direccion, String latitud, String longitud) {
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.longitud = longitud;
+        this.latitud = latitud;
+    }
+
+    public VendedorDto(String IdText, String nombre, String direccion, String latitud, String longitud) {
+        this.IdText = IdText;
         this.nombre = nombre;
         this.direccion = direccion;
         this.longitud = longitud;
@@ -78,6 +88,14 @@ public class VendedorDto {
 
     public Coordenada getCoordenada() {
         return coordenada;
+    }
+
+    public String getIdText() {
+        return IdText;
+    }
+
+    public void setIdText(String idText) {
+        IdText = idText;
     }
 
 }

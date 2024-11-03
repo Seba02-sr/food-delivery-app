@@ -9,7 +9,7 @@ package com.mycompany.tp.dsw.model;
  * @author Cristian
  */
 public class Coordenada {
-    
+
     private Double latitud;
     private Double longitud;
 
@@ -33,4 +33,10 @@ public class Coordenada {
     public void setLongitud(Double lng) {
         this.longitud = lng;
     }
+
+    @Override
+    public String toString() {
+        return "Coordenada [latitud=" + latitud + ", longitud=" + longitud + "]";
+    }
+
 }

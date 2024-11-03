@@ -25,7 +25,7 @@ public class Vendedor {
 
     private LocalDateTime fechaRegistro = LocalDateTime.now();
     private Boolean activo = true;
-    private LocalDateTime fechaEliminacion = LocalDateTime.now();
+    private LocalDateTime fechaEliminacion = null;
 
     public Vendedor(VendedorDto vendedorDto) {
         this.id = vendedorDto.getId();
@@ -203,7 +203,9 @@ public class Vendedor {
         for (ItemMenu itemMenu : itemsMenu) {
             listaItemString.append(itemMenu.toString()).append(" \n");
         }
-        return "Vendedor [id=" + id + ", nombre=" + nombre + ", items=" + listaItemString.toString() + "]";
+        return "Vendedor [id=" + id + ", Nombre=" + nombre + ", Direccion: " + direccion + "," +
+                coordenada.toString() + ", Activo: " + activo + ", Fecha Registro: " + fechaRegistro
+                + ", Fecha Eliminacion" + fechaEliminacion + ", items=" + listaItemString.toString() + "]";
     }
 
 }
