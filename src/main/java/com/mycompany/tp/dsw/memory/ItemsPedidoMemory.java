@@ -7,11 +7,14 @@ package com.mycompany.tp.dsw.memory;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.mycompany.tp.dsw.dao.ItemsPedidoDao;
 import com.mycompany.tp.dsw.dao.VendedorDao;
 import com.mycompany.tp.dsw.exception.ItemNoEncontradoException;
 import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
+import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.ItemPedido;
 import com.mycompany.tp.dsw.model.Vendedor;
 
@@ -111,21 +114,31 @@ public class ItemsPedidoMemory implements ItemsPedidoDao {
      * @throws ItemNoEncontradoException Si no encuentra item pedidos
      */
     @Override
-    public List<ItemPedido> filtrarPorVendedor(String nombreVendedor) throws ItemNoEncontradoException {
+    public List<ItemPedido> filtrarPorVendedor(String nombreVendedor)
+            throws ItemNoEncontradoException, VendedorNoEncontradoException {
         List<ItemPedido> result = new ArrayList<>();
-        try {
-            Vendedor vendedor = vendedorDao.buscarVendedorPorNombre(nombreVendedor);
-            result = itemsPedido.stream()
-                    .filter(item -> vendedor.getItemsMenu().contains(item.getItemMenu()))
-                    .toList();
-        } catch (VendedorNoEncontradoException e) {
-            throw new ItemNoEncontradoException(
-                    "No se encontraron items de pedido para el vendedor: " + nombreVendedor);
+        List<Vendedor> vendedores = vendedorDao.buscarVendedorPorNombre(nombreVendedor);
+
+        // Verifica si se encontraron vendedores
+        if (vendedores.isEmpty()) {
+            throw new VendedorNoEncontradoException("No se encontraron vendedores con el nombre: " + nombreVendedor);
         }
+
+        // Obtiene los IDs de los itemsMenu de todos los vendedores encontrados
+        Set<ItemMenu> itemsMenuVendedores = vendedores.stream()
+                .flatMap(v -> v.getItemsMenu().stream())
+                .collect(Collectors.toSet());
+
+        // Filtra los items de pedido que están en el menú de los vendedores
+        result = itemsPedido.stream()
+                .filter(item -> itemsMenuVendedores.contains(item.getItemMenu()))
+                .toList();
+
         if (result.isEmpty()) {
             throw new ItemNoEncontradoException(
                     "No se encontraron items de pedido para el vendedor: " + nombreVendedor);
         }
+
         return result;
     }
 

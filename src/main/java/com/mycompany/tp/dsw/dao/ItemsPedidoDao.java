@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.mycompany.tp.dsw.exception.ItemNoEncontradoException;
+import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
 import com.mycompany.tp.dsw.model.ItemPedido;
 
 /**
@@ -22,7 +23,8 @@ public interface ItemsPedidoDao {
 
     List<ItemPedido> buscarPorPrecios(BigDecimal min, BigDecimal max) throws ItemNoEncontradoException;
 
-    List<ItemPedido> filtrarPorVendedor(String nombreVendedor) throws ItemNoEncontradoException;
+    List<ItemPedido> filtrarPorVendedor(String nombreVendedor)
+            throws ItemNoEncontradoException, VendedorNoEncontradoException;
 
     void setItemsPedido(List<ItemPedido> itemsPedido);
 
