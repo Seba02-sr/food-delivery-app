@@ -45,15 +45,12 @@ public class VendedorMemory implements VendedorDao {
      * 
      * @param nombre El nombre del restaurante a buscar
      * @return El restaurante buscado
-     * @throws VendedorNoEncontradoException Si no encuentra el restaurante
      */
     @Override
-    public Vendedor buscarVendedorPorNombre(String nombre) throws VendedorNoEncontradoException {
-        Vendedor vendedor = vendedores.stream()
+    public List<Vendedor> buscarVendedorPorNombre(String nombre) {
+        List<Vendedor> vendedor = vendedores.stream()
                 .filter(v -> v.getNombre().toLowerCase().equals(nombre.toLowerCase()))
-                .findFirst()
-                .orElseThrow(() -> new VendedorNoEncontradoException(
-                        "No se encontraron vendedores con el nombre: " + nombre));
+                .toList();
         return vendedor;
     }
 
@@ -106,12 +103,11 @@ public class VendedorMemory implements VendedorDao {
      * @return El restaurante con id del @param
      */
     @Override
-    public Vendedor buscarVendedorPorId(Integer id) throws VendedorNoEncontradoException {
+    public Vendedor buscarVendedorPorId(Integer id) {
         return vendedores.stream()
                 .filter(v -> Objects.equals(v.getId(), id) && v.getActivo().equals(true))
                 .findFirst()
-                .orElseThrow(
-                        () -> new VendedorNoEncontradoException("No se ah encontrado un vendedor con el ID: " + id));
+                .orElse(null); 
     }
 
     /**

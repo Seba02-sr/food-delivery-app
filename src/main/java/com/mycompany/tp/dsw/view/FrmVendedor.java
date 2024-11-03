@@ -4,11 +4,14 @@
  */
 package com.mycompany.tp.dsw.view;
 
-import com.mycompany.tp.dsw.dao.VendedorDao;
 import java.util.List;
+
+import com.mycompany.tp.dsw.dao.VendedorDao;
 import com.mycompany.tp.dsw.model.Vendedor;
+import com.mycompany.tp.dsw.memory.VendedorMemory;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *
@@ -16,6 +19,7 @@ import javax.swing.table.TableModel;
  */
 public class FrmVendedor extends javax.swing.JFrame {
 
+    private final VendedorDao vendedorDao = new VendedorMemory();
     /**
      * Creates new form FrmVendedor
      */
@@ -24,8 +28,8 @@ public class FrmVendedor extends javax.swing.JFrame {
         initComponents();
         this.setTitle("Agregar Vendedor");
         this.setLocationRelativeTo(null);
-        //this.setSize(940, 440);
         this.setResizable(false);
+        mostrarTabla();
     }
 
     /**
@@ -46,7 +50,7 @@ public class FrmVendedor extends javax.swing.JFrame {
         btnSalir = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbVendedorDatos = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -117,7 +121,7 @@ public class FrmVendedor extends javax.swing.JFrame {
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(452, 402));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbVendedorDatos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -128,7 +132,12 @@ public class FrmVendedor extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tbVendedorDatos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbVendedorDatosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbVendedorDatos);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -170,23 +179,105 @@ public class FrmVendedor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tbVendedorDatosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbVendedorDatosMouseClicked
+        int select = tbVendedorDatos.getSelectedRow();
+        
+    }//GEN-LAST:event_tbVendedorDatosMouseClicked
+
     private void btnEliminarVendedorActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnEliminarVendedorActionPerformed
-        FrmEliminarVendedor eliminarVendedorForm = new FrmEliminarVendedor();
-        eliminarVendedorForm.setVisible(true);
+        int selectedRow = tbVendedorDatos.getSelectedRow();
+        
+        if (selectedRow != -1){
+            String id = tbVendedorDatos.getValueAt(selectedRow, 0).toString();
+            FrmEliminarVendedor eliminarVendedorForm = new FrmEliminarVendedor(vendedorDao, id);
+            eliminarVendedorForm.setVisible(true);
+            eliminarVendedorForm.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    mostrarTabla(); // Refresca la tabla cuando se cierre el formulario
+                }
+            });
+        } else {
+            // Si no hay una fila seleccionada, abrir el formulario sin datos precargados
+            FrmEliminarVendedor eliminarVendedorForm = new FrmEliminarVendedor(vendedorDao);
+            eliminarVendedorForm.setVisible(true);
+
+            eliminarVendedorForm.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    mostrarTabla(vendedorDao.getAllVendedor()); // Refresca la tabla cuando se cierre el formulario
+                }
+            });
+        }
+        
+        
     }// GEN-LAST:event_btnEliminarVendedorActionPerformed
 
     private void btnAgregarVendedorActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnAgregarVendedorActionPerformed
-        FrmAgregarVendedor agregarVendedorForm = new FrmAgregarVendedor();
+        FrmAgregarVendedor agregarVendedorForm = new FrmAgregarVendedor(vendedorDao);
         agregarVendedorForm.setVisible(true);
+        
+        agregarVendedorForm.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                mostrarTabla(); // Refresca la tabla cuando se cierre el formulario
+            }
+        });
+        
+        
     }// GEN-LAST:event_btnAgregarVendedorActionPerformed
 
     private void btnModificarVendedorActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnModificarVendedorActionPerformed
-        FrmModificarVendedor modificarVendedorForm = new FrmModificarVendedor();
+    int selectedRow = tbVendedorDatos.getSelectedRow();
+    
+    // Verificar si hay una fila seleccionada
+    if (selectedRow != -1) {
+        // Obtener los valores de la fila seleccionada
+        String id = tbVendedorDatos.getValueAt(selectedRow, 0).toString();
+        String nombre = tbVendedorDatos.getValueAt(selectedRow, 1).toString();
+        String direccion = tbVendedorDatos.getValueAt(selectedRow, 2).toString();
+        String latitud = tbVendedorDatos.getValueAt(selectedRow, 3).toString();
+        String longitud = tbVendedorDatos.getValueAt(selectedRow, 4).toString();
+        
+        LocalDateTime fechaRegistro = (LocalDateTime) tbVendedorDatos.getValueAt(selectedRow, 5);
+        DateTimeFormatter formateador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String fechaFormateada = fechaRegistro.format(formateador);
+        
+        // Crear y mostrar el formulario de modificación con los datos de la fila seleccionada
+        FrmModificarVendedor modificarVendedorForm = new FrmModificarVendedor(vendedorDao, id, nombre, direccion, latitud, longitud, fechaFormateada);
         modificarVendedorForm.setVisible(true);
-    }// GEN-LAST:event_btnModificarVendedorActionPerformed
+        
+        // Agregar un WindowListener para refrescar la tabla cuando se cierre el formulario
+        modificarVendedorForm.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                mostrarTabla(vendedorDao.getAllVendedor()); // Refresca la tabla cuando se cierre el formulario
+            }
+        });
+    } else {
+        // Si no hay una fila seleccionada, abrir el formulario sin datos precargados
+        FrmModificarVendedor modificarVendedorForm = new FrmModificarVendedor(vendedorDao);
+        modificarVendedorForm.setVisible(true);
+        
+        modificarVendedorForm.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                mostrarTabla(vendedorDao.getAllVendedor()); // Refresca la tabla cuando se cierre el formulario
+            }
+        });
+    }
+}
 
     private void btnBuscarVendedorActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnBuscarVendedorActionPerformed
-        // TODO add your handling code here:
+        FrmBuscarVendedor buscarVendedorForm = new FrmBuscarVendedor(vendedorDao, this);
+        buscarVendedorForm.setVisible(true);
+        
+        buscarVendedorForm.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                mostrarTabla(); // Refresca la tabla cuando se cierre el formulario
+            }
+        });
 
     }// GEN-LAST:event_btnBuscarVendedorActionPerformed
 
@@ -194,6 +285,62 @@ public class FrmVendedor extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
     }// GEN-LAST:event_btnSalirActionPerformed
+    
+    private void mostrarTabla(){
+        DefaultTableModel model;
+        String [] titulo = {"ID", "NOMBRE", "DIRECCION", "LATITUD", "LONGITUD", "FECHA REGISTRO", "FECHA ELIMINADO", "ACTIVO" };
+        model = new DefaultTableModel(null, titulo);
+        
+        List<Vendedor> listaVendedores = vendedorDao.getAllVendedor();
+        
+        if (listaVendedores.isEmpty()) {
+            // Si la lista está vacía, puedes decidir no añadir filas.
+            // Esto vacía la tabla.
+            tbVendedorDatos.setModel(model); // Modelo vacío
+        } else{
+           for (Vendedor vendedor : listaVendedores) {
+                Object[] fila = new Object[8]; // Número de columnas
+
+                // Asigna valores a cada columna de la fila
+                fila[0] = vendedor.getId();                
+                fila[1] = vendedor.getNombre();            
+                fila[2] = vendedor.getDireccion();         
+                fila[3] = vendedor.getCoordenada().getLatitud();       
+                fila[4] = vendedor.getCoordenada().getLongitud();        
+                fila[5] = vendedor.getFechaRegistro();    
+                fila[6] = vendedor.getFechaEliminacion();    
+                fila[7] = vendedor.getActivo();            
+
+                // Añade la fila al modelo de la tabla
+                model.addRow(fila);
+            }
+            tbVendedorDatos.setModel(model); 
+        }
+        
+    }
+    
+    public void mostrarTabla(List<Vendedor> listaVendedores) {
+        DefaultTableModel model = new DefaultTableModel();
+        String[] titulo = {"ID", "NOMBRE", "DIRECCION", "LATITUD", "LONGITUD", "FECHA REGISTRO", "FECHA ELIMINADO", "ACTIVO"};
+        model.setColumnIdentifiers(titulo); // Establece los títulos de las columnas
+
+        // Llena el modelo con los vendedores encontrados
+        for (Vendedor vendedor : listaVendedores) {
+            Object[] fila = new Object[8];
+            fila[0] = vendedor.getId();
+            fila[1] = vendedor.getNombre();
+            fila[2] = vendedor.getDireccion();
+            fila[3] = vendedor.getCoordenada().getLatitud();
+            fila[4] = vendedor.getCoordenada().getLongitud();
+            fila[5] = vendedor.getFechaRegistro();
+            fila[6] = vendedor.getFechaEliminacion();
+            fila[7] = vendedor.getActivo();
+
+            model.addRow(fila); // Añade la fila al modelo
+        }
+
+        tbVendedorDatos.setModel(model); // Establece el modelo a la tabla
+    }
 
     /**
      * @param args the command line arguments
@@ -248,6 +395,6 @@ public class FrmVendedor extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tbVendedorDatos;
     // End of variables declaration//GEN-END:variables
 }

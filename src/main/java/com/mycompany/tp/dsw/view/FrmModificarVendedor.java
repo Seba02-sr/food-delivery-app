@@ -19,17 +19,38 @@ import javax.swing.JOptionPane;
  */
 public class FrmModificarVendedor extends javax.swing.JFrame {
 
-    private final VendedorDao vendedorDao = new VendedorMemory();
+    private final VendedorDao vendedorDao;
 
     /**
      * Creates new form FrmModificarVendedor
+     * @param dao
      */
-    public FrmModificarVendedor() {
+    public FrmModificarVendedor(VendedorDao dao) {
         initComponents();
         this.setTitle("Modificar Vendedor");
         this.setLocationRelativeTo(null);
         this.setSize(440, 320);
         this.setResizable(false);
+        this.vendedorDao = dao;
+    }
+    
+    // Constructor con datos en String (cuando se selecciona una fila)
+    public FrmModificarVendedor(VendedorDao dao, String id, String nombre, String direccion, String latitud, String longitud, String fechaRegistro) {
+        initComponents();
+        this.setTitle("Modificar Vendedor");
+        this.setLocationRelativeTo(null);
+        this.setSize(440, 320);
+        this.setResizable(false);
+        this.vendedorDao = dao;
+
+        // Asignar los valores en String directamente a los campos de texto
+        txtID.setEnabled(false);
+        txtID.setText(id);
+        txtNombre.setText(nombre);
+        txtDireccion.setText(direccion);
+        txtLatitud.setText(latitud);
+        txtLongitud.setText(longitud);
+        jLabelFechaAlta.setText("Fecha de alta: " + fechaRegistro);
     }
 
     /**
@@ -55,6 +76,7 @@ public class FrmModificarVendedor extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         txtID = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
+        jLabelFechaAlta = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -67,12 +89,10 @@ public class FrmModificarVendedor extends javax.swing.JFrame {
         jLabel3.setText("Direccion:");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 100, 70, -1));
 
-        txtLongitud.setForeground(new java.awt.Color(153, 153, 153));
-        txtLongitud.setText("Longitud");
+        txtLongitud.setForeground(new java.awt.Color(51, 51, 51));
         jPanel1.add(txtLongitud, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 180, 220, -1));
 
-        txtLatitud.setForeground(new java.awt.Color(153, 153, 153));
-        txtLatitud.setText("Latitud");
+        txtLatitud.setForeground(new java.awt.Color(51, 51, 51));
         txtLatitud.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtLatitudActionPerformed(evt);
@@ -80,8 +100,7 @@ public class FrmModificarVendedor extends javax.swing.JFrame {
         });
         jPanel1.add(txtLatitud, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 140, 220, -1));
 
-        txtDireccion.setForeground(new java.awt.Color(153, 153, 153));
-        txtDireccion.setText("Direccion");
+        txtDireccion.setForeground(new java.awt.Color(51, 51, 51));
         jPanel1.add(txtDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 100, 220, -1));
 
         btnModificar.setText("Modificar");
@@ -106,8 +125,7 @@ public class FrmModificarVendedor extends javax.swing.JFrame {
         });
         jPanel1.add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 240, 150, -1));
 
-        txtNombre.setForeground(new java.awt.Color(153, 153, 153));
-        txtNombre.setText("Nombre");
+        txtNombre.setForeground(new java.awt.Color(51, 51, 51));
         txtNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNombreActionPerformed(evt);
@@ -118,8 +136,7 @@ public class FrmModificarVendedor extends javax.swing.JFrame {
         jLabel4.setText("Latitud:");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, 70, -1));
 
-        txtID.setForeground(new java.awt.Color(153, 153, 153));
-        txtID.setText("ID");
+        txtID.setForeground(new java.awt.Color(51, 51, 51));
         txtID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtIDActionPerformed(evt);
@@ -129,6 +146,7 @@ public class FrmModificarVendedor extends javax.swing.JFrame {
 
         jLabel6.setText("ID:");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 70, -1));
+        jPanel1.add(jLabelFechaAlta, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 0, -1, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 440, 280));
 
@@ -177,6 +195,7 @@ public class FrmModificarVendedor extends javax.swing.JFrame {
                 // 3. Persistir el vendedor
                 vendedorDao.modificarVendedor(vendedorDto);
                 JOptionPane.showMessageDialog(null, "Vendedor modificado exitosamente");
+                this.dispose();
             } catch (VendedorNoEncontradoException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -184,6 +203,7 @@ public class FrmModificarVendedor extends javax.swing.JFrame {
             errores.forEach((campo, mensaje) -> JOptionPane.showMessageDialog(null, mensaje, "Error en " + campo,
                     JOptionPane.ERROR_MESSAGE));
         }
+        
     }// GEN-LAST:event_btnModificarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnCancelarActionPerformed
@@ -231,7 +251,7 @@ public class FrmModificarVendedor extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new FrmModificarVendedor().setVisible(true);
+            new FrmModificarVendedor(new VendedorMemory()).setVisible(true);
         });
     }
 
@@ -243,6 +263,7 @@ public class FrmModificarVendedor extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabelFechaAlta;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtID;

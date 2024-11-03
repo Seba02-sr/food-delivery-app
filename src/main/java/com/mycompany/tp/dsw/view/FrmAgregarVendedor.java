@@ -19,14 +19,15 @@ import javax.swing.JOptionPane;
  */
 public class FrmAgregarVendedor extends javax.swing.JFrame {
 
-    private final VendedorDao vendedorDao = new VendedorMemory();
+    private final VendedorDao vendedorDao;
 
-    public FrmAgregarVendedor() {
+    public FrmAgregarVendedor(VendedorDao dao) {
         initComponents();
         this.setTitle("Agregar Vendedor");
         this.setLocationRelativeTo(null);
         this.setSize(440, 280);
         this.setResizable(false);
+        this.vendedorDao = dao;
     }
 
     /**
@@ -77,15 +78,18 @@ public class FrmAgregarVendedor extends javax.swing.JFrame {
         jLabel2.setText("Nombre:");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 70, -1));
 
-        txtLongitud.setForeground(new java.awt.Color(153, 153, 153));
-        txtLongitud.setText("Longitud");
+        txtLongitud.setForeground(new java.awt.Color(51, 51, 51));
+        txtLongitud.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtLongitudActionPerformed(evt);
+            }
+        });
         jPanel1.add(txtLongitud, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 140, 220, -1));
 
         jLabel4.setText("Latitud:");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 100, 70, -1));
 
-        txtLatitud.setForeground(new java.awt.Color(153, 153, 153));
-        txtLatitud.setText("Latitud");
+        txtLatitud.setForeground(new java.awt.Color(51, 51, 51));
         txtLatitud.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtLatitudActionPerformed(evt);
@@ -104,8 +108,7 @@ public class FrmAgregarVendedor extends javax.swing.JFrame {
         });
         jPanel1.add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 198, 150, -1));
 
-        txtNombre.setForeground(new java.awt.Color(153, 153, 153));
-        txtNombre.setText("Nombre");
+        txtNombre.setForeground(new java.awt.Color(51, 51, 51));
         txtNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNombreActionPerformed(evt);
@@ -113,14 +116,26 @@ public class FrmAgregarVendedor extends javax.swing.JFrame {
         });
         jPanel1.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, 220, -1));
 
-        txtDireccion.setForeground(new java.awt.Color(153, 153, 153));
-        txtDireccion.setText("Direccion");
+        txtDireccion.setForeground(new java.awt.Color(51, 51, 51));
+        txtDireccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDireccionActionPerformed(evt);
+            }
+        });
         jPanel1.add(txtDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 60, 220, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtDireccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDireccionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDireccionActionPerformed
+
+    private void txtLongitudActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLongitudActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtLongitudActionPerformed
 
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtNombreActionPerformed
         // TODO add your handling code here:
@@ -154,10 +169,12 @@ public class FrmAgregarVendedor extends javax.swing.JFrame {
             // 3. Persistir el vendedor
             vendedorDao.crearVendedor(vendedorDto);
             JOptionPane.showMessageDialog(null, "Vendedor creado exitosamente");
+            this.dispose();
         } else {
             errores.forEach((campo, mensaje) -> JOptionPane.showMessageDialog(null, mensaje, "Error en " + campo,
                     JOptionPane.ERROR_MESSAGE));
         }
+        
     }// GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnCancelarActionPerformed
@@ -202,7 +219,7 @@ public class FrmAgregarVendedor extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new FrmAgregarVendedor().setVisible(true);
+            new FrmAgregarVendedor(new VendedorMemory()).setVisible(true);
         });
     }
 

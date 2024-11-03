@@ -17,16 +17,30 @@ import javax.swing.JOptionPane;
  */
 public class FrmEliminarVendedor extends javax.swing.JFrame {
 
-    private final VendedorDao vendedorDao = new VendedorMemory();
+    private final VendedorDao vendedorDao;
     /**
      * Creates new form FrmEliminarVendedor
+     * @param dao
      */
-    public FrmEliminarVendedor() {
+    public FrmEliminarVendedor(VendedorDao dao) {
         initComponents();
         this.setTitle("Eliminar Vendedor");
         this.setLocationRelativeTo(null);
         this.setSize(440, 160);
         this.setResizable(false);
+        this.vendedorDao = dao;
+    }
+    
+    public FrmEliminarVendedor(VendedorDao dao, String id) {
+        initComponents();
+        this.setTitle("Eliminar Vendedor");
+        this.setLocationRelativeTo(null);
+        this.setSize(440, 160);
+        this.setResizable(false);
+        this.vendedorDao = dao;
+        
+        // Asignar los valores en String directamente a los campos de texto
+        txtID.setText(id);
     }
 
     /**
@@ -54,8 +68,7 @@ public class FrmEliminarVendedor extends javax.swing.JFrame {
         jLabel6.setText("ID:");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 70, -1));
 
-        txtID.setForeground(new java.awt.Color(153, 153, 153));
-        txtID.setText("ID");
+        txtID.setForeground(new java.awt.Color(51, 51, 51));
         txtID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtIDActionPerformed(evt);
@@ -99,10 +112,12 @@ public class FrmEliminarVendedor extends javax.swing.JFrame {
                 Integer id = Integer.parseInt(idText);
                 vendedorDao.eliminarVendedor(id);
                 JOptionPane.showMessageDialog(null, "Vendedor Eliminado exitosamente");
+                this.dispose();
             } catch(VendedorNoEncontradoException e){
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+        
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -139,7 +154,7 @@ public class FrmEliminarVendedor extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmEliminarVendedor().setVisible(true);
+                new FrmEliminarVendedor(new VendedorMemory()).setVisible(true);
             }
         });
     }

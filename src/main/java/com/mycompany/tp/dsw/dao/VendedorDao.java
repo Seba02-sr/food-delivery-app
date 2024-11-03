@@ -9,7 +9,7 @@ import com.mycompany.tp.dsw.model.Vendedor;
 public interface VendedorDao {
     void crearVendedor(VendedorDto vendedor);
 
-    Vendedor buscarVendedorPorNombre(String nombre) throws VendedorNoEncontradoException;
+    List<Vendedor> buscarVendedorPorNombre(String nombre);
 
     void modificarVendedor(VendedorDto vendedor) throws VendedorNoEncontradoException;
 
@@ -17,5 +17,5 @@ public interface VendedorDao {
 
     List<Vendedor> getAllVendedor();
 
-    Vendedor buscarVendedorPorId(Integer id) throws VendedorNoEncontradoException;
+    Vendedor buscarVendedorPorId(Integer id);
 }
