@@ -4,9 +4,13 @@
  */
 package com.mycompany.tp.dsw.view;
 
+import com.mycompany.tp.dsw.dao.BebidaDao;
+import com.mycompany.tp.dsw.dao.PlatoDao;
 import java.util.List;
 
 import com.mycompany.tp.dsw.dao.VendedorDao;
+import com.mycompany.tp.dsw.memory.BebidaMemory;
+import com.mycompany.tp.dsw.memory.PlatoMemory;
 import com.mycompany.tp.dsw.model.Vendedor;
 import com.mycompany.tp.dsw.memory.VendedorMemory;
 import java.time.LocalDateTime;
@@ -20,6 +24,9 @@ import javax.swing.table.DefaultTableModel;
 public class FrmVendedor extends javax.swing.JFrame {
 
     private final VendedorDao vendedorDao = new VendedorMemory();
+    private final PlatoDao platoDao = new PlatoMemory();
+    private final BebidaDao bebidaDao = new BebidaMemory();
+
     /**
      * Creates new form FrmVendedor
      */
@@ -39,6 +46,7 @@ public class FrmVendedor extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -48,6 +56,7 @@ public class FrmVendedor extends javax.swing.JFrame {
         btnModificarVendedor = new javax.swing.JButton();
         btnBuscarVendedor = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
+        btnBuscarItemMenu = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbVendedorDatos = new javax.swing.JTable();
@@ -89,18 +98,26 @@ public class FrmVendedor extends javax.swing.JFrame {
             }
         });
 
+        btnBuscarItemMenu.setText("Items");
+        btnBuscarItemMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarItemMenuActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnAgregarVendedor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                    .addComponent(btnModificarVendedor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnEliminarVendedor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnBuscarVendedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnSalir, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAgregarVendedor, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                    .addComponent(btnModificarVendedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnEliminarVendedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnBuscarVendedor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnBuscarItemMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -108,13 +125,15 @@ public class FrmVendedor extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnAgregarVendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnModificarVendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnEliminarVendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnBuscarVendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addComponent(btnBuscarItemMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(btnSalir)
                 .addContainerGap())
         );
@@ -179,15 +198,32 @@ public class FrmVendedor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tbVendedorDatosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbVendedorDatosMouseClicked
+    private void tbVendedorDatosMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_tbVendedorDatosMouseClicked
         int select = tbVendedorDatos.getSelectedRow();
-        
-    }//GEN-LAST:event_tbVendedorDatosMouseClicked
+
+    }// GEN-LAST:event_tbVendedorDatosMouseClicked
+
+    private void btnBuscarItemMenuActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnBuscarItemMenuActionPerformed
+        int selectedRow = tbVendedorDatos.getSelectedRow();
+        if (selectedRow != -1) {
+            
+            String idVendedor = tbVendedorDatos.getValueAt(selectedRow, 0).toString(); 
+            String nombreVendedor = tbVendedorDatos.getValueAt(selectedRow, 1).toString();
+            FrmItemMenu itemMenuForm = new FrmItemMenu(platoDao, bebidaDao, idVendedor, nombreVendedor);
+            itemMenuForm.setVisible(true);
+            itemMenuForm.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    mostrarTabla(); // Refresca la tabla cuando se cierre el formulario
+                }
+            });
+        }
+    }// GEN-LAST:event_btnBuscarItemMenuActionPerformed
 
     private void btnEliminarVendedorActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnEliminarVendedorActionPerformed
         int selectedRow = tbVendedorDatos.getSelectedRow();
-        
-        if (selectedRow != -1){
+
+        if (selectedRow != -1) {
             String id = tbVendedorDatos.getValueAt(selectedRow, 0).toString();
             FrmEliminarVendedor eliminarVendedorForm = new FrmEliminarVendedor(vendedorDao, id);
             eliminarVendedorForm.setVisible(true);
@@ -209,69 +245,70 @@ public class FrmVendedor extends javax.swing.JFrame {
                 }
             });
         }
-        
-        
+
     }// GEN-LAST:event_btnEliminarVendedorActionPerformed
 
     private void btnAgregarVendedorActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnAgregarVendedorActionPerformed
         FrmAgregarVendedor agregarVendedorForm = new FrmAgregarVendedor(vendedorDao);
         agregarVendedorForm.setVisible(true);
-        
+
         agregarVendedorForm.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
                 mostrarTabla(); // Refresca la tabla cuando se cierre el formulario
             }
         });
-        
-        
+
     }// GEN-LAST:event_btnAgregarVendedorActionPerformed
 
     private void btnModificarVendedorActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnModificarVendedorActionPerformed
-    int selectedRow = tbVendedorDatos.getSelectedRow();
-    
-    // Verificar si hay una fila seleccionada
-    if (selectedRow != -1) {
-        // Obtener los valores de la fila seleccionada
-        String id = tbVendedorDatos.getValueAt(selectedRow, 0).toString();
-        String nombre = tbVendedorDatos.getValueAt(selectedRow, 1).toString();
-        String direccion = tbVendedorDatos.getValueAt(selectedRow, 2).toString();
-        String latitud = tbVendedorDatos.getValueAt(selectedRow, 3).toString();
-        String longitud = tbVendedorDatos.getValueAt(selectedRow, 4).toString();
-        
-        LocalDateTime fechaRegistro = (LocalDateTime) tbVendedorDatos.getValueAt(selectedRow, 5);
-        DateTimeFormatter formateador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String fechaFormateada = fechaRegistro.format(formateador);
-        
-        // Crear y mostrar el formulario de modificación con los datos de la fila seleccionada
-        FrmModificarVendedor modificarVendedorForm = new FrmModificarVendedor(vendedorDao, id, nombre, direccion, latitud, longitud, fechaFormateada);
-        modificarVendedorForm.setVisible(true);
-        
-        // Agregar un WindowListener para refrescar la tabla cuando se cierre el formulario
-        modificarVendedorForm.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent e) {
-                mostrarTabla(vendedorDao.getAllVendedor()); // Refresca la tabla cuando se cierre el formulario
-            }
-        });
-    } else {
-        // Si no hay una fila seleccionada, abrir el formulario sin datos precargados
-        FrmModificarVendedor modificarVendedorForm = new FrmModificarVendedor(vendedorDao);
-        modificarVendedorForm.setVisible(true);
-        
-        modificarVendedorForm.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent e) {
-                mostrarTabla(vendedorDao.getAllVendedor()); // Refresca la tabla cuando se cierre el formulario
-            }
-        });
+        int selectedRow = tbVendedorDatos.getSelectedRow();
+
+        // Verificar si hay una fila seleccionada
+        if (selectedRow != -1) {
+            // Obtener los valores de la fila seleccionada
+            String id = tbVendedorDatos.getValueAt(selectedRow, 0).toString();
+            String nombre = tbVendedorDatos.getValueAt(selectedRow, 1).toString();
+            String direccion = tbVendedorDatos.getValueAt(selectedRow, 2).toString();
+            String latitud = tbVendedorDatos.getValueAt(selectedRow, 3).toString();
+            String longitud = tbVendedorDatos.getValueAt(selectedRow, 4).toString();
+
+            LocalDateTime fechaRegistro = (LocalDateTime) tbVendedorDatos.getValueAt(selectedRow, 5);
+            DateTimeFormatter formateador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String fechaFormateada = fechaRegistro.format(formateador);
+
+            // Crear y mostrar el formulario de modificación con los datos de la fila
+            // seleccionada
+            FrmModificarVendedor modificarVendedorForm = new FrmModificarVendedor(vendedorDao, id, nombre, direccion,
+                    latitud, longitud, fechaFormateada);
+            modificarVendedorForm.setVisible(true);
+
+            // Agregar un WindowListener para refrescar la tabla cuando se cierre el
+            // formulario
+            modificarVendedorForm.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    mostrarTabla(vendedorDao.getAllVendedor()); // Refresca la tabla cuando se cierre el formulario
+                }
+            });
+        } else {
+            // Si no hay una fila seleccionada, abrir el formulario sin datos precargados
+            FrmModificarVendedor modificarVendedorForm = new FrmModificarVendedor(vendedorDao);
+            modificarVendedorForm.setVisible(true);
+
+            modificarVendedorForm.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    mostrarTabla(vendedorDao.getAllVendedor()); // Refresca la tabla cuando se cierre el formulario
+                }
+            });
+        }
     }
-}
 
     private void btnBuscarVendedorActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnBuscarVendedorActionPerformed
         FrmBuscarVendedor buscarVendedorForm = new FrmBuscarVendedor(vendedorDao, this);
         buscarVendedorForm.setVisible(true);
-        
+
         buscarVendedorForm.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
@@ -285,43 +322,45 @@ public class FrmVendedor extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
     }// GEN-LAST:event_btnSalirActionPerformed
-    
-    private void mostrarTabla(){
+
+    private void mostrarTabla() {
         DefaultTableModel model;
-        String [] titulo = {"ID", "NOMBRE", "DIRECCION", "LATITUD", "LONGITUD", "FECHA REGISTRO", "FECHA ELIMINADO", "ACTIVO" };
+        String[] titulo = { "ID", "NOMBRE", "DIRECCION", "LATITUD", "LONGITUD", "FECHA REGISTRO", "FECHA ELIMINADO",
+                "ACTIVO" };
         model = new DefaultTableModel(null, titulo);
-        
+
         List<Vendedor> listaVendedores = vendedorDao.getAllVendedor();
-        
+
         if (listaVendedores.isEmpty()) {
             // Si la lista está vacía, puedes decidir no añadir filas.
             // Esto vacía la tabla.
             tbVendedorDatos.setModel(model); // Modelo vacío
-        } else{
-           for (Vendedor vendedor : listaVendedores) {
+        } else {
+            for (Vendedor vendedor : listaVendedores) {
                 Object[] fila = new Object[8]; // Número de columnas
 
                 // Asigna valores a cada columna de la fila
-                fila[0] = vendedor.getId();                
-                fila[1] = vendedor.getNombre();            
-                fila[2] = vendedor.getDireccion();         
-                fila[3] = vendedor.getCoordenada().getLatitud();       
-                fila[4] = vendedor.getCoordenada().getLongitud();        
-                fila[5] = vendedor.getFechaRegistro();    
-                fila[6] = vendedor.getFechaEliminacion();    
-                fila[7] = vendedor.getActivo();            
+                fila[0] = vendedor.getId();
+                fila[1] = vendedor.getNombre();
+                fila[2] = vendedor.getDireccion();
+                fila[3] = vendedor.getCoordenada().getLatitud();
+                fila[4] = vendedor.getCoordenada().getLongitud();
+                fila[5] = vendedor.getFechaRegistro();
+                fila[6] = vendedor.getFechaEliminacion();
+                fila[7] = vendedor.getActivo();
 
                 // Añade la fila al modelo de la tabla
                 model.addRow(fila);
             }
-            tbVendedorDatos.setModel(model); 
+            tbVendedorDatos.setModel(model);
         }
-        
+
     }
-    
+
     public void mostrarTabla(List<Vendedor> listaVendedores) {
         DefaultTableModel model = new DefaultTableModel();
-        String[] titulo = {"ID", "NOMBRE", "DIRECCION", "LATITUD", "LONGITUD", "FECHA REGISTRO", "FECHA ELIMINADO", "ACTIVO"};
+        String[] titulo = { "ID", "NOMBRE", "DIRECCION", "LATITUD", "LONGITUD", "FECHA REGISTRO", "FECHA ELIMINADO",
+                "ACTIVO" };
         model.setColumnIdentifiers(titulo); // Establece los títulos de las columnas
 
         // Llena el modelo con los vendedores encontrados
@@ -388,6 +427,7 @@ public class FrmVendedor extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarVendedor;
+    private javax.swing.JButton btnBuscarItemMenu;
     private javax.swing.JButton btnBuscarVendedor;
     private javax.swing.JButton btnEliminarVendedor;
     private javax.swing.JButton btnModificarVendedor;
