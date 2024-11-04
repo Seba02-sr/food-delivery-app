@@ -1,6 +1,6 @@
 package com.mycompany.tp.dsw.memory;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -18,10 +18,40 @@ public class VendedorMemory implements VendedorDao {
     private int currentId = 0;
 
     public VendedorMemory() {
-        VendedorDto vendedorDto = new VendedorDto("Hola", "Iturraspe 2447", null, null);
-        vendedorDto.setCoordenada(new Coordenada(20.0, 20.0));
-        vendedorDto.setId(1);
-        vendedores.add(new Vendedor(vendedorDto));
+        valoresInciales();
+    }
+
+    /**
+     * Metodo para valores iniciales en la base de datos en memoria
+     * - Comentar si no se usa
+     */
+    public void valoresInciales() {
+        VendedorDto vendedorDto1 = new VendedorDto("La Tienda de Ana", "Av. San Martín 1234", null, null);
+        vendedorDto1.setCoordenada(new Coordenada(-34.6037, -58.3816));
+        vendedorDto1.setId(101);
+
+        VendedorDto vendedorDto2 = new VendedorDto("El Rincón Gourmet", "Calle Falsa 123", null, null);
+        vendedorDto2.setCoordenada(new Coordenada(40.7128, -74.0060));
+        vendedorDto2.setId(102);
+
+        VendedorDto vendedorDto3 = new VendedorDto("Mercado Central", "Plaza Mayor, Madrid", null, null);
+        vendedorDto3.setCoordenada(new Coordenada(40.4168, -3.7038));
+        vendedorDto3.setId(103);
+
+        VendedorDto vendedorDto4 = new VendedorDto("Sabores del Mundo", "Av. Córdoba 5555", null, null);
+        vendedorDto4.setCoordenada(new Coordenada(-34.5885, -58.4333));
+        vendedorDto4.setId(104);
+
+        VendedorDto vendedorDto5 = new VendedorDto("Bazar de Antonia", "Las Heras 980", null, null);
+        vendedorDto5.setCoordenada(new Coordenada(-33.4691, -70.641));
+        vendedorDto5.setId(105);
+
+        vendedores.add(new Vendedor(vendedorDto1));
+        vendedores.add(new Vendedor(vendedorDto2));
+        vendedores.add(new Vendedor(vendedorDto3));
+        vendedores.add(new Vendedor(vendedorDto4));
+        vendedores.add(new Vendedor(vendedorDto5));
+
     }
 
     /**
@@ -49,7 +79,7 @@ public class VendedorMemory implements VendedorDao {
     @Override
     public List<Vendedor> buscarVendedorPorNombre(String nombre) {
         List<Vendedor> vendedor = vendedores.stream()
-                .filter(v -> v.getNombre().toLowerCase().equals(nombre.toLowerCase()))
+                .filter(v -> v.getNombre().toLowerCase().contains(nombre.toLowerCase()))
                 .toList();
         return vendedor;
     }
@@ -107,7 +137,7 @@ public class VendedorMemory implements VendedorDao {
         return vendedores.stream()
                 .filter(v -> Objects.equals(v.getId(), id) && v.getActivo().equals(true))
                 .findFirst()
-                .orElse(null); 
+                .orElse(null);
     }
 
     /**
@@ -122,7 +152,7 @@ public class VendedorMemory implements VendedorDao {
         Vendedor vendedorEliminado = buscarVendedorPorId(id);
         if (vendedorEliminado != null) {
             vendedorEliminado.setActivo(false);
-            vendedorEliminado.setFechaEliminacion(LocalDateTime.now());
+            vendedorEliminado.setFechaEliminacion(LocalDate.now());
             System.out.println("Vendedor con ID:" + id + " eliminado correctamente.");
             System.out.println(vendedorEliminado);
         } else {

@@ -13,8 +13,6 @@ import com.mycompany.tp.dsw.memory.BebidaMemory;
 import com.mycompany.tp.dsw.memory.PlatoMemory;
 import com.mycompany.tp.dsw.model.Vendedor;
 import com.mycompany.tp.dsw.memory.VendedorMemory;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -33,7 +31,7 @@ public class FrmVendedor extends javax.swing.JFrame {
 
     public FrmVendedor() {
         initComponents();
-        this.setTitle("Agregar Vendedor");
+        this.setTitle("Restaurantes");
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         mostrarTabla();
@@ -62,6 +60,11 @@ public class FrmVendedor extends javax.swing.JFrame {
         tbVendedorDatos = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
 
         btnEliminarVendedor.setText("Eliminar Vendedor");
         btnEliminarVendedor.addActionListener(new java.awt.event.ActionListener() {
@@ -198,6 +201,14 @@ public class FrmVendedor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        int selectedRow = tbVendedorDatos.getSelectedRow();
+        
+        if (selectedRow != -1){
+            tbVendedorDatos.clearSelection();
+        }
+    }//GEN-LAST:event_formMouseClicked
+
     private void tbVendedorDatosMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_tbVendedorDatosMouseClicked
         int select = tbVendedorDatos.getSelectedRow();
 
@@ -272,15 +283,12 @@ public class FrmVendedor extends javax.swing.JFrame {
             String direccion = tbVendedorDatos.getValueAt(selectedRow, 2).toString();
             String latitud = tbVendedorDatos.getValueAt(selectedRow, 3).toString();
             String longitud = tbVendedorDatos.getValueAt(selectedRow, 4).toString();
-
-            LocalDateTime fechaRegistro = (LocalDateTime) tbVendedorDatos.getValueAt(selectedRow, 5);
-            DateTimeFormatter formateador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String fechaFormateada = fechaRegistro.format(formateador);
+            String fechaRegistro =tbVendedorDatos.getValueAt(selectedRow, 5).toString();
 
             // Crear y mostrar el formulario de modificación con los datos de la fila
             // seleccionada
             FrmModificarVendedor modificarVendedorForm = new FrmModificarVendedor(vendedorDao, id, nombre, direccion,
-                    latitud, longitud, fechaFormateada);
+                    latitud, longitud, fechaRegistro);
             modificarVendedorForm.setVisible(true);
 
             // Agregar un WindowListener para refrescar la tabla cuando se cierre el

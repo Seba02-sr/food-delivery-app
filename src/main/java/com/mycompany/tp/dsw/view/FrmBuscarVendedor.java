@@ -48,7 +48,7 @@ public class FrmBuscarVendedor extends javax.swing.JFrame {
         txtNombre = new javax.swing.JTextField();
         btnCerrar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(0, 0));
         setMinimumSize(new java.awt.Dimension(440, 140));
         setPreferredSize(new java.awt.Dimension(440, 180));

@@ -96,4 +96,20 @@ public abstract class ItemMenu { // Items que hay en un restaurante/vendedor
         this.vendedor = vendedor;
     }
 
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
+    public LocalDateTime getFechaEliminacion() {
+        return fechaEliminacion;
+    }
+
+    public void setFechaEliminacion(LocalDateTime fechaEliminacion) {
+        this.fechaEliminacion = fechaEliminacion;
+    }
+
 }

@@ -4,52 +4,19 @@
  */
 package com.mycompany.tp.dsw.view;
 
-import java.util.List;
-
-import com.mycompany.tp.dsw.dao.BebidaDao;
-import com.mycompany.tp.dsw.dao.ItemMenuDao;
-import com.mycompany.tp.dsw.dao.PlatoDao;
-import com.mycompany.tp.dsw.memory.BebidaMemory;
-import com.mycompany.tp.dsw.memory.ItemMenuMemory;
-import com.mycompany.tp.dsw.memory.PlatoMemory;
-import com.mycompany.tp.dsw.model.Plato;
-import com.mycompany.tp.dsw.model.Bebida;
-import javax.swing.table.DefaultTableModel;
-
 /**
  *
  * @author Usuario
  */
 public class FrmItemMenu extends javax.swing.JFrame {
 
-    private final PlatoDao platoDao;
-    private final BebidaDao bebidaDao;
-   
-    public FrmItemMenu(PlatoDao platoDao, BebidaDao bebidaDao, String idVendedor, String nombreVendedor) {
+    /**
+     * Creates new form FrmItemMenu
+     */
+    public FrmItemMenu() {
         initComponents();
-        this.setTitle("Item Menu");
-        this.setLocationRelativeTo(null);
-        
-        this.setSize(750, 460);
-        this.setResizable(false);
-        this.platoDao = platoDao;
-        this.bebidaDao = bebidaDao;
-        jLabelVendedorData.setText("Vendedor: " + nombreVendedor + " ID: " + idVendedor);
-        inicializarTabla();
     }
 
-    private void inicializarTabla() {
-        // Obtiene el valor por defecto del JComboBox
-        String defaultItem = (String) jComboBox1.getSelectedItem();
-
-        if ("Plato".equals(defaultItem)) {
-            List<Plato> platos = platoDao.obtenerTodosLosPlatos();
-            mostrarPlatoEnPantalla(platos);
-        } else if ("Bebida".equals(defaultItem)) {
-            List<Bebida> bebidas = bebidaDao.obtenerTodasLasBebidas();
-            mostrarBebidaEnPantalla(bebidas);
-        }
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -65,15 +32,14 @@ public class FrmItemMenu extends javax.swing.JFrame {
         btnModificarItem = new javax.swing.JButton();
         btnBuscarItem = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBoxPlatoBebida = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbItemDatos = new javax.swing.JTable();
         btnVerDetalles = new javax.swing.JButton();
         jLabelVendedorData = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(715, 397));
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         btnEliminarItem.setText("Eliminar Item");
         btnEliminarItem.addActionListener(new java.awt.event.ActionListener() {
@@ -110,10 +76,10 @@ public class FrmItemMenu extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Plato", "Bebida" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        jComboBoxPlatoBebida.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Plato", "Bebida" }));
+        jComboBoxPlatoBebida.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                jComboBoxPlatoBebidaActionPerformed(evt);
             }
         });
 
@@ -129,7 +95,7 @@ public class FrmItemMenu extends javax.swing.JFrame {
                     .addComponent(btnModificarItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnEliminarItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnBuscarItem, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jComboBoxPlatoBebida, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -143,12 +109,14 @@ public class FrmItemMenu extends javax.swing.JFrame {
                 .addComponent(btnEliminarItem, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnBuscarItem, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addComponent(jComboBoxPlatoBebida, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28)
                 .addComponent(btnSalir)
                 .addContainerGap())
         );
+
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tbItemDatos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -161,70 +129,30 @@ public class FrmItemMenu extends javax.swing.JFrame {
 
             }
         ));
-        tbItemDatos.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbItemDatosMouseClicked(evt);
-            }
-        });
         jScrollPane1.setViewportView(tbItemDatos);
 
-        btnVerDetalles.setText("Ver Detalles");
-        btnVerDetalles.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVerDetallesActionPerformed(evt);
-            }
-        });
+        jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(26, 6, 500, 321));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(jLabelVendedorData)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 301, Short.MAX_VALUE)
-                .addComponent(btnVerDetalles)
-                .addGap(116, 116, 116))
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addGap(26, 26, 26)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnVerDetalles)
-                    .addComponent(jLabelVendedorData))
-                .addContainerGap())
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(58, Short.MAX_VALUE)))
-        );
+        btnVerDetalles.setText("Ver Detalles");
+        jPanel2.add(btnVerDetalles, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 350, -1, -1));
+        jPanel2.add(jLabelVendedorData, new org.netbeans.lib.awtextra.AbsoluteConstraints(31, 356, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(0, 7, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -247,84 +175,13 @@ public class FrmItemMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarItemActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        this.dispose();
+        // TODO add your handling code here:
     }//GEN-LAST:event_btnSalirActionPerformed
 
-    private void tbItemDatosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbItemDatosMouseClicked
+    private void jComboBoxPlatoBebidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPlatoBebidaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tbItemDatosMouseClicked
+    }//GEN-LAST:event_jComboBoxPlatoBebidaActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        String selectedItem = (String) jComboBox1.getSelectedItem();
-         if ("Plato".equals(selectedItem)) {
-             List<Plato> platos = platoDao.obtenerTodosLosPlatos();
-             mostrarPlatoEnPantalla(platos);
-         } else if ("Bebida".equals(selectedItem)){
-             List<Bebida> bebidas = bebidaDao.obtenerTodasLasBebidas();
-             mostrarBebidaEnPantalla(bebidas);
-         }
-    }//GEN-LAST:event_jComboBox1ActionPerformed
-
-    private void btnVerDetallesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerDetallesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnVerDetallesActionPerformed
-
-    private void mostrarBebidaEnPantalla(List<Bebida> listaBebida){
-        DefaultTableModel model;
-        String[] titulo = { "ID","NOMBRE", "VOLUMEN", "DESCRIPCION", "PRECIO"};
-        model = new DefaultTableModel(null, titulo);
-
-
-        if (listaBebida.isEmpty()) {
-            // Si la lista está vacía, puedes decidir no añadir filas.
-            // Esto vacía la tabla.
-            tbItemDatos.setModel(model); // Modelo vacío
-        } else {
-            for (Bebida bebida : listaBebida) {
-                Object[] fila = new Object[5]; // Número de columnas
-
-                // Asigna valores a cada columna de la fila
-                fila[0] = bebida.getId();
-                fila[1] = bebida.getNombre();
-                fila[2] = bebida.getVolumen();
-                fila[3] = bebida.getDescripcion();
-                fila[4] = bebida.getPrecio();
-
-                // Añade la fila al modelo de la tabla
-                model.addRow(fila);
-            }
-            tbItemDatos.setModel(model);
-        }
-    }
-    private void mostrarPlatoEnPantalla(List<Plato> listaPlatos) {
-        DefaultTableModel model;
-        String[] titulo = { "ID","NOMBRE", "CALORIAS", "DESCRIPCION", "PRECIO"};
-        model = new DefaultTableModel(null, titulo);
-
-
-        if (listaPlatos.isEmpty()) {
-            // Si la lista está vacía, puedes decidir no añadir filas.
-            // Esto vacía la tabla.
-            tbItemDatos.setModel(model); // Modelo vacío
-        } else {
-            for (Plato plato : listaPlatos) {
-                Object[] fila = new Object[5]; // Número de columnas
-
-                // Asigna valores a cada columna de la fila
-                fila[0] = plato.getId();
-                fila[1] = plato.getNombre();
-                fila[2] = plato.getCalorias();
-                fila[3] = plato.getDescripcion();
-                fila[4] = plato.getPrecio();
-
-                // Añade la fila al modelo de la tabla
-                model.addRow(fila);
-            }
-            tbItemDatos.setModel(model);
-        }
-
-    }
-    
     /**
      * @param args the command line arguments
      */
@@ -336,7 +193,7 @@ public class FrmItemMenu extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -355,7 +212,7 @@ public class FrmItemMenu extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmItemMenu(new PlatoMemory(), new BebidaMemory()).setVisible(true);
+                new FrmItemMenu().setVisible(true);
             }
         });
     }
@@ -367,7 +224,7 @@ public class FrmItemMenu extends javax.swing.JFrame {
     private javax.swing.JButton btnModificarItem;
     private javax.swing.JButton btnSalir;
     private javax.swing.JButton btnVerDetalles;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBoxPlatoBebida;
     private javax.swing.JLabel jLabelVendedorData;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
