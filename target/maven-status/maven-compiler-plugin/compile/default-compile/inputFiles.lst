@@ -43,6 +43,9 @@ E:\Ing Sistemas\3er Año\Desarrollo De Software\TP\tp-dsw\src\main\java\com\myco
 E:\Ing Sistemas\3er Año\Desarrollo De Software\TP\tp-dsw\src\main\java\com\mycompany\tp\dsw\service\ValidarVendedor.java
 E:\Ing Sistemas\3er Año\Desarrollo De Software\TP\tp-dsw\src\main\java\com\mycompany\tp\dsw\util\CrudOperation.java
 E:\Ing Sistemas\3er Año\Desarrollo De Software\TP\tp-dsw\src\main\java\com\mycompany\tp\dsw\view\FachadaItemMenu.java
+E:\Ing Sistemas\3er Año\Desarrollo De Software\TP\tp-dsw\src\main\java\com\mycompany\tp\dsw\view\FrmAgregarBebida.java
+E:\Ing Sistemas\3er Año\Desarrollo De Software\TP\tp-dsw\src\main\java\com\mycompany\tp\dsw\view\FrmAgregarItem.java
+E:\Ing Sistemas\3er Año\Desarrollo De Software\TP\tp-dsw\src\main\java\com\mycompany\tp\dsw\view\FrmAgregarPlato.java
 E:\Ing Sistemas\3er Año\Desarrollo De Software\TP\tp-dsw\src\main\java\com\mycompany\tp\dsw\view\FrmAgregarVendedor.java
 E:\Ing Sistemas\3er Año\Desarrollo De Software\TP\tp-dsw\src\main\java\com\mycompany\tp\dsw\view\FrmBuscarVendedor.java
 E:\Ing Sistemas\3er Año\Desarrollo De Software\TP\tp-dsw\src\main\java\com\mycompany\tp\dsw\view\FrmEliminarVendedor.java
@@ -51,4 +54,5 @@ E:\Ing Sistemas\3er Año\Desarrollo De Software\TP\tp-dsw\src\main\java\com\myco
 E:\Ing Sistemas\3er Año\Desarrollo De Software\TP\tp-dsw\src\main\java\com\mycompany\tp\dsw\view\FrmModificarVendedor.java
 E:\Ing Sistemas\3er Año\Desarrollo De Software\TP\tp-dsw\src\main\java\com\mycompany\tp\dsw\view\FrmPlatoBebida.java
 E:\Ing Sistemas\3er Año\Desarrollo De Software\TP\tp-dsw\src\main\java\com\mycompany\tp\dsw\view\FrmVendedor.java
+E:\Ing Sistemas\3er Año\Desarrollo De Software\TP\tp-dsw\src\main\java\com\mycompany\tp\dsw\view\FrmVerDetalles.java
 E:\Ing Sistemas\3er Año\Desarrollo De Software\TP\tp-dsw\src\main\java\com\mycompany\tp\dsw\view\Mensajes.java

@@ -103,7 +103,9 @@ public class Bebida extends ItemMenu {
 
     @Override
     public String toString() {
-        return "ItemMenu [id=" + this.getId() + ", nombre=" + this.getNombre() + ", vendedor="
-                + this.getVendedor().getId() + "]";
+        return "Bebida [graduacionAlcoholica=" + graduacionAlcoholica + ", tamano=" + tamano + ", volumen=" + volumen
+                + ", getNombre()=" + getNombre() + ", getDescripcion()=" + getDescripcion() + ", getPrecio()="
+                + getPrecio() + ", getCategoria()=" + getCategoria() + "]";
     }
+
 }

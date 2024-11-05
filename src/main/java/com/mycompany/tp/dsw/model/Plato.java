@@ -6,6 +6,8 @@ package com.mycompany.tp.dsw.model;
 
 import java.math.BigDecimal;
 
+import com.mycompany.tp.dsw.dto.PlatoDto;
+
 /**
  *
  * @author Cristian
@@ -17,6 +19,21 @@ public class Plato extends ItemMenu {
     private Boolean aptoVegetariano;
     private Boolean aptoVegano;
     private Double peso;
+
+    // Constructor para agregar Bebida
+    public Plato(PlatoDto platoDto) {
+        super(null,
+                platoDto.getNombre(),
+                platoDto.getDescripcion(),
+                platoDto.getPrecio(),
+                platoDto.getCategoria(),
+                platoDto.getVendedor());
+        this.calorias = platoDto.getCalorias();
+        this.aptoCeliaco = platoDto.getAptoCeliaco();
+        this.aptoVegetariano = platoDto.getAptoVegetariano();
+        this.aptoVegano = platoDto.getAptoVegano();
+        this.peso = platoDto.getPeso();
+    }
 
     public Plato(String nombre, Double calorias, Boolean aptoCeliaco, Boolean aptoVegetariano, Boolean aptoVegano,
             Double peso,
@@ -145,6 +162,10 @@ public class Plato extends ItemMenu {
     public String toString() {
         return "ItemMenu [id=" + this.getId() + ", nombre=" + this.getNombre() + ", vendedor="
                 + this.getVendedor().getId() + "]";
+    }
+
+    public Boolean getAptoVegano() {
+        return aptoVegano;
     }
 
 }

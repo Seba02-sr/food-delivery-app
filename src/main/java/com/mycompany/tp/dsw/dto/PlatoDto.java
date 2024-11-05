@@ -1,5 +1,7 @@
 package com.mycompany.tp.dsw.dto;
 
+import com.mycompany.tp.dsw.model.Vendedor;
+
 public class PlatoDto extends ItemMenuDto {
 
     private Double calorias;
@@ -12,27 +14,22 @@ public class PlatoDto extends ItemMenuDto {
      * Atributos para el manejo de los errores.
      * - Un string es mas facil manejar y permite null.
      * - El parseo de un null a Double no se puede.
-     * - Idem con Boolean
      * 
-     * Al asegurarse que no contengan NULL, se parsea a Double/Boolean
+     * Al asegurarse que no contengan NULL, se parsea a Double
      * Luego setear el atributo
      */
     private String caloriasText;
-    // Ver si no los necesito a los boolean, los cambio
-    // Cambiar el constructor y sacar los string, dejar solo los boolean
-    private String aptoCeliacoText;
-    private String aptoVegetarianoText;
-    private String aptoVeganoText;
     private String pesoText;
 
     // Constructor para metodo agregar Plato
-    public PlatoDto(String nombre, String descripcion, String precioText, String categoriaText, String caloriasText,
-            String aptoCeliacoText, String aptoVegetarianoText, String aptoVeganoText, String pesoText) {
-        super(nombre, descripcion, precioText, categoriaText);
+    public PlatoDto(String nombre, String descripcion, String precioText, String categoriaText, Vendedor vendedor,
+            String caloriasText,
+            Boolean aptoCeliaco, Boolean aptoVegetariano, Boolean aptoVegano, String pesoText) {
+        super(nombre, descripcion, precioText, categoriaText, vendedor);
         this.caloriasText = caloriasText;
-        this.aptoCeliacoText = aptoCeliacoText;
-        this.aptoVegetarianoText = aptoVegetarianoText;
-        this.aptoVeganoText = aptoVeganoText;
+        this.aptoCeliaco = aptoCeliaco;
+        this.aptoVegetariano = aptoVegetariano;
+        this.aptoVegano = aptoVegano;
         this.pesoText = pesoText;
     }
 
@@ -82,30 +79,6 @@ public class PlatoDto extends ItemMenuDto {
 
     public void setCaloriasText(String caloriasText) {
         this.caloriasText = caloriasText;
-    }
-
-    public String getAptoCeliacoText() {
-        return aptoCeliacoText;
-    }
-
-    public void setAptoCeliacoText(String aptoCeliacoText) {
-        this.aptoCeliacoText = aptoCeliacoText;
-    }
-
-    public String getAptoVegetarianoText() {
-        return aptoVegetarianoText;
-    }
-
-    public void setAptoVegetarianoText(String aptoVegetarianoText) {
-        this.aptoVegetarianoText = aptoVegetarianoText;
-    }
-
-    public String getAptoVeganoText() {
-        return aptoVeganoText;
-    }
-
-    public void setAptoVeganoText(String aptoVeganoText) {
-        this.aptoVeganoText = aptoVeganoText;
     }
 
     public String getPesoText() {

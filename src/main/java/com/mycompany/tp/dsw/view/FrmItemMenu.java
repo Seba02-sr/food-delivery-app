@@ -4,17 +4,53 @@
  */
 package com.mycompany.tp.dsw.view;
 
+import com.mycompany.tp.dsw.dao.BebidaDao;
+import com.mycompany.tp.dsw.dao.PlatoDao;
+import com.mycompany.tp.dsw.memory.BebidaMemory;
+import com.mycompany.tp.dsw.memory.PlatoMemory;
+import com.mycompany.tp.dsw.model.Bebida;
+import com.mycompany.tp.dsw.model.Plato;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import com.mycompany.tp.dsw.model.ItemMenu;
+
 /**
  *
  * @author Usuario
  */
 public class FrmItemMenu extends javax.swing.JFrame {
 
-    /**
-     * Creates new form FrmItemMenu
-     */
-    public FrmItemMenu() {
+    
+    private final PlatoDao platoDao;
+    private final BebidaDao bebidaDao;
+    private final Integer idVendedor;
+
+    
+    public FrmItemMenu(PlatoDao platoDao, BebidaDao bebidaDao, String idVendedor, String nombreVendedor) {
         initComponents();
+        this.setTitle("Item Menu");
+        this.setLocationRelativeTo(null);
+
+        this.setSize(750, 460);
+        this.setResizable(false);
+        this.platoDao = platoDao;
+        this.bebidaDao = bebidaDao;
+        this.idVendedor = Integer.parseInt(idVendedor);
+        jLabelVendedorData.setText("Vendedor: " + nombreVendedor + " ID: " + idVendedor);
+        inicializarTabla();
+    }
+    
+    public void inicializarTabla(){
+        // Obtiene el valor por defecto del JComboBox
+        String defaultItem = (String) jComboBoxPlatoBebida.getSelectedItem();
+        if ("Plato".equals(defaultItem)) {
+            List<Plato> platos = platoDao.obtenerTodosLosPlatos();
+            mostrarItemMenuEnPantalla(platos);
+        } else if ("Bebida".equals(defaultItem)) {
+            List<Bebida> bebidas = bebidaDao.obtenerTodasLasBebidas();
+            mostrarItemMenuEnPantalla(bebidas);
+        }
+        
     }
 
     /**
@@ -27,10 +63,10 @@ public class FrmItemMenu extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        btnEliminarItem = new javax.swing.JButton();
-        btnAgregarItem = new javax.swing.JButton();
-        btnModificarItem = new javax.swing.JButton();
-        btnBuscarItem = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
+        btnBuscar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
         jComboBoxPlatoBebida = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
@@ -41,31 +77,31 @@ public class FrmItemMenu extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btnEliminarItem.setText("Eliminar Item");
-        btnEliminarItem.addActionListener(new java.awt.event.ActionListener() {
+        btnEliminar.setText("Eliminar Item");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarItemActionPerformed(evt);
+                btnEliminarActionPerformed(evt);
             }
         });
 
-        btnAgregarItem.setText("Agregar Item");
-        btnAgregarItem.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregar.setText("Agregar Item");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarItemActionPerformed(evt);
+                btnAgregarActionPerformed(evt);
             }
         });
 
-        btnModificarItem.setText("Modificar Item");
-        btnModificarItem.addActionListener(new java.awt.event.ActionListener() {
+        btnModificar.setText("Modificar Item");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModificarItemActionPerformed(evt);
+                btnModificarActionPerformed(evt);
             }
         });
 
-        btnBuscarItem.setText("Buscar Item");
-        btnBuscarItem.addActionListener(new java.awt.event.ActionListener() {
+        btnBuscar.setText("Buscar Item");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarItemActionPerformed(evt);
+                btnBuscarActionPerformed(evt);
             }
         });
 
@@ -91,10 +127,10 @@ public class FrmItemMenu extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnSalir, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnAgregarItem, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                    .addComponent(btnModificarItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnEliminarItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnBuscarItem, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                    .addComponent(btnModificar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jComboBoxPlatoBebida, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -102,13 +138,13 @@ public class FrmItemMenu extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnAgregarItem, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnModificarItem, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnEliminarItem, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnBuscarItem, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addComponent(jComboBoxPlatoBebida, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28)
@@ -134,6 +170,11 @@ public class FrmItemMenu extends javax.swing.JFrame {
         jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(26, 6, 500, 321));
 
         btnVerDetalles.setText("Ver Detalles");
+        btnVerDetalles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerDetallesActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnVerDetalles, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 350, -1, -1));
         jPanel2.add(jLabelVendedorData, new org.netbeans.lib.awtextra.AbsoluteConstraints(31, 356, -1, -1));
 
@@ -158,30 +199,144 @@ public class FrmItemMenu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnEliminarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarItemActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnEliminarItemActionPerformed
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
-    private void btnAgregarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarItemActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAgregarItemActionPerformed
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        String tipoItemMenu = jComboBoxPlatoBebida.getSelectedItem().toString();
 
-    private void btnModificarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarItemActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnModificarItemActionPerformed
+        /*FachadaItemMenu fachadaItemMenu = new FachadaItemMenu(idVendedor);
+        fachadaItemMenu.crearItemMenu(tipoItemMenu);*/
+        FrmAgregarItem agregarItemForm = new FrmAgregarItem(tipoItemMenu, idVendedor, this);
+        agregarItemForm.setVisible(true);
+        
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
-    private void btnBuscarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarItemActionPerformed
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnBuscarItemActionPerformed
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        // TODO add your handling code here:
+        this.dispose(); 
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void jComboBoxPlatoBebidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPlatoBebidaActionPerformed
-        // TODO add your handling code here:
+        String selectedItem = (String) jComboBoxPlatoBebida.getSelectedItem();
+        if ("Plato".equals(selectedItem)) {
+            List<Plato> platos = platoDao.obtenerTodosLosPlatos();
+            mostrarItemMenuEnPantalla(platos);
+        } else {
+            List<Bebida> bebidas = bebidaDao.obtenerTodasLasBebidas();
+            mostrarItemMenuEnPantalla(bebidas);
+        }
     }//GEN-LAST:event_jComboBoxPlatoBebidaActionPerformed
 
+    private void btnVerDetallesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerDetallesActionPerformed
+        int selectedRow = tbItemDatos.getSelectedRow();
+        
+        if (selectedRow != -1){
+            String id = tbItemDatos.getValueAt(selectedRow, 0).toString();
+            FrmVerDetalles verDetallesForm = new FrmVerDetalles(id);
+            verDetallesForm.setVisible(true);
+        }
+    }//GEN-LAST:event_btnVerDetallesActionPerformed
+    
+    private void mostrarItemMenuEnPantalla(List<? extends ItemMenu> listaItemMenu) {
+        DefaultTableModel model;
+        String[] titulo;
+
+        String selectedItem = (String) jComboBoxPlatoBebida.getSelectedItem();
+        if ("Bebida".equals(selectedItem)) {
+            titulo = new String[] { "ID", "NOMBRE", "VOLUMEN", "DESCRIPCION", "PRECIO" };
+        } else {
+            titulo = new String[] { "ID", "NOMBRE", "CALORÍAS", "DESCRIPCION", "PRECIO" };
+        }
+
+        model = new DefaultTableModel(null, titulo);
+
+        if (listaItemMenu.isEmpty()) {
+            // Tabla vacía
+            tbItemDatos.setModel(model);
+        } else {
+            for (ItemMenu item : listaItemMenu) {
+                Object[] fila = new Object[5]; // Número de columnas
+
+                fila[0] = item.getId();
+                fila[1] = item.getNombre();
+                fila[3] = item.getDescripcion();
+                fila[4] = item.getPrecio();
+
+                if (item instanceof Bebida) {
+                    fila[2] = ((Bebida) item).getVolumen();
+                } else if (item instanceof Plato) {
+                    fila[2] = ((Plato) item).getCalorias(); // Calorías en lugar de volumen
+                }
+
+                model.addRow(fila);
+            }
+            tbItemDatos.setModel(model);
+        }
+    }
+    
+    /*private void mostrarBebidaEnPantalla(List<Bebida> listaBebida) {
+        DefaultTableModel model;
+        String[] titulo = { "ID", "NOMBRE", "VOLUMEN", "DESCRIPCION", "PRECIO" };
+        model = new DefaultTableModel(null, titulo);
+
+        if (listaBebida.isEmpty()) {
+            // Si la lista está vacía, puedes decidir no añadir filas.
+            // Esto vacía la tabla.
+            tbItemDatos.setModel(model); // Modelo vacío
+        } else {
+            for (Bebida bebida : listaBebida) {
+                Object[] fila = new Object[5]; // Número de columnas
+
+                // Asigna valores a cada columna de la fila
+                fila[0] = bebida.getId();
+                fila[1] = bebida.getNombre();
+                fila[2] = bebida.getVolumen();
+                fila[3] = bebida.getDescripcion();
+                fila[4] = bebida.getPrecio();
+
+                // Añade la fila al modelo de la tabla
+                model.addRow(fila);
+            }
+            tbItemDatos.setModel(model);
+        }
+    }
+
+    private void mostrarPlatoEnPantalla(List<Plato> listaPlatos) {
+        DefaultTableModel model;
+        String[] titulo = { "ID", "NOMBRE", "CALORIAS", "DESCRIPCION", "PRECIO" };
+        model = new DefaultTableModel(null, titulo);
+
+        if (listaPlatos.isEmpty()) {
+            // Si la lista está vacía, puedes decidir no añadir filas.
+            // Esto vacía la tabla.
+            tbItemDatos.setModel(model); // Modelo vacío
+        } else {
+            for (Plato plato : listaPlatos) {
+                Object[] fila = new Object[5]; // Número de columnas
+
+                // Asigna valores a cada columna de la fila
+                fila[0] = plato.getId();
+                fila[1] = plato.getNombre();
+                fila[2] = plato.getCalorias();
+                fila[3] = plato.getDescripcion();
+                fila[4] = plato.getPrecio();
+
+                // Añade la fila al modelo de la tabla
+                model.addRow(fila);
+            }
+            tbItemDatos.setModel(model);
+        }
+
+    }*/
     /**
      * @param args the command line arguments
      */
@@ -210,18 +365,16 @@ public class FrmItemMenu extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmItemMenu().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new FrmItemMenu(new PlatoMemory(), new BebidaMemory(), "101", "nombre").setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAgregarItem;
-    private javax.swing.JButton btnBuscarItem;
-    private javax.swing.JButton btnEliminarItem;
-    private javax.swing.JButton btnModificarItem;
+    private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnSalir;
     private javax.swing.JButton btnVerDetalles;
     private javax.swing.JComboBox<String> jComboBoxPlatoBebida;

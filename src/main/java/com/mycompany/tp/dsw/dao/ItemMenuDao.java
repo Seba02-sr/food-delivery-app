@@ -34,4 +34,6 @@ public interface ItemMenuDao {
      */
     List<ItemMenu> filtrarPorVendedor(Vendedor vendedor) throws VendedorNoEncontradoException;
 
+    ItemMenu filtrarPorId(Integer id);
+
 }

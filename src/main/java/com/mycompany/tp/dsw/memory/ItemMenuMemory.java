@@ -120,4 +120,12 @@ public class ItemMenuMemory implements ItemMenuDao {
         return listaItemString.toString();
     }
 
+    @Override
+    public ItemMenu filtrarPorId(Integer id) {
+        return items.stream()
+                .filter(i -> i.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+
 }

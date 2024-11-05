@@ -1,5 +1,7 @@
 package com.mycompany.tp.dsw.dto;
 
+import com.mycompany.tp.dsw.model.Vendedor;
+
 public class BebidaDto extends ItemMenuDto {
     private Double graduacionAlcoholica;
     private Double tamano;
@@ -18,9 +20,9 @@ public class BebidaDto extends ItemMenuDto {
     private String volumenText;
 
     // Constructor para metodo agregar bebida
-    public BebidaDto(String nombre, String descripcion, String precioText, String categoriaText,
+    public BebidaDto(String nombre, String descripcion, String precioText, String categoriaText, Vendedor vendedor,
             String graduacionAlcoholicaText, String tamanoText, String volumenText) {
-        super(nombre, descripcion, precioText, categoriaText);
+        super(nombre, descripcion, precioText, categoriaText, vendedor);
         this.graduacionAlcoholicaText = graduacionAlcoholicaText;
         this.tamanoText = tamanoText;
         this.volumenText = volumenText;
