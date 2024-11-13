@@ -232,9 +232,9 @@ public class FrmModificarPlato extends javax.swing.JFrame {
         Boolean aptoVegano = jCheckBoxVegano.isSelected();
         String descripcion = jTextAreaDescripcion.getText();
 
-        Plato = new Plato(platoDto);
+        // Plato plato = new Plato(platoDto);
 
-        itemMenuDao.modificarItemMenu();
+        // itemMenuDao.modificarItemMenu();
 
     }// GEN-LAST:event_btnModificarActionPerformed
 

@@ -1,28 +1,33 @@
 package com.mycompany.tp.dsw.memory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.mycompany.tp.dsw.dao.ClienteDao;
+import com.mycompany.tp.dsw.dto.ClienteDto;
 import com.mycompany.tp.dsw.exception.ClienteNoEncontradoException;
 import com.mycompany.tp.dsw.model.Cliente;
+import com.mycompany.tp.dsw.model.Coordenada;
 
-public class ClienteMemory implements ClienteDao {
+public class ClienteMemory {
 
-    List<Cliente> clientes = new ArrayList<>();
-    private int currentID = 0;
+    private ClienteDao clienteDao;
+
+    public ClienteMemory() {
+        clienteDao = new ClienteDao();
+    }
 
     /**
      * Crea y persiste un cliente
      * - Menejo de id unicos con currentID
      * 
-     * @param cliente El cliente a persistir
+     * @param clientedto El cliente a persistir
      */
-    @Override
-    public void crearCliente(Cliente cliente) {
-        cliente.setId(currentID++);
-        clientes.add(cliente);
-        System.out.println("Se creo un nuevo Cliente con ID: " + cliente.getId());
+    public void registrarCliente(ClienteDto clientedto) {
+        // 1. Crear la instancia Cliente
+        Cliente cliente = parseCliente(clientedto);
+
+        // 2. Persistir el dato
+        clienteDao.add(cliente);
     }
 
     /**
@@ -33,16 +38,8 @@ public class ClienteMemory implements ClienteDao {
      * @return Lista de clientes que coinciden con el @param
      * @throws ClienteNoEncontradoException Si el cliente no se encuentra
      */
-    @Override
     public List<Cliente> buscarClientePorNombre(String nombre) throws ClienteNoEncontradoException {
-        List<Cliente> clienteBuscado = clientes.stream()
-                .filter(c -> c.getNombre().toLowerCase().equals(nombre.toLowerCase()))
-                .toList();
-
-        if (clienteBuscado.isEmpty()) {
-            throw new ClienteNoEncontradoException("No se encontro un Cliente con el Nombre: " + nombre);
-        }
-        return clienteBuscado;
+        return clienteDao.findByNombre(nombre);
     }
 
     /**
@@ -50,28 +47,15 @@ public class ClienteMemory implements ClienteDao {
      * - Del objeto cliente pasado como parametro
      * - Solo los datos a modificar permanecen no nulos
      * 
-     * @param cliente El objeto 'Cliente' con los datos modificados
+     * @param clienteDto El objeto 'ClienteDTO' con los datos modificados
      * @throws ClienteNoEncontradoException Si el cliente no se encuentra
      */
-    @Override
-    public void modificarCliente(Cliente clienteModificado) throws ClienteNoEncontradoException {
-        Cliente existeCliente = clientes.stream()
-                .filter(c -> c.getId().equals(clienteModificado.getId()))
-                .findFirst()
-                .orElseThrow(() -> new ClienteNoEncontradoException(
-                        "No se encontro el cliente con ID: " + clienteModificado.getId()));
+    public void modificarCliente(ClienteDto clienteDto) throws ClienteNoEncontradoException {
+        // 1. Crear la instancia cliente
+        Cliente cliente = parseCliente(clienteDto);
 
-        String nombreModificado = clienteModificado.getNombre().trim();
-        String cuitModificado = clienteModificado.getCuit();
-        String emailModificado = clienteModificado.getEmail();
-
-        if (nombreModificado != null)
-            existeCliente.setNombre(nombreModificado);
-        if (cuitModificado != null)
-            existeCliente.setCuit(cuitModificado);
-        if (emailModificado != null)
-            existeCliente.setEmail(emailModificado);
-        System.out.println(" modificado correctamente." + "Cliente con ID : " + clienteModificado.getId());
+        // 2. Persistir el cambio
+        clienteDao.update(cliente);
     }
 
     /**
@@ -81,12 +65,8 @@ public class ClienteMemory implements ClienteDao {
      * @return El cliente que corresponde al @param
      * @throws ClienteNoEncontradoException Si el cliente no se encuentra
      */
-    @Override
     public Cliente buscarClientePorId(Integer id) throws ClienteNoEncontradoException {
-        return clientes.stream()
-                .filter(c -> c.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new ClienteNoEncontradoException("No se ah encontrado un cliente con ID: " + id));
+        return clienteDao.findById(id);
     }
 
     /**
@@ -95,15 +75,8 @@ public class ClienteMemory implements ClienteDao {
      * @param id
      * @throws ClienteNoEncontradoException Si el cliente no se encuentra
      */
-    @Override
     public void eliminarCliente(Integer id) throws ClienteNoEncontradoException {
-        boolean clienteEliminado = clientes.removeIf(c -> c.getId().equals(id));
-
-        if (!clienteEliminado) {
-            throw new ClienteNoEncontradoException("No se encontro el cliente con ID: " + id);
-        } else {
-            System.out.println("Cliente con ID: " + id + " borrado correctamente.");
-        }
+        clienteDao.delete(id);
     }
 
     /**
@@ -111,9 +84,27 @@ public class ClienteMemory implements ClienteDao {
      * 
      * @return Lista de los clientes del sistema.
      */
-    @Override
-    public List<Cliente> getAllCliente() {
-        return new ArrayList<>(clientes);
+    public List<Cliente> obtenerTodosLosClientes() {
+        return clienteDao.findAll();
+    }
+
+    /**
+     * Realiza la creacion del objeto 'Cliente' a partir de su DTO
+     * 
+     * @param clienteDto El DTO que se quiere crear cliente
+     * @return El objeto cliente
+     */
+    private Cliente parseCliente(ClienteDto clienteDto) {
+        // 1. Setear la coordenada
+        Double longitud = Double.parseDouble(clienteDto.getLongitud());
+        Double latitud = Double.parseDouble(clienteDto.getLatitud());
+
+        clienteDto.setCoordenada(new Coordenada(latitud, longitud));
+
+        // 2. Crear el cliente a persistir
+        Cliente cliente = new Cliente(clienteDto);
+
+        return cliente;
     }
 
 }

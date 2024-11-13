@@ -5,18 +5,21 @@ import java.util.List;
 import com.mycompany.tp.dsw.dao.PlatoDao;
 import com.mycompany.tp.dsw.model.Plato;
 
-public class PlatoMemory extends ItemMenuMemory implements PlatoDao {
-    @Override
+public class PlatoMemory extends ItemMenuMemory {
+
+    private PlatoDao platoDao;
+
+    public PlatoMemory() {
+        platoDao = new PlatoDao();
+    }
+
     /**
      * Obtiene una lista de todos los platos disponibles del sistema
      * 
      * @return Lista de platos
      */
     public List<Plato> obtenerTodosLosPlatos() {
-        return items.stream()
-                .filter(i -> i instanceof Plato)
-                .map(i -> (Plato) i)
-                .toList();
+        return platoDao.findAllPlato();
     }
 
     /**
@@ -25,35 +28,17 @@ public class PlatoMemory extends ItemMenuMemory implements PlatoDao {
      * 
      * @param plato El plato a persistir
      */
-    @Override
-    public void crearPlato(Plato plato) {
-        super.crearItemMenu(plato);
+    public void registrarPlato(Plato plato) {
+        super.registrarItemMenu(plato);
     }
 
-    @Override
-    public List<Plato> obtenerPlatoPorIdVendedor(Integer id) {
-        List<Plato> platos = obtenerTodosLosPlatos();
-
-        return platos.stream()
-                .filter(p -> p.getVendedor().getId().equals(id))
-                .toList();
-
-    }
-
-    @Override
-    public void modificarPlato(Plato platoModificado, Plato plato) {
-
-        Double caloriasModificado = platoModificado.getCalorias();
-        Boolean aptoCeliacoModificado = platoModificado.getAptoCeliaco();
-        Boolean aptoVegetarianoModificado = platoModificado.getAptoVegetariano();
-        Boolean aptoVeganoModificado = platoModificado.getAptoVegano();
-        Double pesoModificado = platoModificado.getPeso();
-
-        plato.setCalorias(caloriasModificado);
-        plato.setAptoCeliaco(aptoCeliacoModificado);
-        plato.setAptoVegano(aptoVeganoModificado);
-        plato.setAptoVegetariano(aptoVegetarianoModificado);
-        plato.setPeso(pesoModificado);
-
+    /**
+     * Obtiene todos los platos del restaurante en particular
+     * 
+     * @param id El id del restaurante a buscar los platos
+     * @return Lista de platos del restaurante, cuyo id es el parametro
+     */
+    public List<Plato> obtenerPlatosPorIdVendedor(Integer id) {
+        return platoDao.findByIdVendedor(id);
     }
 }

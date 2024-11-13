@@ -9,7 +9,7 @@ package com.mycompany.tp.dsw.exception;
  * @author User
  */
 public class ItemNoEncontradoException extends Exception {
-    public ItemNoEncontradoException(String mensaje){
+    public ItemNoEncontradoException(String mensaje) {
         super(mensaje);
     }
 }
