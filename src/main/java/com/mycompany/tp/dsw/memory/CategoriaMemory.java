@@ -65,4 +65,11 @@ public class CategoriaMemory implements CategoriaDao {
                 return categorias;
         }
 
+        @Override
+        public List<Categoria> findByTipoCategoria(String tipo) {
+                return categorias.stream()
+                                .filter(c -> c.getTipo().name().equalsIgnoreCase(tipo))
+                                .toList();
+        }
+
 }

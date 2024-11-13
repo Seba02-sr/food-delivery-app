@@ -24,10 +24,10 @@ public class FrmAgregarItem extends javax.swing.JFrame {
     public FrmAgregarItem(String tipoCategoria, Integer idVendedor, FrmItemMenu itemMenuForm) {
         categoriaDao = new CategoriaMemory();
         initComponents();
-        categoriaBox();
         this.tipoCategoria = tipoCategoria;
         this.idVendedor = idVendedor;
         this.itemMenuForm = itemMenuForm;
+        categoriaBox();
     }
 
     /**
@@ -37,7 +37,7 @@ public class FrmAgregarItem extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -108,6 +108,11 @@ public class FrmAgregarItem extends javax.swing.JFrame {
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 160, 360, 90));
 
+        jComboBoxCategoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxCategoriaActionPerformed(evt);
+            }
+        });
         jPanel1.add(jComboBoxCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 100, -1, -1));
 
         btnSiguiente.setText("Siguiente");
@@ -122,6 +127,10 @@ public class FrmAgregarItem extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jComboBoxCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCategoriaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxCategoriaActionPerformed
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnAtrasActionPerformed
         this.dispose();
@@ -150,7 +159,7 @@ public class FrmAgregarItem extends javax.swing.JFrame {
                 agregarBebidaForm.setVisible(true);
                 this.dispose();
                 break;
-            case "plato":
+            case "comida":
                 FrmAgregarPlato agregarPlatoForm = new FrmAgregarPlato(nombre, descripcion, precio, categoria,
                         idVendedor, itemMenuForm);
                 agregarPlatoForm.setVisible(true);
@@ -164,8 +173,8 @@ public class FrmAgregarItem extends javax.swing.JFrame {
     }// GEN-LAST:event_btnSiguienteActionPerformed
 
     private void categoriaBox() {
-        List<Categoria> categorias = categoriaDao.getAllCategoria();
-
+        List<Categoria> categorias = categoriaDao.findByTipoCategoria(tipoCategoria);
+ 
         for (Categoria categoria : categorias) {
             String nombre = categoria.getNombre();
             jComboBoxCategoria.addItem(nombre);

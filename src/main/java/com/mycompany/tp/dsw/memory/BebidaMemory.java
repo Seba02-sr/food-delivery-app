@@ -31,4 +31,26 @@ public class BebidaMemory extends ItemMenuMemory implements BebidaDao {
         super.crearItemMenu(bebida);
     }
 
+    @Override
+    public List<Bebida> obtenerBebidaPorIdVendedor(Integer id) {
+        List<Bebida> bebida = obtenerTodasLasBebidas();
+
+        return bebida.stream()
+                .filter(b -> b.getVendedor().getId().equals(id))
+                .toList();
+
+    }
+
+    @Override
+    public void modificarBebida(Bebida bebidaModificada, Bebida bebida) {
+        Double graduacionAlcoholicaModificado = bebidaModificada.getGraduacionAlcoholica();
+        Double tamanoModificado = bebidaModificada.getTamano();
+        Double volumenModificado = bebidaModificada.getVolumen();
+
+        bebida.setGraduacionAlcoholica(graduacionAlcoholicaModificado);
+        bebida.setTamano(tamanoModificado);
+        bebida.setVolumen(volumenModificado);
+
+    }
+
 }

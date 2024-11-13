@@ -8,4 +8,6 @@ public interface CategoriaDao {
     Categoria obtenerCategoriaPorNombre(String nombre);
 
     List<Categoria> getAllCategoria();
+
+    List<Categoria> findByTipoCategoria(String tipo);
 }

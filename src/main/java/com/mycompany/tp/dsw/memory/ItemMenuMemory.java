@@ -5,15 +5,46 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.mycompany.tp.dsw.dao.BebidaDao;
+import com.mycompany.tp.dsw.dao.CategoriaDao;
 import com.mycompany.tp.dsw.dao.ItemMenuDao;
+import com.mycompany.tp.dsw.dao.PlatoDao;
+import com.mycompany.tp.dsw.dao.VendedorDao;
 import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
+import com.mycompany.tp.dsw.model.Bebida;
 import com.mycompany.tp.dsw.model.ItemMenu;
+import com.mycompany.tp.dsw.model.Plato;
 import com.mycompany.tp.dsw.model.Vendedor;
 
 public class ItemMenuMemory implements ItemMenuDao {
 
-    protected static final List<ItemMenu> items = new ArrayList<>();
+    protected static List<ItemMenu> items;
     private static int currentID = 0;
+    private CategoriaDao categoriaDao;
+    private VendedorDao vendedorDao;
+
+    public ItemMenuMemory() {
+        items = new ArrayList<>();
+        categoriaDao = new CategoriaMemory();
+        vendedorDao = new VendedorMemory();
+        valoresInciales();
+    }
+
+    public void valoresInciales() {
+        Plato platoEjemplo = new Plato(
+                "Milanesa con Papas Fritas",
+                850.0,
+                true,
+                true,
+                false,
+                500.0,
+                1,
+                new BigDecimal("12.50"),
+                "Clásico plato argentino",
+                categoriaDao.obtenerCategoriaPorNombre("Comida Clasica"),
+                vendedorDao.buscarVendedorPorId(101));
+        items.add(platoEjemplo);
+    }
 
     /**
      * Crea y persiste un ItemMenu
@@ -63,6 +94,19 @@ public class ItemMenuMemory implements ItemMenuDao {
                 i.setDescripcion(descripcionModificado);
             if (precioModificado != null)
                 i.setPrecio(precioModificado);
+
+            switch (itemMenuModificado.getClass().getSimpleName()) {
+                case "Plato":
+                    PlatoDao platoDao = new PlatoMemory();
+                    platoDao.modificarPlato((Plato) itemMenuModificado, (Plato) i);
+                    break;
+                case "Bebida":
+                    BebidaDao bebidaDao = new BebidaMemory();
+                    bebidaDao.modificarBebida((Bebida) itemMenuModificado, (Bebida) i);
+                    break;
+                default:
+                    break;
+            }
         });
 
     }

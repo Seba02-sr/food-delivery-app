@@ -9,4 +9,8 @@ public interface PlatoDao extends ItemMenuDao {
 
     void crearPlato(Plato plato);
 
+    List<Plato> obtenerPlatoPorIdVendedor(Integer id);
+
+    void modificarPlato(Plato platoModificado, Plato plato);
+
 }

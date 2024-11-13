@@ -13,11 +13,12 @@ import com.mycompany.tp.dsw.model.Vendedor;
 import com.mycompany.tp.dsw.service.ValidarVendedor;
 
 public class VendedorMemory implements VendedorDao {
-    List<Vendedor> vendedores = new ArrayList<>();
+    private List<Vendedor> vendedores;
 
     private int currentId = 0;
 
     public VendedorMemory() {
+        vendedores = new ArrayList<>();
         valoresInciales();
     }
 

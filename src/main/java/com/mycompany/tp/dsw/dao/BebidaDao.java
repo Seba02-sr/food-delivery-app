@@ -9,4 +9,8 @@ public interface BebidaDao extends ItemMenuDao {
     List<Bebida> obtenerTodasLasBebidas();
 
     void crearBebida(Bebida bebida);
+
+    List<Bebida> obtenerBebidaPorIdVendedor(Integer id);
+
+    void modificarBebida(Bebida bebidaModificada, Bebida bebida);
 }

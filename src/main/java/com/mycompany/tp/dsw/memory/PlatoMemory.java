@@ -29,4 +29,31 @@ public class PlatoMemory extends ItemMenuMemory implements PlatoDao {
     public void crearPlato(Plato plato) {
         super.crearItemMenu(plato);
     }
+
+    @Override
+    public List<Plato> obtenerPlatoPorIdVendedor(Integer id) {
+        List<Plato> platos = obtenerTodosLosPlatos();
+
+        return platos.stream()
+                .filter(p -> p.getVendedor().getId().equals(id))
+                .toList();
+
+    }
+
+    @Override
+    public void modificarPlato(Plato platoModificado, Plato plato) {
+
+        Double caloriasModificado = platoModificado.getCalorias();
+        Boolean aptoCeliacoModificado = platoModificado.getAptoCeliaco();
+        Boolean aptoVegetarianoModificado = platoModificado.getAptoVegetariano();
+        Boolean aptoVeganoModificado = platoModificado.getAptoVegano();
+        Double pesoModificado = platoModificado.getPeso();
+
+        plato.setCalorias(caloriasModificado);
+        plato.setAptoCeliaco(aptoCeliacoModificado);
+        plato.setAptoVegano(aptoVeganoModificado);
+        plato.setAptoVegetariano(aptoVegetarianoModificado);
+        plato.setPeso(pesoModificado);
+
+    }
 }
