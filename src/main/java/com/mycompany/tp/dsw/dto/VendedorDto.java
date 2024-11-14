@@ -31,8 +31,8 @@ public class VendedorDto {
     public VendedorDto(String nombre, String direccion, String latitud, String longitud) {
         this.nombre = nombre;
         this.direccion = direccion;
-        this.longitud = longitud;
         this.latitud = latitud;
+        this.longitud = longitud;
     }
 
     // Constructor para Modifcar Vendedor
@@ -40,8 +40,8 @@ public class VendedorDto {
         this.IdText = IdText;
         this.nombre = nombre;
         this.direccion = direccion;
-        this.longitud = longitud;
         this.latitud = latitud;
+        this.longitud = longitud;
     }
 
     public void setCoordenada(Coordenada coordenada) {

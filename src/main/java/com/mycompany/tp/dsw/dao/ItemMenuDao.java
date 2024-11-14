@@ -27,6 +27,7 @@ public class ItemMenuDao {
     }
 
     public void valoresInciales() {
+        Vendedor vendedor = vendedorMemory.buscarVendedorPorId(101);
         Plato platoEjemplo = new Plato(
                 "Milanesa con Papas Fritas",
                 850.0,
@@ -38,13 +39,25 @@ public class ItemMenuDao {
                 new BigDecimal("12.50"),
                 "Clásico plato argentino",
                 categoriaMemory.obtenerCategoriaPorNombre("Comida Clasica"),
-                vendedorMemory.buscarVendedorPorId(101));
+                vendedor);
         items.add(platoEjemplo);
+        List<ItemMenu> listaVendedor = vendedor.getItemsMenu();
+        listaVendedor.add(platoEjemplo);
+        vendedor.setItemsMenu(listaVendedor);
     }
 
     public void add(ItemMenu itemMenu) {
         itemMenu.setId(currentID++);
         items.add(itemMenu);
+
+        Integer idVendedor = itemMenu.getVendedor().getId();
+        Vendedor vendedor = vendedorMemory.buscarVendedorPorId(idVendedor);
+        List<ItemMenu> listaVendedor = itemMenu.getVendedor().getItemsMenu();
+        listaVendedor.add(itemMenu);
+        vendedor.setItemsMenu(listaVendedor);
+        System.out.println("Items: " + items.toString());
+        System.out.println("itemMenu" + itemMenu.toString());
+        System.out.println("Vendedor: " + itemMenu.getVendedor().toString());
     }
 
     public List<ItemMenu> findByNombre(String nombre) {
@@ -53,21 +66,7 @@ public class ItemMenuDao {
     }
 
     public void update(ItemMenu itemMenu) {
-        /*
-         * ItemMenu existeItem = findById(itemMenu.getId());
-         * 
-         * String nombreModificado = itemMenu.getNombre();
-         * String descripcionModificado = itemMenu.getDescripcion();
-         * BigDecimal precioModificado = itemMenu.getPrecio();
-         * 
-         * if (nombreModificado != null)
-         * existeItem.setNombre(nombreModificado);
-         * if (descripcionModificado != null)
-         * existeItem.setDescripcion(descripcionModificado);
-         * if (precioModificado != null)
-         * existeItem.setPrecio(precioModificado);
-         */
-
+        System.out.println("ID en itemMenuDao: " + itemMenu);
         switch (itemMenu.getClass().getSimpleName()) {
             case "Plato":
                 PlatoDao platoDao = new PlatoDao();

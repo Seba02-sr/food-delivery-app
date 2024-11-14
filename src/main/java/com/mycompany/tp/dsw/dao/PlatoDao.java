@@ -13,7 +13,7 @@ public class PlatoDao extends ItemMenuDao {
         platos = findAllPlato();
     }
 
-    public Plato findById(Integer id) {
+    public Plato findPlatoById(Integer id) {
         return platos.stream()
                 .filter(p -> p.getId().equals(id))
                 .findFirst()
@@ -35,8 +35,11 @@ public class PlatoDao extends ItemMenuDao {
     }
 
     public void update(Plato plato) {
-        Plato existePlato = findById(plato.getId());
+
+        Plato existePlato = findPlatoById(plato.getId());
+        System.out.println(plato.getId());
         if (existePlato != null) {
+            System.out.println("EXISTE EL FUCKING PLATO");
             String nombre = plato.getNombre().trim();
             String descripcion = plato.getDescripcion().trim();
             BigDecimal precio = plato.getPrecio();
@@ -59,6 +62,7 @@ public class PlatoDao extends ItemMenuDao {
                 existePlato.setPeso(peso);
             }
         }
+        System.out.println("NOOOOOOOOOOOOOO");
 
     }
 

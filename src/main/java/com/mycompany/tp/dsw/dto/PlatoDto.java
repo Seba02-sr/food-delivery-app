@@ -21,11 +21,32 @@ public class PlatoDto extends ItemMenuDto {
     private String caloriasText;
     private String pesoText;
 
+    public PlatoDto() {
+
+    }
+
+    public PlatoDto(String nombre, String descripcion, String precioText, String categoriaText, Vendedor vendedor) {
+        super(nombre, descripcion, precioText, categoriaText, vendedor);
+    }
+
     // Constructor para metodo agregar Plato
     public PlatoDto(String nombre, String descripcion, String precioText, String categoriaText, Vendedor vendedor,
             String caloriasText,
             Boolean aptoCeliaco, Boolean aptoVegetariano, Boolean aptoVegano, String pesoText) {
         super(nombre, descripcion, precioText, categoriaText, vendedor);
+        this.caloriasText = caloriasText;
+        this.aptoCeliaco = aptoCeliaco;
+        this.aptoVegetariano = aptoVegetariano;
+        this.aptoVegano = aptoVegano;
+        this.pesoText = pesoText;
+    }
+
+    // Constructor para modificar un Plato
+    public PlatoDto(String idText, String nombre, String descripcion, String precioText, String categoriaText,
+            Vendedor vendedor,
+            String caloriasText,
+            Boolean aptoCeliaco, Boolean aptoVegetariano, Boolean aptoVegano, String pesoText) {
+        super(idText, nombre, descripcion, precioText, categoriaText, vendedor);
         this.caloriasText = caloriasText;
         this.aptoCeliaco = aptoCeliaco;
         this.aptoVegetariano = aptoVegetariano;

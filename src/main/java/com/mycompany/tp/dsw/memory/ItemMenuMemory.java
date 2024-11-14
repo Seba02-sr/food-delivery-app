@@ -31,10 +31,13 @@ public class ItemMenuMemory {
      * Crea y persiste un ItemMenu
      * - ItemMenu = Plato o Bebida
      * - Manejo de id unicos con currentID
+     * - Parseo Solo los atributos de ItemMenu
+     * - Los de la subclase en su respectivo service
      * 
      * @param itemMenu
      */
-    public void registrarItemMenu(ItemMenu itemMenu) {
+    protected void registrarItemMenu(ItemMenuDto itemMenuDto) {
+        ItemMenu itemMenu = parseItemMenu(itemMenuDto);
         itemMenuDao.add(itemMenu);
     }
 
@@ -53,14 +56,14 @@ public class ItemMenuMemory {
      * Modifica los datos de un item especifico
      * - Del objeto itemMenu pasado como parametro
      * - Solo los datos a modificar permanecen no nulos
+     * - Parseo solo los atributos de Item Menu
+     * - Los de la subclase en su respectivo service
      * 
      * @param itemMenu El objeto item con los datos modificados
      */
-    public void modificarItemMenu(ItemMenuDto itemMenuDto) {
-        // 1. Parsear los datos del ItemMenu, incluyendo los de la subclase
+    protected void modificarItemMenu(ItemMenuDto itemMenuDto) {
         ItemMenu itemMenu = parseItemMenu(itemMenuDto);
-
-        // 2. Persistir el dato
+        System.out.println("33333: " + itemMenu.getId());
         itemMenuDao.update(itemMenu);
     }
 
@@ -102,30 +105,39 @@ public class ItemMenuMemory {
 
     private ItemMenu parseItemMenu(ItemMenuDto itemMenuDto) {
         // 1. Parsear los datos del ItemMenu
-        itemMenuDto.setId(Integer.parseInt(itemMenuDto.getIdText()));
-        itemMenuDto.setPrecio(new BigDecimal(itemMenuDto.getPrecioText()));
 
-        itemMenuDto.setCategoria(categoriaDao.findByNombre(itemMenuDto.getCategoriaText()));
-
-        // 2. Parsear los datos de la subclase -> Plato o Bebida
-        switch (itemMenuDto.getClass().getSimpleName()) {
-            case "Plato":
-                PlatoDto platoDto = (PlatoDto) itemMenuDto;
-                platoDto.setCalorias(Double.parseDouble(platoDto.getCaloriasText()));
-                platoDto.setPeso(Double.parseDouble(platoDto.getPesoText()));
-
-                return new Plato(platoDto);
-            case "Bebida":
-                BebidaDto bebidaDto = (BebidaDto) itemMenuDto;
-                bebidaDto.setGraduacionAlcoholica(Double.parseDouble(bebidaDto.getGraduacionAlcoholicaText()));
-                bebidaDto.setTamano(Double.parseDouble(bebidaDto.getTamanoText()));
-                bebidaDto.setVolumen(Double.parseDouble(bebidaDto.getVolumenText()));
-
-                return new Bebida(bebidaDto);
-            default:
-                return null;
+        String id = itemMenuDto.getIdText();
+        if (!esNullOrBlank(id)) {
+            itemMenuDto.setId(Integer.parseInt(id));
         }
 
+        String precio = itemMenuDto.getPrecioText();
+        if (!esNullOrBlank(precio)) {
+            itemMenuDto.setPrecio(new BigDecimal(precio));
+        }
+
+        String categoria = itemMenuDto.getCategoriaText();
+        if (!esNullOrBlank(categoria)) {
+            itemMenuDto.setCategoria(categoriaDao.findByNombre(categoria));
+        }
+
+        // 2. Crear el objeto
+        switch (itemMenuDto.getClass().getSimpleName()) {
+            case "PlatoDto":
+                PlatoDto platoDto = (PlatoDto) itemMenuDto;
+                System.out.println("ID en platoDto ItemMenuMemory: " + platoDto.getId());
+                return new Plato(platoDto);
+            case "BebidaDto":
+                BebidaDto bebidaDto = (BebidaDto) itemMenuDto;
+                return new Bebida(bebidaDto);
+            default:
+                System.out.println("No tiene que pasar por aca");
+                return null;
+        }
+    }
+
+    private Boolean esNullOrBlank(String palabra) {
+        return palabra == null || palabra.isBlank();
     }
 
 }

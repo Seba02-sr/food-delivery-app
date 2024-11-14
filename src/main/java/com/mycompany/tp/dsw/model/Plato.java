@@ -20,9 +20,26 @@ public class Plato extends ItemMenu {
     private Boolean aptoVegano;
     private Double peso;
 
-    // Constructor para agregar Bebida
+    // Constructor para agregar Plato
+    /*
+     * public Plato(PlatoDto platoDto) {
+     * super(null,
+     * platoDto.getNombre(),
+     * platoDto.getDescripcion(),
+     * platoDto.getPrecio(),
+     * platoDto.getCategoria(),
+     * platoDto.getVendedor());
+     * this.calorias = platoDto.getCalorias();
+     * this.aptoCeliaco = platoDto.getAptoCeliaco();
+     * this.aptoVegetariano = platoDto.getAptoVegetariano();
+     * this.aptoVegano = platoDto.getAptoVegano();
+     * this.peso = platoDto.getPeso();
+     * }
+     */
+
+    // Constructor para modificar Plato
     public Plato(PlatoDto platoDto) {
-        super(null,
+        super(platoDto.getId(),
                 platoDto.getNombre(),
                 platoDto.getDescripcion(),
                 platoDto.getPrecio(),

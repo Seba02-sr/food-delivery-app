@@ -3,6 +3,7 @@ package com.mycompany.tp.dsw.memory;
 import java.util.List;
 
 import com.mycompany.tp.dsw.dao.BebidaDao;
+import com.mycompany.tp.dsw.dto.BebidaDto;
 import com.mycompany.tp.dsw.model.Bebida;
 
 public class BebidaMemory extends ItemMenuMemory {
@@ -26,8 +27,36 @@ public class BebidaMemory extends ItemMenuMemory {
         return bebidaDao.findByIdVendedor(id);
     }
 
-    public void registrarBebida(Bebida bebida) {
-        super.registrarItemMenu(bebida);
+    public void registrarBebida(BebidaDto bebidaDto) {
+        parseBebidaDto(bebidaDto);
+        super.registrarItemMenu(bebidaDto);
+    }
+
+    public void modificarBebida(BebidaDto bebidaDto) {
+        parseBebidaDto(bebidaDto);
+        super.modificarItemMenu(bebidaDto);
+    }
+
+    public void parseBebidaDto(BebidaDto bebidaDto) {
+        String graduacionAlcoholica = bebidaDto.getGraduacionAlcoholicaText();
+        if (!esNullOrBlank(graduacionAlcoholica)) {
+            bebidaDto.setGraduacionAlcoholica(Double.parseDouble(graduacionAlcoholica));
+        }
+
+        String tamano = bebidaDto.getTamanoText();
+        if (!esNullOrBlank(tamano)) {
+            bebidaDto.setTamano(Double.parseDouble(tamano));
+        }
+
+        String volumen = bebidaDto.getVolumenText();
+        if (!esNullOrBlank(volumen)) {
+            bebidaDto.setVolumen(Double.parseDouble(volumen));
+        }
+
+    }
+
+    private Boolean esNullOrBlank(String palabra) {
+        return palabra.trim() == null || palabra.isBlank();
     }
 
 }

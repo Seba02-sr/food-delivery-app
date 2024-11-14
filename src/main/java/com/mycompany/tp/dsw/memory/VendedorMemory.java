@@ -58,7 +58,7 @@ public class VendedorMemory {
      * - El restaurante debe estar activo ( No borrado logicamente )
      * 
      * @param id El id del restaurante a buscar
-     * @return El restaurante con id del @param
+     * @return El restaurante con id del @param, caso no encontrar NULL
      */
     public Vendedor buscarVendedorPorId(Integer id) {
         return vendedorDao.findById(id);
@@ -80,7 +80,7 @@ public class VendedorMemory {
      * 
      * @return Lista de todos los restaurantes
      */
-    public List<Vendedor> getAllVendedor() {
+    public List<Vendedor> obtenerTodosLosVendedores() {
         return vendedorDao.findAll();
     }
 
@@ -91,12 +91,34 @@ public class VendedorMemory {
      * @return El objeto 'Vendedor'
      */
     public Vendedor parseVendedor(VendedorDto vendedorDto) {
-        vendedorDto.setId(Integer.parseInt(vendedorDto.getIdText()));
-        Double longitud = Double.parseDouble(vendedorDto.getLongitud());
-        Double latitud = Double.parseDouble(vendedorDto.getLatitud());
-        vendedorDto.setCoordenada(new Coordenada(latitud, longitud));
+        String id = vendedorDto.getIdText();
+        if (!esNullOrBlank(id)) {
+            vendedorDto.setId(Integer.parseInt(id));
+        }
+
+        String longitudText = vendedorDto.getLongitud();
+        Double longitud = null;
+        if (!esNullOrBlank(longitudText)) {
+            longitud = Double.parseDouble(longitudText);
+        }
+
+        String latitudText = vendedorDto.getLatitud();
+        Double latitud = null;
+        if (!esNullOrBlank(latitudText)) {
+            System.out.println("2");
+            latitud = Double.parseDouble(latitudText);
+        }
+
+        if (latitud != null && longitud != null) {
+            System.out.println("3");
+            vendedorDto.setCoordenada(new Coordenada(latitud, longitud));
+        }
 
         return new Vendedor(vendedorDto);
+    }
+
+    private Boolean esNullOrBlank(String palabra) {
+        return palabra.trim() == null || palabra.isBlank();
     }
 
 }

@@ -19,6 +19,14 @@ public class BebidaDto extends ItemMenuDto {
     private String tamanoText;
     private String volumenText;
 
+    public BebidaDto() {
+
+    }
+
+    public BebidaDto(String nombre, String descripcion, String precioText, String categoriaText, Vendedor vendedor) {
+        super(nombre, descripcion, precioText, categoriaText, vendedor);
+    }
+
     // Constructor para metodo agregar bebida
     public BebidaDto(String nombre, String descripcion, String precioText, String categoriaText, Vendedor vendedor,
             String graduacionAlcoholicaText, String tamanoText, String volumenText) {

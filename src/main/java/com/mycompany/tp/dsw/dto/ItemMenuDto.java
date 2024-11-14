@@ -26,8 +26,23 @@ public abstract class ItemMenuDto {
     private String precioText;
     private String categoriaText;
 
+    public ItemMenuDto() {
+
+    }
+
     // Constructor para metodo agregar ItemMenu
     public ItemMenuDto(String nombre, String descripcion, String precioText, String categoriaText, Vendedor vendedor) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precioText = precioText;
+        this.categoriaText = categoriaText;
+        this.vendedor = vendedor;
+    }
+
+    // Constructor para metodo modificar ItemMenu
+    public ItemMenuDto(String idText, String nombre, String descripcion, String precioText, String categoriaText,
+            Vendedor vendedor) {
+        this.idText = idText;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precioText = precioText;

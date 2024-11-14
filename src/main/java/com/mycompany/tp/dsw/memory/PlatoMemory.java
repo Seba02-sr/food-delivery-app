@@ -3,6 +3,7 @@ package com.mycompany.tp.dsw.memory;
 import java.util.List;
 
 import com.mycompany.tp.dsw.dao.PlatoDao;
+import com.mycompany.tp.dsw.dto.PlatoDto;
 import com.mycompany.tp.dsw.model.Plato;
 
 public class PlatoMemory extends ItemMenuMemory {
@@ -28,8 +29,9 @@ public class PlatoMemory extends ItemMenuMemory {
      * 
      * @param plato El plato a persistir
      */
-    public void registrarPlato(Plato plato) {
-        super.registrarItemMenu(plato);
+    public void registrarPlato(PlatoDto platoDto) {
+        parsePlatoDto(platoDto);
+        super.registrarItemMenu(platoDto);
     }
 
     /**
@@ -38,7 +40,29 @@ public class PlatoMemory extends ItemMenuMemory {
      * @param id El id del restaurante a buscar los platos
      * @return Lista de platos del restaurante, cuyo id es el parametro
      */
-    public List<Plato> obtenerPlatosPorIdVendedor(Integer id) {
+    public List<Plato> obtenerPlatoPorIdVendedor(Integer id) {
         return platoDao.findByIdVendedor(id);
+    }
+
+    public void modificarPlato(PlatoDto platoDto) {
+        parsePlatoDto(platoDto);
+        super.modificarItemMenu(platoDto);
+    }
+
+    public void parsePlatoDto(PlatoDto platoDto) {
+
+        String calorias = platoDto.getCaloriasText();
+        if (!esNullOrBlank(calorias)) {
+            platoDto.setCalorias(Double.parseDouble(calorias));
+        }
+
+        String peso = platoDto.getPesoText();
+        if (!esNullOrBlank(peso)) {
+            platoDto.setPeso(Double.parseDouble(peso));
+        }
+    }
+
+    private Boolean esNullOrBlank(String palabra) {
+        return palabra.trim() == null || palabra.isBlank();
     }
 }
