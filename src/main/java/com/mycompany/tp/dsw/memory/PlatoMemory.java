@@ -3,20 +3,24 @@ package com.mycompany.tp.dsw.memory;
 import java.util.List;
 
 import com.mycompany.tp.dsw.dao.PlatoDao;
+import com.mycompany.tp.dsw.dto.PlatoDto;
 import com.mycompany.tp.dsw.model.Plato;
 
-public class PlatoMemory extends ItemMenuMemory implements PlatoDao {
-    @Override
+public class PlatoMemory extends ItemMenuMemory {
+
+    private PlatoDao platoDao;
+
+    public PlatoMemory() {
+        platoDao = new PlatoDao();
+    }
+
     /**
      * Obtiene una lista de todos los platos disponibles del sistema
      * 
      * @return Lista de platos
      */
     public List<Plato> obtenerTodosLosPlatos() {
-        return items.stream()
-                .filter(i -> i instanceof Plato)
-                .map(i -> (Plato) i)
-                .toList();
+        return platoDao.findAllPlato();
     }
 
     /**
@@ -25,8 +29,40 @@ public class PlatoMemory extends ItemMenuMemory implements PlatoDao {
      * 
      * @param plato El plato a persistir
      */
-    @Override
-    public void crearPlato(Plato plato) {
-        super.crearItemMenu(plato);
+    public void registrarPlato(PlatoDto platoDto) {
+        parsePlatoDto(platoDto);
+        super.registrarItemMenu(platoDto);
+    }
+
+    /**
+     * Obtiene todos los platos del restaurante en particular
+     * 
+     * @param id El id del restaurante a buscar los platos
+     * @return Lista de platos del restaurante, cuyo id es el parametro
+     */
+    public List<Plato> obtenerPlatoPorIdVendedor(Integer id) {
+        return platoDao.findByIdVendedor(id);
+    }
+
+    public void modificarPlato(PlatoDto platoDto) {
+        parsePlatoDto(platoDto);
+        super.modificarItemMenu(platoDto);
+    }
+
+    public void parsePlatoDto(PlatoDto platoDto) {
+
+        String calorias = platoDto.getCaloriasText();
+        if (!esNullOrBlank(calorias)) {
+            platoDto.setCalorias(Double.parseDouble(calorias));
+        }
+
+        String peso = platoDto.getPesoText();
+        if (!esNullOrBlank(peso)) {
+            platoDto.setPeso(Double.parseDouble(peso));
+        }
+    }
+
+    private Boolean esNullOrBlank(String palabra) {
+        return palabra.trim() == null || palabra.isBlank();
     }
 }

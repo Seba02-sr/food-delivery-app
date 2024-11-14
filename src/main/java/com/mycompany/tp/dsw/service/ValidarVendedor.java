@@ -47,7 +47,6 @@ public class ValidarVendedor {
     public static Map<String, String> esModificarValido(VendedorDto vendedorDto) {
         Map<String, String> errores = new HashMap<>();
 
-        // Pasando todo a string para mejor manejo de las comprobaciones.
         String idText = vendedorDto.getIdText();
         String nombre = vendedorDto.getNombre();
         String direccion = vendedorDto.getDireccion();
@@ -58,7 +57,8 @@ public class ValidarVendedor {
         Boolean latitudEsNula = esNullOrEmpty(latitudTexto);
         Boolean longitudEsNula = esNullOrEmpty(longitudTexto);
 
-        // Validar nularidad total o relleno total
+        // Validar nularidad total o relleno total entre:
+        // Direccion, Longitud y Latitud
         if (validarRelacionDireccionCoordenadas(direccionEsNula, latitudEsNula, longitudEsNula, errores)
                 && !(direccionEsNula && latitudEsNula && longitudEsNula)) {
             // Caso de relleno total, validar la sintaxis
@@ -74,13 +74,8 @@ public class ValidarVendedor {
         }
 
         // Validacion de Id y Nombre.
-
-        if (!soloNumero(idText)) {
-            errores.put("id", "El id solo puede contener numeros");
-        }
-        if (!soloLetras(nombre)) {
-            errores.put("nombre", "El nombre solo puede contener letras");
-        }
+        idValido(idText, errores);
+        nombreValido(nombre, errores);
 
         return errores;
 
@@ -90,7 +85,7 @@ public class ValidarVendedor {
             Boolean longitudEsNula,
             Map<String, String> errores) {
 
-        // Si alguno es nulo y los otros no, es inválido
+        // Si alguno es nulo y los otros no, es no valido
         if ((direccionEsNula && latitudEsNula && longitudEsNula)
                 || (!direccionEsNula && !latitudEsNula && !longitudEsNula)) {
             return true;
@@ -161,13 +156,16 @@ public class ValidarVendedor {
     }
 
     /**
-     * Verifica que la palabra solo contenga letras y numeros.
+     * Verifica que la palabra solo contenga:
+     * - Letras.
+     * - Numeros.
+     * - El caracter '.'(punto).
      * 
      * @param palabra
      * @return True si es correcta, False en otro caso.
      */
     private static Boolean letrasNumeros(String palabra) {
-        return palabra.matches("^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s]+$");
+        return palabra.matches("^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s.]+$");
     }
 
     /**

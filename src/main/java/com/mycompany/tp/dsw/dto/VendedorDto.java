@@ -27,19 +27,21 @@ public class VendedorDto {
     private String latitud;
     private String IdText;
 
+    // Constructor para agregar Vendedor
     public VendedorDto(String nombre, String direccion, String latitud, String longitud) {
         this.nombre = nombre;
         this.direccion = direccion;
-        this.longitud = longitud;
         this.latitud = latitud;
+        this.longitud = longitud;
     }
 
+    // Constructor para Modifcar Vendedor
     public VendedorDto(String IdText, String nombre, String direccion, String latitud, String longitud) {
         this.IdText = IdText;
         this.nombre = nombre;
         this.direccion = direccion;
-        this.longitud = longitud;
         this.latitud = latitud;
+        this.longitud = longitud;
     }
 
     public void setCoordenada(Coordenada coordenada) {

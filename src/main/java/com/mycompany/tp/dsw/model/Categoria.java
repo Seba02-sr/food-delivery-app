@@ -15,7 +15,7 @@ public class Categoria {
     private String descripcion;
     private TipoCategoria tipo;
 
-    public Categoria( Integer id, String nombre, String descripcion, TipoCategoria tipo) {
+    public Categoria(Integer id, String nombre, String descripcion, TipoCategoria tipo) {
         this.descripcion = descripcion;
         this.id = id;
         this.nombre = nombre;
@@ -53,6 +53,5 @@ public class Categoria {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
 
 }

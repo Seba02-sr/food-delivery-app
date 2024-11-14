@@ -5,10 +5,11 @@
 package com.mycompany.tp.dsw.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  *
- * @author Cristian 
+ * @author Cristian
  */
 public abstract class ItemMenu { // Items que hay en un restaurante/vendedor
     private Integer id;
@@ -18,12 +19,19 @@ public abstract class ItemMenu { // Items que hay en un restaurante/vendedor
     private Categoria categoria;
     private Vendedor vendedor;
 
+    private Boolean activo = true;
+    private LocalDateTime fechaEliminacion = null;
+
     public abstract Double peso();
+
     public abstract boolean esComida();
+
     public abstract boolean esBebida();
+
     public abstract boolean aptoVegano();
-    
-    public ItemMenu(Integer id, String nombre, String descripcion, BigDecimal precio, Categoria categoria, Vendedor vendedor) { //
+
+    public ItemMenu(Integer id, String nombre, String descripcion, BigDecimal precio, Categoria categoria,
+            Vendedor vendedor) { //
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -87,8 +95,21 @@ public abstract class ItemMenu { // Items que hay en un restaurante/vendedor
     public void setVendedor(Vendedor vendedor) {
         this.vendedor = vendedor;
     }
-    
 
-    
-    
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
+    public LocalDateTime getFechaEliminacion() {
+        return fechaEliminacion;
+    }
+
+    public void setFechaEliminacion(LocalDateTime fechaEliminacion) {
+        this.fechaEliminacion = fechaEliminacion;
+    }
+
 }

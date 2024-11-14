@@ -4,7 +4,7 @@
  */
 package com.mycompany.tp.dsw.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,9 +23,9 @@ public class Vendedor {
     private Coordenada coordenada;
     private List<ItemMenu> itemsMenu;
 
-    private LocalDateTime fechaRegistro = LocalDateTime.now();
+    private LocalDate fechaRegistro = LocalDate.now();
     private Boolean activo = true;
-    private LocalDateTime fechaEliminacion = null;
+    private LocalDate fechaEliminacion = null;
 
     public Vendedor(VendedorDto vendedorDto) {
         this.id = vendedorDto.getId();
@@ -43,12 +43,20 @@ public class Vendedor {
         this.itemsMenu = itemsMenu;
     }
 
-    public LocalDateTime getFechaRegistro() {
+    public LocalDate getFechaRegistro() {
         return fechaRegistro;
     }
 
-    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+    public void setFechaRegistro(LocalDate fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
+    }
+
+    public LocalDate getFechaEliminacion() {
+        return fechaEliminacion;
+    }
+
+    public void setFechaEliminacion(LocalDate fechaEliminacion) {
+        this.fechaEliminacion = fechaEliminacion;
     }
 
     public Boolean getActivo() {
@@ -57,14 +65,6 @@ public class Vendedor {
 
     public void setActivo(Boolean activo) {
         this.activo = activo;
-    }
-
-    public LocalDateTime getFechaEliminacion() {
-        return fechaEliminacion;
-    }
-
-    public void setFechaEliminacion(LocalDateTime fechaEliminacion) {
-        this.fechaEliminacion = fechaEliminacion;
     }
 
     public List<ItemMenu> getItemsMenu() {

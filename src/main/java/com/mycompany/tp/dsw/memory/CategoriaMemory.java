@@ -1,44 +1,41 @@
 package com.mycompany.tp.dsw.memory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.mycompany.tp.dsw.dao.CategoriaDao;
-import com.mycompany.tp.dsw.exception.CategoriaNoEncontradaException;
 import com.mycompany.tp.dsw.model.Categoria;
 
-public class CategoriaMemory implements CategoriaDao {
-    List<Categoria> categorias;
+public class CategoriaMemory {
 
-    // Constructor
-    public CategoriaMemory() {
-        this.categorias = new ArrayList<>();
-    }
+        CategoriaDao categoriaDao;
 
-    /**
-     * Crea y persiste una categoria
-     * 
-     * @param categoria La categoria a persistir
-     */
-    @Override
-    public void crearCategoria(Categoria categoria) {
-        categorias.add(categoria);
-    }
+        public CategoriaMemory() {
+                categoriaDao = new CategoriaDao();
+        }
 
-    /**
-     * Obitene una categoria basada en su nombre.
-     * 
-     * @param nombre El nombre que se desea obtener
-     * @return La categoria correspondiente al nombre
-     * @throws CategoriaNoEncontradaException Retorno si no encuentra la categoria
-     */
-    @Override
-    public Categoria obtenerCategoriaPorNombre(String nombre) throws CategoriaNoEncontradaException {
-        return categorias.stream()
-                .filter(c -> c.getNombre().equalsIgnoreCase(nombre))
-                .findFirst()
-                .orElseThrow(() -> new CategoriaNoEncontradaException(
-                        "No se ah encontrado una categoria con el nombre: " + nombre));
-    }
+        /**
+         * Obtiene una categoria basada en su nombre.
+         * - No hay posibilidad de error por no encontrar categoria
+         * - Tenido en cuenta en la interfaz
+         * 
+         * @param nombre El nombre que se desea obtener
+         * @return La categoria correspondiente al nombre
+         */
+        public Categoria obtenerCategoriaPorNombre(String nombre) {
+                return categoriaDao.findByNombre(nombre);
+        }
+
+        /**
+         * Obtiene todas las categorias persistidas
+         * 
+         * @return
+         */
+        public List<Categoria> obtenerTodasLasCategorias() {
+                return categoriaDao.findAll();
+        }
+
+        public List<Categoria> buscarPorTipoCategoria(String tipo) {
+                return categoriaDao.findByTipoCategoria(tipo);
+        }
 
 }

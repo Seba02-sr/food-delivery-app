@@ -1,31 +1,44 @@
 package com.mycompany.tp.dsw.memory;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
+import com.mycompany.tp.dsw.dao.CategoriaDao;
 import com.mycompany.tp.dsw.dao.ItemMenuDao;
+import com.mycompany.tp.dsw.dto.BebidaDto;
+import com.mycompany.tp.dsw.dto.ItemMenuDto;
+import com.mycompany.tp.dsw.dto.PlatoDto;
+import com.mycompany.tp.dsw.dto.VendedorDto;
 import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
+import com.mycompany.tp.dsw.model.Bebida;
 import com.mycompany.tp.dsw.model.ItemMenu;
+import com.mycompany.tp.dsw.model.Plato;
 import com.mycompany.tp.dsw.model.Vendedor;
 
-public class ItemMenuMemory implements ItemMenuDao {
+public class ItemMenuMemory {
 
-    protected static final List<ItemMenu> items = new ArrayList<>();
-    private static int currentID = 0;
+    private CategoriaDao categoriaDao;
+    private VendedorMemory vendedorMemory;
+    private ItemMenuDao itemMenuDao;
+
+    public ItemMenuMemory() {
+        itemMenuDao = new ItemMenuDao();
+        categoriaDao = new CategoriaDao();
+        vendedorMemory = new VendedorMemory();
+
+    }
 
     /**
      * Crea y persiste un ItemMenu
      * - ItemMenu = Plato o Bebida
      * - Manejo de id unicos con currentID
+     * - Parseo Solo los atributos de ItemMenu
+     * - Los de la subclase en su respectivo service
      * 
      * @param itemMenu
      */
-    @Override
-    public void crearItemMenu(ItemMenu itemMenu) {
-        itemMenu.setId(currentID++);
-        items.add(itemMenu);
+    protected void registrarItemMenu(ItemMenuDto itemMenuDto) {
+        ItemMenu itemMenu = parseItemMenu(itemMenuDto);
+        itemMenuDao.add(itemMenu);
     }
 
     /**
@@ -35,36 +48,23 @@ public class ItemMenuMemory implements ItemMenuDao {
      * @param nombre
      * @return Lista de los items que coincide con el @param
      */
-    @Override
     public List<ItemMenu> buscarItemMenuPorNombre(String nombre) {
-        return items.stream().filter(i -> i.getNombre().equalsIgnoreCase(nombre))
-                .toList();
+        return itemMenuDao.findByNombre(nombre);
     }
 
     /**
      * Modifica los datos de un item especifico
      * - Del objeto itemMenu pasado como parametro
      * - Solo los datos a modificar permanecen no nulos
+     * - Parseo solo los atributos de Item Menu
+     * - Los de la subclase en su respectivo service
      * 
      * @param itemMenu El objeto item con los datos modificados
      */
-    @Override
-    public void modificarItemMenu(ItemMenu itemMenuModificado) {
-        Optional<ItemMenu> existeItem = items.stream()
-                .filter(i -> i.getId().equals(itemMenuModificado.getId())).findFirst();
-        String nombreModificado = itemMenuModificado.getNombre();
-        String descripcionModificado = itemMenuModificado.getDescripcion();
-        BigDecimal precioModificado = itemMenuModificado.getPrecio();
-
-        existeItem.ifPresent(i -> {
-            if (nombreModificado != null)
-                i.setNombre(nombreModificado);
-            if (descripcionModificado != null)
-                i.setDescripcion(descripcionModificado);
-            if (precioModificado != null)
-                i.setPrecio(precioModificado);
-        });
-
+    protected void modificarItemMenu(ItemMenuDto itemMenuDto) {
+        ItemMenu itemMenu = parseItemMenu(itemMenuDto);
+        System.out.println("33333: " + itemMenu.getId());
+        itemMenuDao.update(itemMenu);
     }
 
     /**
@@ -72,9 +72,8 @@ public class ItemMenuMemory implements ItemMenuDao {
      * 
      * @param id
      */
-    @Override
     public void eliminarItemMenu(Integer id) {
-        items.removeIf(i -> i.getId().equals(id));
+        itemMenuDao.delete(id);
     }
 
     /**
@@ -84,9 +83,8 @@ public class ItemMenuMemory implements ItemMenuDao {
      * 
      * @return Lista con los items
      */
-    @Override
     public List<ItemMenu> obtenerTodosLosItemMenu() {
-        return new ArrayList<>(items);
+        return itemMenuDao.findAll();
     }
 
     /**
@@ -96,28 +94,50 @@ public class ItemMenuMemory implements ItemMenuDao {
      * @return Lista de item que tiene el restaurante
      * @throws VendedorNoEncontradoException Si no encuentra el Restaurante
      */
-    @Override
-    public List<ItemMenu> filtrarPorVendedor(Vendedor vendedor) throws VendedorNoEncontradoException {
-        Integer id = vendedor.getId();
-        System.out.println("ID bucado: " + id);
-        List<ItemMenu> itemsVendedor = items.stream()
-                .filter(i -> i.getVendedor().getId().equals(id))
-                .toList();
-        if (itemsVendedor.isEmpty()) {
-            throw new VendedorNoEncontradoException("No se ah encontrado un vendedor con ID: " + vendedor.getId());
-        }
-        return itemsVendedor;
+    public List<ItemMenu> filtrarPorVendedor(VendedorDto vendedorDto) throws VendedorNoEncontradoException {
+        Vendedor vendedor = vendedorMemory.parseVendedor(vendedorDto);
+        return itemMenuDao.findByVendedor(vendedor);
     }
 
-    @Override
-    public String toString() {
-        StringBuilder listaItemString = new StringBuilder();
+    public ItemMenu filtrarPorId(Integer id) {
+        return itemMenuDao.findById(id);
+    }
 
-        for (ItemMenu itemMenu : items) {
-            listaItemString.append(itemMenu.toString()).append(" \n");
+    private ItemMenu parseItemMenu(ItemMenuDto itemMenuDto) {
+        // 1. Parsear los datos del ItemMenu
+
+        String id = itemMenuDto.getIdText();
+        if (!esNullOrBlank(id)) {
+            itemMenuDto.setId(Integer.parseInt(id));
         }
 
-        return listaItemString.toString();
+        String precio = itemMenuDto.getPrecioText();
+        if (!esNullOrBlank(precio)) {
+            itemMenuDto.setPrecio(new BigDecimal(precio));
+        }
+
+        String categoria = itemMenuDto.getCategoriaText();
+        if (!esNullOrBlank(categoria)) {
+            itemMenuDto.setCategoria(categoriaDao.findByNombre(categoria));
+        }
+
+        // 2. Crear el objeto
+        switch (itemMenuDto.getClass().getSimpleName()) {
+            case "PlatoDto":
+                PlatoDto platoDto = (PlatoDto) itemMenuDto;
+                System.out.println("ID en platoDto ItemMenuMemory: " + platoDto.getId());
+                return new Plato(platoDto);
+            case "BebidaDto":
+                BebidaDto bebidaDto = (BebidaDto) itemMenuDto;
+                return new Bebida(bebidaDto);
+            default:
+                System.out.println("No tiene que pasar por aca");
+                return null;
+        }
+    }
+
+    private Boolean esNullOrBlank(String palabra) {
+        return palabra == null || palabra.isBlank();
     }
 
 }

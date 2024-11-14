@@ -1,27 +1,19 @@
 package com.mycompany.tp.dsw.memory;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import com.mycompany.tp.dsw.dao.VendedorDao;
 import com.mycompany.tp.dsw.dto.VendedorDto;
 import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
 import com.mycompany.tp.dsw.model.Coordenada;
 import com.mycompany.tp.dsw.model.Vendedor;
-import com.mycompany.tp.dsw.service.ValidarVendedor;
 
-public class VendedorMemory implements VendedorDao {
-    List<Vendedor> vendedores = new ArrayList<>();
+public class VendedorMemory {
 
-    private int currentId = 0;
+    private VendedorDao vendedorDao;
 
     public VendedorMemory() {
-        VendedorDto vendedorDto = new VendedorDto("Hola", "Iturraspe 2447", null, null);
-        vendedorDto.setCoordenada(new Coordenada(20.0, 20.0));
-        vendedorDto.setId(1);
-        vendedores.add(new Vendedor(vendedorDto));
+        vendedorDao = new VendedorDao();
     }
 
     /**
@@ -31,12 +23,9 @@ public class VendedorMemory implements VendedorDao {
      * 
      * @param vendedorDto El objeto 'Vendedor' a persistir
      */
-    @Override
-    public void crearVendedor(VendedorDto vendedorDto) {
-        Vendedor vendedor = new Vendedor(vendedorDto);
-        vendedor.setId(currentId++);
-        vendedores.add(vendedor);
-        System.out.println("Se creo un nuevo Vendedor con ID: " + vendedor.getId());
+    public void registrarVendedor(VendedorDto vendedorDto) {
+        Vendedor vendedor = parseVendedor(vendedorDto);
+        vendedorDao.add(vendedor);
     }
 
     /**
@@ -44,14 +33,10 @@ public class VendedorMemory implements VendedorDao {
      * - Los nombres son unicos, ya que son restaurantes
      * 
      * @param nombre El nombre del restaurante a buscar
-     * @return El restaurante buscado
+     * @return Los restaurante que contengan en su nombre el parametro
      */
-    @Override
     public List<Vendedor> buscarVendedorPorNombre(String nombre) {
-        List<Vendedor> vendedor = vendedores.stream()
-                .filter(v -> v.getNombre().toLowerCase().equals(nombre.toLowerCase()))
-                .toList();
-        return vendedor;
+        return vendedorDao.findByNombre(nombre);
     }
 
     /**
@@ -62,37 +47,10 @@ public class VendedorMemory implements VendedorDao {
      * @param vendedorModificado El restaurante con los datos a modificar
      * @throws VendedorNoEncontradoException Si no encuentra el restaurante
      */
-    @Override
-    public void modificarVendedor(VendedorDto vendedorModificado) throws VendedorNoEncontradoException {
-        Integer id = Integer.parseInt(vendedorModificado.getIdText());
-        Vendedor existeVendedor = buscarVendedorPorId(id);
-        if (existeVendedor == null) {
-            throw new VendedorNoEncontradoException("No se ha encontrado un vendedor con el ID:" + id);
-        }
+    public void modificarVendedor(VendedorDto vendedorDto) throws VendedorNoEncontradoException {
 
-        String nombreModificado = vendedorModificado.getNombre().trim();
-        String direccionModificada = vendedorModificado.getDireccion().trim();
-        Double latitud = null;
-        Double longitud = null;
-
-        if (!ValidarVendedor.esNullOrEmpty(direccionModificada)) {
-            // Si la direccion no se modifico, no se modifica la Coordenada Y visceversa
-            // Precondicion al metodo:
-            // - Coordenada (latitud y longitud) no nulo
-            // - Y Direccion no nulo
-            latitud = Double.parseDouble(vendedorModificado.getLatitud().trim());
-            longitud = Double.parseDouble(vendedorModificado.getLongitud().trim());
-            existeVendedor.setDireccion(direccionModificada);
-
-            Coordenada coordenadaModificada = new Coordenada(latitud, longitud);
-            existeVendedor.setCoordenada(coordenadaModificada);
-        }
-
-        if (nombreModificado != null)
-            existeVendedor.setNombre(nombreModificado);
-        System.out.println("Vendedor con ID: " + vendedorModificado.getId() + " modificado correctamente.");
-        System.out.println(existeVendedor);
-
+        Vendedor vendedor = parseVendedor(vendedorDto);
+        vendedorDao.update(vendedor);
     }
 
     /**
@@ -100,14 +58,10 @@ public class VendedorMemory implements VendedorDao {
      * - El restaurante debe estar activo ( No borrado logicamente )
      * 
      * @param id El id del restaurante a buscar
-     * @return El restaurante con id del @param
+     * @return El restaurante con id del @param, caso no encontrar NULL
      */
-    @Override
     public Vendedor buscarVendedorPorId(Integer id) {
-        return vendedores.stream()
-                .filter(v -> Objects.equals(v.getId(), id) && v.getActivo().equals(true))
-                .findFirst()
-                .orElse(null); 
+        return vendedorDao.findById(id);
     }
 
     /**
@@ -117,18 +71,8 @@ public class VendedorMemory implements VendedorDao {
      * @param id El id del restaurante a por eliminar
      * @throws VendedorNoEncontradoException Si no encuentra el restaurante
      */
-    @Override
     public void eliminarVendedor(Integer id) throws VendedorNoEncontradoException {
-        Vendedor vendedorEliminado = buscarVendedorPorId(id);
-        if (vendedorEliminado != null) {
-            vendedorEliminado.setActivo(false);
-            vendedorEliminado.setFechaEliminacion(LocalDateTime.now());
-            System.out.println("Vendedor con ID:" + id + " eliminado correctamente.");
-            System.out.println(vendedorEliminado);
-        } else {
-            throw new VendedorNoEncontradoException("No se ha encontrado un vendedor con el ID: " + id);
-        }
-
+        vendedorDao.delete(id);
     }
 
     /**
@@ -136,25 +80,45 @@ public class VendedorMemory implements VendedorDao {
      * 
      * @return Lista de todos los restaurantes
      */
-    @Override
-    public List<Vendedor> getAllVendedor() {
-        if (!vendedores.isEmpty()) {
-            return vendedores.stream()
-                    .filter(v -> v.getActivo().equals(true))
-                    .toList();
-        }
-        return null;
+    public List<Vendedor> obtenerTodosLosVendedores() {
+        return vendedorDao.findAll();
     }
 
-    @Override
-    public String toString() {
-        StringBuilder ret = new StringBuilder();
-
-        for (Vendedor vendedor : vendedores) {
-            ret.append(vendedor.toString()).append("\n");
+    /**
+     * Realiza la creacion del objeto 'Vendedor' a partir de su DTO
+     * 
+     * @param vendedorDto El DTO que se quiere crear Vendedor
+     * @return El objeto 'Vendedor'
+     */
+    public Vendedor parseVendedor(VendedorDto vendedorDto) {
+        String id = vendedorDto.getIdText();
+        if (!esNullOrBlank(id)) {
+            vendedorDto.setId(Integer.parseInt(id));
         }
 
-        return ret.toString();
+        String longitudText = vendedorDto.getLongitud();
+        Double longitud = null;
+        if (!esNullOrBlank(longitudText)) {
+            longitud = Double.parseDouble(longitudText);
+        }
+
+        String latitudText = vendedorDto.getLatitud();
+        Double latitud = null;
+        if (!esNullOrBlank(latitudText)) {
+            System.out.println("2");
+            latitud = Double.parseDouble(latitudText);
+        }
+
+        if (latitud != null && longitud != null) {
+            System.out.println("3");
+            vendedorDto.setCoordenada(new Coordenada(latitud, longitud));
+        }
+
+        return new Vendedor(vendedorDto);
+    }
+
+    private Boolean esNullOrBlank(String palabra) {
+        return palabra.trim() == null || palabra.isBlank();
     }
 
 }

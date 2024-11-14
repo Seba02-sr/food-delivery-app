@@ -1,22 +1,70 @@
 package com.mycompany.tp.dsw.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mycompany.tp.dsw.exception.ClienteNoEncontradoException;
 import com.mycompany.tp.dsw.model.Cliente;
 
-public interface ClienteDao {
+public class ClienteDao {
 
-    void crearCliente(Cliente cliente);
+    List<Cliente> clientes = new ArrayList<>();
+    private int currentID = 0;
 
-    List<Cliente> buscarClientePorNombre(String nombre) throws ClienteNoEncontradoException;
+    public void add(Cliente cliente) {
+        cliente.setId(currentID++);
+        clientes.add(cliente);
+    }
 
-    void modificarCliente(Cliente cliente) throws ClienteNoEncontradoException;
+    public List<Cliente> findByNombre(String nombre) throws ClienteNoEncontradoException {
+        List<Cliente> clienteBuscado = clientes.stream()
+                .filter(c -> c.getNombre().toLowerCase().equals(nombre.toLowerCase()))
+                .toList();
+        if (clienteBuscado.isEmpty()) {
+            throw new ClienteNoEncontradoException("No se encontro un Cliente con el Nombre: " + nombre);
+        }
+        return clienteBuscado;
+    }
 
-    void eliminarCliente(Integer id) throws ClienteNoEncontradoException;
+    public void update(Cliente cliente) throws ClienteNoEncontradoException {
 
-    List<Cliente> getAllCliente();
+        Cliente existeCliente = findById(cliente.getId());
 
-    Cliente buscarClientePorId(Integer id) throws ClienteNoEncontradoException;
+        if (existeCliente == null) {
+            throw new ClienteNoEncontradoException("Cliente con ID " + cliente.getId() + " no encontrado.");
+        }
+
+        String nombreModificado = cliente.getNombre().trim();
+        String cuitModificado = cliente.getCuit();
+        String emailModificado = cliente.getEmail();
+
+        if (nombreModificado != null)
+            existeCliente.setNombre(nombreModificado);
+        if (cuitModificado != null)
+            existeCliente.setCuit(cuitModificado);
+        if (emailModificado != null)
+            existeCliente.setEmail(emailModificado);
+    }
+
+    public void delete(Integer id) throws ClienteNoEncontradoException {
+        boolean clienteEliminado = clientes.removeIf(c -> c.getId().equals(id));
+
+        if (!clienteEliminado) {
+            throw new ClienteNoEncontradoException("No se encontro el cliente con ID: " + id);
+        } else {
+            System.out.println("Cliente con ID: " + id + " borrado correctamente.");
+        }
+    }
+
+    public List<Cliente> findAll() {
+        return clientes;
+    }
+
+    public Cliente findById(Integer id) throws ClienteNoEncontradoException {
+        return clientes.stream()
+                .filter(c -> c.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new ClienteNoEncontradoException("No se ah encontrado un cliente con ID: " + id));
+    }
 
 }

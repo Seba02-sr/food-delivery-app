@@ -6,6 +6,8 @@ package com.mycompany.tp.dsw.model;
 
 import java.math.BigDecimal;
 
+import com.mycompany.tp.dsw.dto.BebidaDto;
+
 /**
  *
  * @author Cristian
@@ -14,6 +16,19 @@ public class Bebida extends ItemMenu {
     private Double graduacionAlcoholica;
     private Double tamano;
     private Double volumen;
+
+    // Constructor para agregar Bebida
+    public Bebida(BebidaDto bebidaDto) {
+        super(null,
+                bebidaDto.getNombre(),
+                bebidaDto.getDescripcion(),
+                bebidaDto.getPrecio(),
+                bebidaDto.getCategoria(),
+                bebidaDto.getVendedor());
+        this.graduacionAlcoholica = bebidaDto.getGraduacionAlcoholica();
+        this.tamano = bebidaDto.getTamano();
+        this.volumen = bebidaDto.getVolumen();
+    }
 
     public Bebida(String nombre, Double graduacionAlcoholica, Double tamano, Double volumen,
             Integer id, BigDecimal precio, String descripcion, Categoria categoria, Vendedor vendedor) {
@@ -88,7 +103,9 @@ public class Bebida extends ItemMenu {
 
     @Override
     public String toString() {
-        return "ItemMenu [id=" + this.getId() + ", nombre=" + this.getNombre() + ", vendedor="
-                + this.getVendedor().getId() + "]";
+        return "Bebida [graduacionAlcoholica=" + graduacionAlcoholica + ", tamano=" + tamano + ", volumen=" + volumen
+                + ", getNombre()=" + getNombre() + ", getDescripcion()=" + getDescripcion() + ", getPrecio()="
+                + getPrecio() + ", getCategoria()=" + getCategoria() + "]";
     }
+
 }

@@ -7,9 +7,8 @@ package com.mycompany.tp.dsw.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
-import com.mycompany.tp.dsw.dto.VendedorDto;
+import com.mycompany.tp.dsw.dto.ClienteDto;
 import com.mycompany.tp.dsw.patronObserver.Observer;
 
 /**
@@ -29,7 +28,7 @@ public class Cliente implements Observer<Pedido> {
     private Boolean activo = true;
     private LocalDateTime fechaEliminacion = null;
 
-    public Vendedor(ClienteDto clienteDto) {
+    public Cliente(ClienteDto clienteDto) {
         this.id = clienteDto.getId();
         this.nombre = clienteDto.getNombre();
         this.cuit = clienteDto.getCuit();
