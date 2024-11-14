@@ -18,7 +18,7 @@ public class VendedorDao {
 
     public VendedorDao() {
         vendedores = new ArrayList<>();
-        valoresInciales();
+        // valoresInciales();
     }
 
     public void valoresInciales() {

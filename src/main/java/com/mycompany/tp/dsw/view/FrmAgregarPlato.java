@@ -8,22 +8,24 @@ import javax.swing.JOptionPane;
 
 import com.mycompany.tp.dsw.dto.PlatoDto;
 import com.mycompany.tp.dsw.memory.PlatoMemory;
+import com.mycompany.tp.dsw.service.MemoryManager;
 
 /**
  *
  * @author Usuario
  */
-public class FrmAgregarPlato extends javax.swing.JFrame {
+public class FrmAgregarPlato extends javax.swing.JDialog {
 
     private final PlatoMemory platoMemory;
     private final PlatoDto platoDto;
-    private FrmItemMenu itemMenuForm;
+    private final MemoryManager memoryManager;
 
-    public FrmAgregarPlato(PlatoDto platoDto, FrmItemMenu itemMenuForm) {
+    public FrmAgregarPlato(PlatoDto platoDto, FrmAgregarItem agregarItemForm) {
+        super(agregarItemForm, true);
         initComponents();
         this.platoDto = platoDto;
-        platoMemory = new PlatoMemory();
-        this.itemMenuForm = itemMenuForm;
+        memoryManager = MemoryManager.getInstance();
+        platoMemory = memoryManager.getPlatoMemory();
     }
 
     /**
@@ -220,7 +222,7 @@ public class FrmAgregarPlato extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmAgregarPlato(new PlatoDto(), new FrmItemMenu(null, null, "1", "nombre")).setVisible(true);
+                new FrmAgregarPlato(new PlatoDto(), new FrmAgregarItem(null, null, null)).setVisible(true);
             }
         });
     }

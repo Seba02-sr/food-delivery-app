@@ -7,20 +7,14 @@ import com.mycompany.tp.dsw.model.Plato;
 
 public class PlatoDao extends ItemMenuDao {
 
-    private List<Plato> platos;
-
-    public PlatoDao() {
-        platos = findAllPlato();
-    }
-
     public Plato findPlatoById(Integer id) {
-        return platos.stream()
+        return getPlatos().stream()
                 .filter(p -> p.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }
 
-    public List<Plato> findAllPlato() {
+    public List<Plato> getPlatos() {
         return items.stream()
                 .filter(i -> i instanceof Plato)
                 .map(i -> (Plato) i)
@@ -28,8 +22,8 @@ public class PlatoDao extends ItemMenuDao {
     }
 
     public List<Plato> findByIdVendedor(Integer id) {
-
-        return platos.stream()
+        System.out.println("Platos en dao: " + getPlatos().toString());
+        return getPlatos().stream()
                 .filter(p -> p.getVendedor().getId().equals(id))
                 .toList();
     }
@@ -39,7 +33,6 @@ public class PlatoDao extends ItemMenuDao {
         Plato existePlato = findPlatoById(plato.getId());
         System.out.println(plato.getId());
         if (existePlato != null) {
-            System.out.println("EXISTE EL FUCKING PLATO");
             String nombre = plato.getNombre().trim();
             String descripcion = plato.getDescripcion().trim();
             BigDecimal precio = plato.getPrecio();
@@ -62,7 +55,6 @@ public class PlatoDao extends ItemMenuDao {
                 existePlato.setPeso(peso);
             }
         }
-        System.out.println("NOOOOOOOOOOOOOO");
 
     }
 

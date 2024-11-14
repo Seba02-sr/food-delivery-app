@@ -20,7 +20,7 @@ public class BebidaMemory extends ItemMenuMemory {
      * @return Lista de bebidas
      */
     public List<Bebida> obtenerTodasLasBebidas() {
-        return bebidaDao.findAllBebida();
+        return bebidaDao.getBebidas();
     }
 
     public List<Bebida> obtenerBebidaPorIdVendedor(Integer id) {

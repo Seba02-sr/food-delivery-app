@@ -90,7 +90,7 @@ public class VendedorMemory {
      * @param vendedorDto El DTO que se quiere crear Vendedor
      * @return El objeto 'Vendedor'
      */
-    public Vendedor parseVendedor(VendedorDto vendedorDto) {
+    public static Vendedor parseVendedor(VendedorDto vendedorDto) {
         String id = vendedorDto.getIdText();
         if (!esNullOrBlank(id)) {
             vendedorDto.setId(Integer.parseInt(id));
@@ -117,8 +117,8 @@ public class VendedorMemory {
         return new Vendedor(vendedorDto);
     }
 
-    private Boolean esNullOrBlank(String palabra) {
-        return palabra.trim() == null || palabra.isBlank();
+    private static Boolean esNullOrBlank(String palabra) {
+        return palabra == null || palabra.isBlank();
     }
 
 }

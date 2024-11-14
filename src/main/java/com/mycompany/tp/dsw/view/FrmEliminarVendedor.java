@@ -6,6 +6,7 @@ package com.mycompany.tp.dsw.view;
 
 import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
 import com.mycompany.tp.dsw.memory.VendedorMemory;
+import com.mycompany.tp.dsw.service.MemoryManager;
 import com.mycompany.tp.dsw.service.ValidarVendedor;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -18,11 +19,13 @@ public class FrmEliminarVendedor extends javax.swing.JFrame {
 
     private final VendedorMemory vendedorMemory;
     private final FrmVendedor frmVendedor;
+    private final MemoryManager memoryManager;
 
     public FrmEliminarVendedor(VendedorMemory vendedorMemory, FrmVendedor frmVendedor) {
         initComponents();
         configureWindow();
-        this.vendedorMemory = vendedorMemory;
+        memoryManager = MemoryManager.getInstance();
+        this.vendedorMemory = memoryManager.getVendedorMemory();
         this.frmVendedor = frmVendedor;
     }
 
@@ -35,7 +38,8 @@ public class FrmEliminarVendedor extends javax.swing.JFrame {
     public FrmEliminarVendedor(VendedorMemory vendedorMemory, String id, FrmVendedor frmVendedor) {
         initComponents();
         configureWindow();
-        this.vendedorMemory = vendedorMemory;
+        memoryManager = MemoryManager.getInstance();
+        this.vendedorMemory = memoryManager.getVendedorMemory();
         this.frmVendedor = frmVendedor;
 
         // Valor id default en el formulario
@@ -113,7 +117,6 @@ public class FrmEliminarVendedor extends javax.swing.JFrame {
         String idText = txtID.getText();
 
         Map<String, String> errores = ValidarVendedor.esEliminarValido(idText);
-        System.out.println("Errores encontrados: " + errores);
         if (errores.isEmpty()) {
             try {
                 Integer id = Integer.parseInt(idText);

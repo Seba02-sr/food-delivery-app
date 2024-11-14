@@ -11,29 +11,30 @@ import com.mycompany.tp.dsw.dto.PlatoDto;
 import com.mycompany.tp.dsw.memory.CategoriaMemory;
 import com.mycompany.tp.dsw.memory.VendedorMemory;
 import com.mycompany.tp.dsw.model.Categoria;
-import com.mycompany.tp.dsw.model.ItemMenu;
-import com.mycompany.tp.dsw.model.Plato;
 import com.mycompany.tp.dsw.model.Vendedor;
+import com.mycompany.tp.dsw.service.MemoryManager;
 
 /**
  *
  * @author Usuario
  */
-public class FrmAgregarItem extends javax.swing.JFrame {
+public class FrmAgregarItem extends javax.swing.JDialog {
+
+    private final MemoryManager memoryManager;
 
     private final CategoriaMemory categoriaMemory;
     private final String tipoCategoria;
     private final Integer idVendedor;
-    private final FrmItemMenu itemMenuForm;
     private final VendedorMemory vendedorMemory;
 
     public FrmAgregarItem(String tipoCategoria, Integer idVendedor, FrmItemMenu itemMenuForm) {
+        super(itemMenuForm, true);
         initComponents();
-        categoriaMemory = new CategoriaMemory();
+        memoryManager = MemoryManager.getInstance();
+        categoriaMemory = memoryManager.getCategoriaMemory();
         this.tipoCategoria = tipoCategoria;
         this.idVendedor = idVendedor;
-        this.itemMenuForm = itemMenuForm;
-        this.vendedorMemory = new VendedorMemory();
+        this.vendedorMemory = memoryManager.getVendedorMemory();
         categoriaBox();
         configureWindow();
     }
@@ -169,17 +170,15 @@ public class FrmAgregarItem extends javax.swing.JFrame {
         switch (tipoCategoria.toLowerCase()) {
             case "bebida":
                 BebidaDto bebidaDto = new BebidaDto(nombre, descripcion, precio, categoria, vendedor);
-                FrmAgregarBebida agregarBebidaForm = new FrmAgregarBebida(bebidaDto, itemMenuForm);
+                FrmAgregarBebida agregarBebidaForm = new FrmAgregarBebida(bebidaDto, this);
                 agregarBebidaForm.setVisible(true);
                 this.dispose();
                 break;
             case "comida":
                 PlatoDto platoDto = new PlatoDto(nombre, descripcion, precio, categoria, vendedor);
-                FrmAgregarPlato agregarPlatoForm = new FrmAgregarPlato(platoDto, itemMenuForm);
+                FrmAgregarPlato agregarPlatoForm = new FrmAgregarPlato(platoDto, this);
+                agregarPlatoForm.setModal(true);
                 agregarPlatoForm.setVisible(true);
-
-                List<ItemMenu> items = vendedor.getItemsMenu();
-                System.out.println("Items en FrmAgregarItem:_ " + items);
                 this.dispose();
                 break;
             default:

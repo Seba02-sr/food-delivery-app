@@ -16,10 +16,10 @@ import com.mycompany.tp.dsw.model.ItemPedido;
  *
  * @author User
  */
-public class ItemsPedidoMemory {
+public class ItemPedidoMemory {
     private ItemsPedidoDao itemPedidoDao;
 
-    public ItemsPedidoMemory() {
+    public ItemPedidoMemory() {
         itemPedidoDao = new ItemsPedidoDao();
     }
 

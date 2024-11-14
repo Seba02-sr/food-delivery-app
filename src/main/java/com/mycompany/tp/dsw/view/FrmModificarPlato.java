@@ -7,6 +7,7 @@ package com.mycompany.tp.dsw.view;
 import com.mycompany.tp.dsw.dto.PlatoDto;
 import com.mycompany.tp.dsw.memory.PlatoMemory;
 import com.mycompany.tp.dsw.model.Plato;
+import com.mycompany.tp.dsw.service.MemoryManager;
 
 import javax.swing.JOptionPane;
 
@@ -16,17 +17,21 @@ import javax.swing.JOptionPane;
  */
 public class FrmModificarPlato extends javax.swing.JFrame {
 
-    private PlatoMemory platoMemory;
+    private final PlatoMemory platoMemory;
     private Integer idPlato;
+    private final MemoryManager memoryManager;
 
     public FrmModificarPlato() {
         initComponents();
+        memoryManager = MemoryManager.getInstance();
+        this.platoMemory = memoryManager.getPlatoMemory();
     }
 
     public FrmModificarPlato(Integer idPlato) {
         initComponents();
         configureWindow();
-        this.platoMemory = new PlatoMemory();
+        memoryManager = MemoryManager.getInstance();
+        this.platoMemory = memoryManager.getPlatoMemory();
         this.idPlato = idPlato;
         rellenarCampos();
 

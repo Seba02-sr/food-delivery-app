@@ -8,6 +8,8 @@ import java.util.List;
 
 import com.mycompany.tp.dsw.memory.VendedorMemory;
 import com.mycompany.tp.dsw.model.Vendedor;
+import com.mycompany.tp.dsw.service.MemoryManager;
+
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
@@ -19,11 +21,13 @@ public class FrmBuscarVendedor extends javax.swing.JFrame {
 
     private final VendedorMemory vendedorMemory;
     private final FrmVendedor frmVendedor;
+    private final MemoryManager memoryManager;
 
     public FrmBuscarVendedor(VendedorMemory vendedorMemory, FrmVendedor frmVendedor) {
         initComponents();
         configureWindow();
-        this.vendedorMemory = vendedorMemory;
+        memoryManager = MemoryManager.getInstance();
+        this.vendedorMemory = memoryManager.getVendedorMemory();
         this.frmVendedor = frmVendedor;
     }
 

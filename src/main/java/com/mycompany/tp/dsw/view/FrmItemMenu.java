@@ -8,6 +8,8 @@ import com.mycompany.tp.dsw.memory.BebidaMemory;
 import com.mycompany.tp.dsw.memory.PlatoMemory;
 import com.mycompany.tp.dsw.model.Bebida;
 import com.mycompany.tp.dsw.model.Plato;
+import com.mycompany.tp.dsw.service.MemoryManager;
+
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import com.mycompany.tp.dsw.model.ItemMenu;
@@ -21,12 +23,14 @@ public class FrmItemMenu extends javax.swing.JFrame {
     private final PlatoMemory platoMemory;
     private final BebidaMemory bebidaMemory;
     private final Integer idVendedor;
+    private final MemoryManager memoryManager;
 
     public FrmItemMenu(PlatoMemory platoMemory, BebidaMemory bebidaMemory, String idVendedor, String nombreVendedor) {
         initComponents();
         configureWindow();
-        this.platoMemory = platoMemory;
-        this.bebidaMemory = bebidaMemory;
+        memoryManager = MemoryManager.getInstance();
+        this.platoMemory = memoryManager.getPlatoMemory();
+        this.bebidaMemory = memoryManager.getBebidaMemory();
         this.idVendedor = Integer.parseInt(idVendedor);
         jLabelVendedorData.setText("Vendedor: " + nombreVendedor + " ID: " + idVendedor);
         inicializarTabla();
@@ -44,7 +48,6 @@ public class FrmItemMenu extends javax.swing.JFrame {
         String defaultItem = (String) jComboBoxPlatoBebida.getSelectedItem();
         if ("Plato".equals(defaultItem)) {
             List<Plato> platos = platoMemory.obtenerPlatoPorIdVendedor(idVendedor);
-            System.out.println("Platos en el frm: " + platos);
             mostrarItemMenuEnPantalla(platos);
         } else if ("Bebida".equals(defaultItem)) {
             List<Bebida> bebidas = bebidaMemory.obtenerBebidaPorIdVendedor(idVendedor);
@@ -223,6 +226,7 @@ public class FrmItemMenu extends javax.swing.JFrame {
         }
 
         FrmAgregarItem agregarItemForm = new FrmAgregarItem(tipoCategoria, idVendedor, this);
+        agregarItemForm.setModal(true);
         agregarItemForm.setVisible(true);
 
         List<Plato> platos = platoMemory.obtenerPlatoPorIdVendedor(idVendedor);
@@ -238,7 +242,6 @@ public class FrmItemMenu extends javax.swing.JFrame {
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnModificarActionPerformed
         int selectedRow = tbItemDatos.getSelectedRow();
-
         if (selectedRow != -1) {
             // 1. Obtener el id de la fila seleccionada
             String idText = tbItemDatos.getValueAt(selectedRow, 0).toString();

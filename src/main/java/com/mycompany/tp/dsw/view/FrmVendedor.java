@@ -7,6 +7,7 @@ package com.mycompany.tp.dsw.view;
 import java.util.List;
 
 import com.mycompany.tp.dsw.dto.VendedorDto;
+import com.mycompany.tp.dsw.service.MemoryManager;
 import com.mycompany.tp.dsw.memory.BebidaMemory;
 import com.mycompany.tp.dsw.memory.PlatoMemory;
 import com.mycompany.tp.dsw.model.Vendedor;
@@ -18,6 +19,8 @@ import javax.swing.table.DefaultTableModel;
  * @author admin
  */
 public class FrmVendedor extends javax.swing.JFrame {
+
+    private final MemoryManager memoryManager;
 
     private final VendedorMemory vendedorMemory;
     private final PlatoMemory platoMemory;
@@ -33,9 +36,11 @@ public class FrmVendedor extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setResizable(false);
 
-        bebidaMemory = new BebidaMemory();
-        platoMemory = new PlatoMemory();
-        vendedorMemory = new VendedorMemory();
+        memoryManager = MemoryManager.getInstance();
+
+        bebidaMemory = memoryManager.getBebidaMemory();
+        platoMemory = memoryManager.getPlatoMemory();
+        vendedorMemory = memoryManager.getVendedorMemory();
 
         mostrarTabla();
     }
@@ -265,11 +270,13 @@ public class FrmVendedor extends javax.swing.JFrame {
             eliminarVendedorForm.setVisible(true);
 
             eliminarVendedorForm.addWindowListener(new java.awt.event.WindowAdapter() {
+
                 @Override
                 public void windowClosed(java.awt.event.WindowEvent e) {
                     mostrarTabla(vendedorMemory.obtenerTodosLosVendedores()); // Refresca la tabla cuando se cierre el
                                                                               // formulario
                 }
+
             });
         }
 
@@ -323,10 +330,12 @@ public class FrmVendedor extends javax.swing.JFrame {
             modificarVendedorForm.setVisible(true);
 
             modificarVendedorForm.addWindowListener(new java.awt.event.WindowAdapter() {
+
                 @Override
                 public void windowClosed(java.awt.event.WindowEvent e) {
                     mostrarTabla(vendedorMemory.obtenerTodosLosVendedores()); // Refresca la tabla
                 }
+
             });
         }
     }
@@ -357,7 +366,7 @@ public class FrmVendedor extends javax.swing.JFrame {
 
         List<Vendedor> listaVendedores = vendedorMemory.obtenerTodosLosVendedores();
 
-        if (listaVendedores.isEmpty()) {
+        if (listaVendedores == null || listaVendedores.isEmpty()) {
             // Si la lista está vacía, puedes decidir no añadir filas.
             // Esto vacía la tabla.
             tbVendedorDatos.setModel(model); // Modelo vacío

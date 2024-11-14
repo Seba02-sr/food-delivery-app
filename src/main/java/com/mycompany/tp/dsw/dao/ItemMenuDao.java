@@ -23,7 +23,7 @@ public class ItemMenuDao {
         items = new ArrayList<>();
         vendedorMemory = new VendedorMemory();
         categoriaMemory = new CategoriaMemory();
-        valoresInciales();
+        // valoresInciales();
     }
 
     public void valoresInciales() {
@@ -44,19 +44,22 @@ public class ItemMenuDao {
         List<ItemMenu> listaVendedor = vendedor.getItemsMenu();
         listaVendedor.add(platoEjemplo);
         vendedor.setItemsMenu(listaVendedor);
+
+        System.out.println("Lista vendedor en valores iniciales: " + vendedor.getItemsMenu().toString());
     }
 
     public void add(ItemMenu itemMenu) {
         itemMenu.setId(currentID++);
         items.add(itemMenu);
 
-        Integer idVendedor = itemMenu.getVendedor().getId();
-        Vendedor vendedor = vendedorMemory.buscarVendedorPorId(idVendedor);
+        System.out.println("Es vendedor? : " + itemMenu.getVendedor());
+        Vendedor vendedor = itemMenu.getVendedor();
         List<ItemMenu> listaVendedor = itemMenu.getVendedor().getItemsMenu();
+        System.out.println("Lista previa a agregar Nuevo item: " + listaVendedor.toString());
         listaVendedor.add(itemMenu);
         vendedor.setItemsMenu(listaVendedor);
-        System.out.println("Items: " + items.toString());
-        System.out.println("itemMenu" + itemMenu.toString());
+        System.out.println("Lista items total: " + items.toString());
+        System.out.println("Nuevo item a agregar: " + itemMenu.toString());
         System.out.println("Vendedor: " + itemMenu.getVendedor().toString());
     }
 

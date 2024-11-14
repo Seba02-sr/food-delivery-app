@@ -4,11 +4,11 @@
  */
 package com.mycompany.tp.dsw.view;
 
-import com.mycompany.tp.dsw.dao.ItemMenuDao;
 import com.mycompany.tp.dsw.memory.ItemMenuMemory;
 import com.mycompany.tp.dsw.model.Bebida;
 import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.Plato;
+import com.mycompany.tp.dsw.service.MemoryManager;
 
 /**
  *
@@ -18,11 +18,14 @@ public class FrmVerDetalles extends javax.swing.JFrame {
 
     private String idItem;
     private final ItemMenuMemory itemMenuMemory;
+    private final MemoryManager memoryManager;
 
     public FrmVerDetalles(String idItem) {
         initComponents();
         this.idItem = idItem;
-        this.itemMenuMemory = new ItemMenuMemory();
+
+        memoryManager = MemoryManager.getInstance();
+        this.itemMenuMemory = memoryManager.getItemMenuMemory();
         verTabla();
     }
 

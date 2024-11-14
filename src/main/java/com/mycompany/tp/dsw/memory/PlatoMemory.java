@@ -20,7 +20,7 @@ public class PlatoMemory extends ItemMenuMemory {
      * @return Lista de platos
      */
     public List<Plato> obtenerTodosLosPlatos() {
-        return platoDao.findAllPlato();
+        return platoDao.getPlatos();
     }
 
     /**
@@ -41,7 +41,9 @@ public class PlatoMemory extends ItemMenuMemory {
      * @return Lista de platos del restaurante, cuyo id es el parametro
      */
     public List<Plato> obtenerPlatoPorIdVendedor(Integer id) {
-        return platoDao.findByIdVendedor(id);
+        List<Plato> platos = platoDao.findByIdVendedor(id);
+        System.out.println("Platos en memory: " + platos.toString());
+        return platos;
     }
 
     public void modificarPlato(PlatoDto platoDto) {

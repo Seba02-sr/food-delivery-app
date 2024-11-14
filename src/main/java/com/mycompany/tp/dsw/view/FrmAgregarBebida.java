@@ -6,22 +6,27 @@ package com.mycompany.tp.dsw.view;
 
 import com.mycompany.tp.dsw.dto.BebidaDto;
 import com.mycompany.tp.dsw.memory.BebidaMemory;
+import com.mycompany.tp.dsw.service.MemoryManager;
+
+import javax.swing.JSpinner;
 
 /**
  *
  * @author Usuario
  */
-public class FrmAgregarBebida extends javax.swing.JFrame {
+public class FrmAgregarBebida extends javax.swing.JDialog {
 
+    private final MemoryManager memoryManager;
     private final BebidaMemory bebidaMemory;
     private final BebidaDto bebidaDto;
     private FrmItemMenu itemMenuForm;
 
-    public FrmAgregarBebida(BebidaDto bebidaDto, FrmItemMenu itemMenuForm) {
+    public FrmAgregarBebida(BebidaDto bebidaDto, FrmAgregarItem agregarItemForm) {
+        super(agregarItemForm, true);
         initComponents();
+        memoryManager = MemoryManager.getInstance();
         this.bebidaDto = bebidaDto;
-        bebidaMemory = new BebidaMemory();
-        this.itemMenuForm = itemMenuForm;
+        bebidaMemory = memoryManager.getBebidaMemory();
 
     }
 
@@ -159,7 +164,7 @@ public class FrmAgregarBebida extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -183,7 +188,7 @@ public class FrmAgregarBebida extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FrmAgregarBebida(new BebidaDto(),
-                        new FrmItemMenu(null, null, "1", "nombre")).setVisible(true);
+                        new FrmAgregarItem(null, null, null)).setVisible(true);
             }
         });
     }

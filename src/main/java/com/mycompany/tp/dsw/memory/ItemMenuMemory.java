@@ -2,6 +2,7 @@ package com.mycompany.tp.dsw.memory;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import com.mycompany.tp.dsw.dao.CategoriaDao;
 import com.mycompany.tp.dsw.dao.ItemMenuDao;
 import com.mycompany.tp.dsw.dto.BebidaDto;
@@ -17,13 +18,11 @@ import com.mycompany.tp.dsw.model.Vendedor;
 public class ItemMenuMemory {
 
     private CategoriaDao categoriaDao;
-    private VendedorMemory vendedorMemory;
     private ItemMenuDao itemMenuDao;
 
     public ItemMenuMemory() {
         itemMenuDao = new ItemMenuDao();
         categoriaDao = new CategoriaDao();
-        vendedorMemory = new VendedorMemory();
 
     }
 
@@ -95,7 +94,7 @@ public class ItemMenuMemory {
      * @throws VendedorNoEncontradoException Si no encuentra el Restaurante
      */
     public List<ItemMenu> filtrarPorVendedor(VendedorDto vendedorDto) throws VendedorNoEncontradoException {
-        Vendedor vendedor = vendedorMemory.parseVendedor(vendedorDto);
+        Vendedor vendedor = VendedorMemory.parseVendedor(vendedorDto);
         return itemMenuDao.findByVendedor(vendedor);
     }
 
@@ -124,6 +123,7 @@ public class ItemMenuMemory {
         // 2. Crear el objeto
         switch (itemMenuDto.getClass().getSimpleName()) {
             case "PlatoDto":
+                System.out.println("ID en platoDto ItemMenuMemory: " + itemMenuDto.getId());
                 PlatoDto platoDto = (PlatoDto) itemMenuDto;
                 System.out.println("ID en platoDto ItemMenuMemory: " + platoDto.getId());
                 return new Plato(platoDto);

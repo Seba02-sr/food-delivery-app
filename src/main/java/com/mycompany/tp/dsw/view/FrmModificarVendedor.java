@@ -7,6 +7,7 @@ package com.mycompany.tp.dsw.view;
 import com.mycompany.tp.dsw.dto.VendedorDto;
 import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
 import com.mycompany.tp.dsw.memory.VendedorMemory;
+import com.mycompany.tp.dsw.service.MemoryManager;
 import com.mycompany.tp.dsw.service.ValidarVendedor;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -18,6 +19,7 @@ import javax.swing.JOptionPane;
 public class FrmModificarVendedor extends javax.swing.JFrame {
 
     private final VendedorMemory vendedorMemory;
+    private final MemoryManager memoryManager;
 
     /**
      * Constructor sin seleccion de fila
@@ -30,7 +32,8 @@ public class FrmModificarVendedor extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setSize(440, 320);
         this.setResizable(false);
-        this.vendedorMemory = vendedorMemory;
+        memoryManager = MemoryManager.getInstance();
+        this.vendedorMemory = memoryManager.getVendedorMemory();
     }
 
     /**
@@ -47,7 +50,8 @@ public class FrmModificarVendedor extends javax.swing.JFrame {
     public FrmModificarVendedor(VendedorMemory vendedorMemory, VendedorDto vendedorDto, String fechaRegistro) {
         initComponents();
         configureWindow();
-        this.vendedorMemory = vendedorMemory;
+        memoryManager = MemoryManager.getInstance();
+        this.vendedorMemory = memoryManager.getVendedorMemory();
 
         // Asignar los valores del DTO a los campos del formulario
         rellenarCampos(vendedorDto, fechaRegistro);
