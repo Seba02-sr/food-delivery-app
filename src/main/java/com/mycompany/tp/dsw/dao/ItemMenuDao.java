@@ -18,8 +18,8 @@ public class ItemMenuDao {
     protected static List<ItemMenu> items;
     private static int currentID = 0;
     private static final MemoryManager memoryManager;
-    private static VendedorMemory vendedorMemory;
-    private static CategoriaMemory categoriaMemory;
+    private final static VendedorMemory vendedorMemory;
+    private final static CategoriaMemory categoriaMemory;
 
     static {
         items = new ArrayList<>();
@@ -34,7 +34,6 @@ public class ItemMenuDao {
     }
 
     public static void valoresInciales() {
-        System.out.println("Se impime esto");
         Vendedor vendedor = vendedorMemory.buscarVendedorPorId(101);
         Plato platoEjemplo = new Plato(
                 "Milanesa con Papas Fritas",
@@ -70,7 +69,7 @@ public class ItemMenuDao {
     }
 
     public List<ItemMenu> findByNombre(String nombre) {
-        return items.stream().filter(i -> i.getNombre().equalsIgnoreCase(nombre))
+        return items.stream().filter(i -> i.getNombre().contains(nombre))
                 .toList();
     }
 

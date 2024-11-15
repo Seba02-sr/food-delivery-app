@@ -1,9 +1,11 @@
 package com.mycompany.tp.dsw.memory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mycompany.tp.dsw.dao.PlatoDao;
 import com.mycompany.tp.dsw.dto.PlatoDto;
+import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.Plato;
 
 public class PlatoMemory extends ItemMenuMemory {
@@ -42,6 +44,17 @@ public class PlatoMemory extends ItemMenuMemory {
      */
     public List<Plato> obtenerPlatoPorIdVendedor(Integer id) {
         List<Plato> platos = platoDao.findByIdVendedor(id);
+        return platos;
+    }
+
+    public List<Plato> buscarPlatoPorNombre(String nombre) {
+        List<ItemMenu> items = buscarItemMenuPorNombre(nombre);
+        List<Plato> platos = new ArrayList<>();
+        for (ItemMenu itemMenu : items) {
+            if (itemMenu instanceof Plato) {
+                platos.add((Plato) itemMenu);
+            }
+        }
         return platos;
     }
 
