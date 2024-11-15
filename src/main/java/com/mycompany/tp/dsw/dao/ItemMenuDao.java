@@ -11,22 +11,30 @@ import com.mycompany.tp.dsw.model.Bebida;
 import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.Plato;
 import com.mycompany.tp.dsw.model.Vendedor;
+import com.mycompany.tp.dsw.service.MemoryManager;
 
 public class ItemMenuDao {
 
     protected static List<ItemMenu> items;
     private static int currentID = 0;
-    private VendedorMemory vendedorMemory;
-    private CategoriaMemory categoriaMemory;
+    private static final MemoryManager memoryManager;
+    private static VendedorMemory vendedorMemory;
+    private static CategoriaMemory categoriaMemory;
 
-    public ItemMenuDao() {
+    static {
         items = new ArrayList<>();
-        vendedorMemory = new VendedorMemory();
-        categoriaMemory = new CategoriaMemory();
-        // valoresInciales();
+        memoryManager = MemoryManager.getInstance();
+        vendedorMemory = memoryManager.getVendedorMemory();
+        categoriaMemory = memoryManager.getCategoriaMemory();
+        valoresInciales();
     }
 
-    public void valoresInciales() {
+    public ItemMenuDao() {
+
+    }
+
+    public static void valoresInciales() {
+        System.out.println("Se impime esto");
         Vendedor vendedor = vendedorMemory.buscarVendedorPorId(101);
         Plato platoEjemplo = new Plato(
                 "Milanesa con Papas Fritas",
@@ -41,26 +49,24 @@ public class ItemMenuDao {
                 categoriaMemory.obtenerCategoriaPorNombre("Comida Clasica"),
                 vendedor);
         items.add(platoEjemplo);
+
+        // Actualizar la lista del vendedor
         List<ItemMenu> listaVendedor = vendedor.getItemsMenu();
+
         listaVendedor.add(platoEjemplo);
         vendedor.setItemsMenu(listaVendedor);
 
-        System.out.println("Lista vendedor en valores iniciales: " + vendedor.getItemsMenu().toString());
     }
 
     public void add(ItemMenu itemMenu) {
         itemMenu.setId(currentID++);
         items.add(itemMenu);
 
-        System.out.println("Es vendedor? : " + itemMenu.getVendedor());
+        // Actualizar la lista del vendedor
         Vendedor vendedor = itemMenu.getVendedor();
         List<ItemMenu> listaVendedor = itemMenu.getVendedor().getItemsMenu();
-        System.out.println("Lista previa a agregar Nuevo item: " + listaVendedor.toString());
         listaVendedor.add(itemMenu);
         vendedor.setItemsMenu(listaVendedor);
-        System.out.println("Lista items total: " + items.toString());
-        System.out.println("Nuevo item a agregar: " + itemMenu.toString());
-        System.out.println("Vendedor: " + itemMenu.getVendedor().toString());
     }
 
     public List<ItemMenu> findByNombre(String nombre) {
@@ -69,7 +75,6 @@ public class ItemMenuDao {
     }
 
     public void update(ItemMenu itemMenu) {
-        System.out.println("ID en itemMenuDao: " + itemMenu);
         switch (itemMenu.getClass().getSimpleName()) {
             case "Plato":
                 PlatoDao platoDao = new PlatoDao();

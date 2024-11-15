@@ -13,15 +13,18 @@ import com.mycompany.tp.dsw.service.ValidarVendedor;
 
 public class VendedorDao {
 
-    private List<Vendedor> vendedores;
+    private static List<Vendedor> vendedores = new ArrayList<>();
     private int currentId = 0;
 
-    public VendedorDao() {
-        vendedores = new ArrayList<>();
-        // valoresInciales();
+    static {
+        valoresInciales();
     }
 
-    public void valoresInciales() {
+    public VendedorDao() {
+
+    }
+
+    public static void valoresInciales() {
         VendedorDto vendedorDto1 = new VendedorDto("La Tienda de Ana", "Av. San Martín 1234", null, null);
         vendedorDto1.setCoordenada(new Coordenada(-34.6037, -58.3816));
         vendedorDto1.setId(101);

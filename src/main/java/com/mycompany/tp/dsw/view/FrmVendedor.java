@@ -273,8 +273,7 @@ public class FrmVendedor extends javax.swing.JFrame {
 
                 @Override
                 public void windowClosed(java.awt.event.WindowEvent e) {
-                    mostrarTabla(vendedorMemory.obtenerTodosLosVendedores()); // Refresca la tabla cuando se cierre el
-                                                                              // formulario
+                    mostrarTabla(vendedorMemory.obtenerTodosLosVendedores());
                 }
 
             });

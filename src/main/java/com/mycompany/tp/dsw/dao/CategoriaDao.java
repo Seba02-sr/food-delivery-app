@@ -7,14 +7,19 @@ import com.mycompany.tp.dsw.model.Categoria;
 import com.mycompany.tp.dsw.model.TipoCategoria;
 
 public class CategoriaDao {
-        List<Categoria> categorias;
+        private static List<Categoria> categorias;
 
-        public CategoriaDao() {
+        static {
                 categorias = new ArrayList<>();
                 datosIniciales();
         }
 
-        void datosIniciales() {
+        public CategoriaDao() {
+
+        }
+
+        public static void datosIniciales() {
+                System.out.println("categoria Dao");
                 categorias.add(new Categoria(
                                 1,
                                 "Comida Vegana",

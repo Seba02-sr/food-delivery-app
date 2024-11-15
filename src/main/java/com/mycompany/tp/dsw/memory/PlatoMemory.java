@@ -42,7 +42,6 @@ public class PlatoMemory extends ItemMenuMemory {
      */
     public List<Plato> obtenerPlatoPorIdVendedor(Integer id) {
         List<Plato> platos = platoDao.findByIdVendedor(id);
-        System.out.println("Platos en memory: " + platos.toString());
         return platos;
     }
 
@@ -65,6 +64,6 @@ public class PlatoMemory extends ItemMenuMemory {
     }
 
     private Boolean esNullOrBlank(String palabra) {
-        return palabra.trim() == null || palabra.isBlank();
+        return palabra == null || palabra.isBlank();
     }
 }

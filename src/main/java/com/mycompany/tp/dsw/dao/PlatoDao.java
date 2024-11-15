@@ -31,7 +31,6 @@ public class PlatoDao extends ItemMenuDao {
     public void update(Plato plato) {
 
         Plato existePlato = findPlatoById(plato.getId());
-        System.out.println(plato.getId());
         if (existePlato != null) {
             String nombre = plato.getNombre().trim();
             String descripcion = plato.getDescripcion().trim();

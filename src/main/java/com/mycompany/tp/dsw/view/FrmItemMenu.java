@@ -64,7 +64,6 @@ public class FrmItemMenu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
         jPanel1 = new javax.swing.JPanel();
         btnEliminar = new javax.swing.JButton();
         btnAgregar = new javax.swing.JButton();
@@ -216,7 +215,44 @@ public class FrmItemMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnEliminarActionPerformed
+        int selectedRow = tbItemDatos.getSelectedRow();
+        String tipoCategoria = jComboBoxPlatoBebida.getSelectedItem().toString();
+        FrmEliminarItemMenu eliminarItemMenuForm = null;
 
+        if (selectedRow != -1) {
+            // 1. Obtener el id de la fila seleccionada
+            String idText = tbItemDatos.getValueAt(selectedRow, 0).toString();
+            eliminarItemMenuForm = new FrmEliminarItemMenu(idText, this, tipoCategoria, idVendedor);
+        } else {
+            eliminarItemMenuForm = new FrmEliminarItemMenu(this, tipoCategoria, idVendedor);
+        }
+
+        eliminarItemMenuForm.setVisible(true);
+        switch (tipoCategoria) {
+            case "Plato":
+                List<Plato> platos = platoMemory.obtenerPlatoPorIdVendedor(idVendedor);
+
+                eliminarItemMenuForm.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent e) {
+                        mostrarItemMenuEnPantalla(platos);
+                    }
+                });
+                break;
+            case "Bebida":
+                List<Bebida> bebidas = bebidaMemory.obtenerBebidaPorIdVendedor(idVendedor);
+
+                eliminarItemMenuForm.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent e) {
+                        mostrarItemMenuEnPantalla(bebidas);
+                    }
+                });
+                break;
+
+            default:
+                break;
+        }
     }// GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnAgregarActionPerformed
@@ -242,29 +278,59 @@ public class FrmItemMenu extends javax.swing.JFrame {
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnModificarActionPerformed
         int selectedRow = tbItemDatos.getSelectedRow();
+        String tipoCategoria = jComboBoxPlatoBebida.getSelectedItem().toString();
         if (selectedRow != -1) {
             // 1. Obtener el id de la fila seleccionada
             String idText = tbItemDatos.getValueAt(selectedRow, 0).toString();
             Integer id = Integer.parseInt(idText);
 
             // 2. Obtener la instancia del item
-            String tipoCategoria = jComboBoxPlatoBebida.getSelectedItem().toString();
             switch (tipoCategoria) {
                 case "Plato":
                     FrmModificarPlato modificarPlatoForm = new FrmModificarPlato(id);
                     modificarPlatoForm.setVisible(true);
+                    List<Plato> platos = platoMemory.obtenerPlatoPorIdVendedor(idVendedor);
+
+                    modificarPlatoForm.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosed(java.awt.event.WindowEvent e) {
+                            mostrarItemMenuEnPantalla(platos); // Refresca la tabla cuando se cierre el formulario
+                        }
+                    });
                     break;
                 case "bebida":
                     break;
                 default:
-
             }
+        } else {
+            switch (tipoCategoria) {
+                case "Plato":
+                    FrmModificarPlato modificarPlatoForm = new FrmModificarPlato();
+                    modificarPlatoForm.setVisible(true);
+                    List<Plato> platos = platoMemory.obtenerPlatoPorIdVendedor(idVendedor);
 
+                    modificarPlatoForm.addWindowListener(new java.awt.event.WindowAdapter() {
+
+                        @Override
+                        public void windowClosed(java.awt.event.WindowEvent e) {
+                            mostrarItemMenuEnPantalla(platos); // Refresca la tabla cuando se cierre el formulario
+                        }
+
+                    });
+                    break;
+                case "bebida":
+                    break;
+                default:
+            }
         }
     }// GEN-LAST:event_btnModificarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
+        FrmBuscarItemMenu buscarItemMenuForm = new FrmBuscarItemMenu(this);
+        buscarItemMenuForm.setVisible(true);
+        buscarItemMenuForm.setModal(true);
+        this.dispose();
+
     }// GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnSalirActionPerformed
@@ -298,7 +364,7 @@ public class FrmItemMenu extends javax.swing.JFrame {
         }
     }// GEN-LAST:event_btnVerDetallesActionPerformed
 
-    private void mostrarItemMenuEnPantalla(List<? extends ItemMenu> listaItemMenu) {
+    public void mostrarItemMenuEnPantalla(List<? extends ItemMenu> listaItemMenu) {
         DefaultTableModel model;
         String[] titulo;
 

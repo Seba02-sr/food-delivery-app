@@ -11,12 +11,16 @@ import com.mycompany.tp.dsw.model.Pedido;
 
 public class PedidoDao {
 
-    List<Pedido> pedidos;
-    private int currentID;
+    private static List<Pedido> pedidos;
+    private static int currentID;
 
-    public PedidoDao() {
+    static {
         pedidos = new ArrayList<>();
         currentID = 0;
+    }
+
+    public PedidoDao() {
+
     }
 
     public void add(Pedido pedido) {

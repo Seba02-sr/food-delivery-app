@@ -23,6 +23,7 @@ public class FrmModificarPlato extends javax.swing.JFrame {
 
     public FrmModificarPlato() {
         initComponents();
+        configureWindow();
         memoryManager = MemoryManager.getInstance();
         this.platoMemory = memoryManager.getPlatoMemory();
     }
@@ -34,8 +35,6 @@ public class FrmModificarPlato extends javax.swing.JFrame {
         this.platoMemory = memoryManager.getPlatoMemory();
         this.idPlato = idPlato;
         rellenarCampos();
-
-        // Asignar los valores de la instancia a los campos
 
     }
 
@@ -252,6 +251,7 @@ public class FrmModificarPlato extends javax.swing.JFrame {
 
         platoMemory.modificarPlato(platoDto);
         JOptionPane.showMessageDialog(null, "Plato modificado exitosamente");
+        this.dispose();
 
     }// GEN-LAST:event_btnModificarActionPerformed
 

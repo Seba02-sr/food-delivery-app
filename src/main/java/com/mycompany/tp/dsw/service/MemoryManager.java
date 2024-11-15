@@ -15,7 +15,6 @@ import com.mycompany.tp.dsw.memory.VendedorMemory;
  */
 public class MemoryManager {
 
-    // Instancias únicas de todas las clases Memory
     private static MemoryManager instance;
 
     private BebidaMemory bebidaMemory;
@@ -27,19 +26,9 @@ public class MemoryManager {
     private PlatoMemory platoMemory;
     private VendedorMemory vendedorMemory;
 
-    // Constructor privado
     private MemoryManager() {
-        bebidaMemory = new BebidaMemory();
-        categoriaMemory = new CategoriaMemory();
-        clienteMemory = new ClienteMemory();
-        itemMenuMemory = new ItemMenuMemory();
-        itemPedidoMemory = new ItemPedidoMemory();
-        pedidoMemory = new PedidoMemory();
-        platoMemory = new PlatoMemory();
-        vendedorMemory = new VendedorMemory();
     }
 
-    // Método para obtener la instancia única
     public static MemoryManager getInstance() {
         if (instance == null) {
             instance = new MemoryManager();
@@ -47,36 +36,60 @@ public class MemoryManager {
         return instance;
     }
 
-    // Métodos getter para acceder a las instancias de cada Memory
+    // Lazy initialization para cada clase Memory
     public BebidaMemory getBebidaMemory() {
+        if (bebidaMemory == null) {
+            bebidaMemory = new BebidaMemory();
+        }
         return bebidaMemory;
     }
 
     public CategoriaMemory getCategoriaMemory() {
+        if (categoriaMemory == null) {
+            categoriaMemory = new CategoriaMemory();
+        }
         return categoriaMemory;
     }
 
     public ClienteMemory getClienteMemory() {
+        if (clienteMemory == null) {
+            clienteMemory = new ClienteMemory();
+        }
         return clienteMemory;
     }
 
     public ItemMenuMemory getItemMenuMemory() {
+        if (itemMenuMemory == null) {
+            itemMenuMemory = new ItemMenuMemory();
+        }
         return itemMenuMemory;
     }
 
     public ItemPedidoMemory getItemPedidoMemory() {
+        if (itemPedidoMemory == null) {
+            itemPedidoMemory = new ItemPedidoMemory();
+        }
         return itemPedidoMemory;
     }
 
     public PedidoMemory getPedidoMemory() {
+        if (pedidoMemory == null) {
+            pedidoMemory = new PedidoMemory();
+        }
         return pedidoMemory;
     }
 
     public PlatoMemory getPlatoMemory() {
+        if (platoMemory == null) {
+            platoMemory = new PlatoMemory();
+        }
         return platoMemory;
     }
 
     public VendedorMemory getVendedorMemory() {
+        if (vendedorMemory == null) {
+            vendedorMemory = new VendedorMemory();
+        }
         return vendedorMemory;
     }
 }

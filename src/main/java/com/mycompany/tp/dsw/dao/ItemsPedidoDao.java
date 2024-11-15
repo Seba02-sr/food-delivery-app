@@ -22,14 +22,18 @@ import com.mycompany.tp.dsw.model.Vendedor;
  */
 public class ItemsPedidoDao {
 
-    private List<ItemPedido> itemsPedido;
-    private int currentID;
-    private final VendedorDao vendedorDao;
+    private static List<ItemPedido> itemsPedido;
+    private static int currentID;
+    private static final VendedorDao vendedorDao;
 
-    public ItemsPedidoDao() {
+    static {
         itemsPedido = new ArrayList<>();
         currentID = 0;
         vendedorDao = new VendedorDao();
+    }
+
+    public ItemsPedidoDao() {
+
     }
 
     // Ver con el FRM si es necesario

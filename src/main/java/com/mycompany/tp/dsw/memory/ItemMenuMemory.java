@@ -62,7 +62,6 @@ public class ItemMenuMemory {
      */
     protected void modificarItemMenu(ItemMenuDto itemMenuDto) {
         ItemMenu itemMenu = parseItemMenu(itemMenuDto);
-        System.out.println("33333: " + itemMenu.getId());
         itemMenuDao.update(itemMenu);
     }
 

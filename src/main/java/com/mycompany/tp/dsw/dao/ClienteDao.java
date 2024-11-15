@@ -8,8 +8,8 @@ import com.mycompany.tp.dsw.model.Cliente;
 
 public class ClienteDao {
 
-    List<Cliente> clientes = new ArrayList<>();
-    private int currentID = 0;
+    private static List<Cliente> clientes = new ArrayList<>();
+    private static int currentID = 0;
 
     public void add(Cliente cliente) {
         cliente.setId(currentID++);
