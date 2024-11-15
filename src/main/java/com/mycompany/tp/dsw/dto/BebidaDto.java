@@ -36,6 +36,16 @@ public class BebidaDto extends ItemMenuDto {
         this.volumenText = volumenText;
     }
 
+    // Constructor para metodo modificar bebida
+    public BebidaDto(String idText, String nombre, String descripcion, String precioText, String categoriaText,
+            Vendedor vendedor,
+            String graduacionAlcoholicaText, String tamanoText, String volumenText) {
+        super(idText,nombre, descripcion, precioText, categoriaText, vendedor);
+        this.graduacionAlcoholicaText = graduacionAlcoholicaText;
+        this.tamanoText = tamanoText;
+        this.volumenText = volumenText;
+    }
+
     public Double getGraduacionAlcoholica() {
         return graduacionAlcoholica;
     }

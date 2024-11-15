@@ -57,6 +57,7 @@ public class FrmAgregarItem extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -171,21 +172,19 @@ public class FrmAgregarItem extends javax.swing.JDialog {
         String categoria = jComboBoxCategoria.getSelectedItem().toString();
 
         Vendedor vendedor = vendedorMemory.buscarVendedorPorId(idVendedor);
-        switch (tipoCategoria.toLowerCase()) {
-            case "bebida":
+        switch (tipoCategoria) {
+            case "Bebida":
                 BebidaDto bebidaDto = new BebidaDto(nombre, descripcion, precio, categoria, vendedor);
                 FrmAgregarBebida agregarBebidaForm = new FrmAgregarBebida(bebidaDto, this);
+                agregarBebidaForm.setModal(true);
                 agregarBebidaForm.setVisible(true);
                 this.dispose();
                 break;
-            case "comida":
+            case "Plato":
                 PlatoDto platoDto = new PlatoDto(nombre, descripcion, precio, categoria, vendedor);
                 FrmAgregarPlato agregarPlatoForm = new FrmAgregarPlato(platoDto, this);
                 agregarPlatoForm.setModal(true);
                 agregarPlatoForm.setVisible(true);
-                this.dispose();
-                break;
-            default:
                 this.dispose();
                 break;
         }
@@ -193,10 +192,16 @@ public class FrmAgregarItem extends javax.swing.JDialog {
     }// GEN-LAST:event_btnSiguienteActionPerformed
 
     private void categoriaBox() {
-        List<Categoria> categorias = categoriaMemory.buscarPorTipoCategoria(tipoCategoria);
+        String categoria;
+        if (tipoCategoria.equals("Plato")) {
+            categoria = "Comida";
+        } else {
+            categoria = "Bebida";
+        }
+        List<Categoria> categorias = categoriaMemory.buscarPorTipoCategoria(categoria);
 
-        for (Categoria categoria : categorias) {
-            String nombre = categoria.getNombre();
+        for (Categoria cat : categorias) {
+            String nombre = cat.getNombre();
             jComboBoxCategoria.addItem(nombre);
         }
 

@@ -42,7 +42,7 @@ public class ItemMenuDao {
                 true,
                 false,
                 500.0,
-                1,
+                101,
                 new BigDecimal("12.50"),
                 "Clásico plato argentino",
                 categoriaMemory.obtenerCategoriaPorNombre("Comida Clasica"),
@@ -76,14 +76,17 @@ public class ItemMenuDao {
     public void update(ItemMenu itemMenu) {
         switch (itemMenu.getClass().getSimpleName()) {
             case "Plato":
+                System.out.println("PLATO ItemMenuDao ID: " + itemMenu.getId());
                 PlatoDao platoDao = new PlatoDao();
                 platoDao.update((Plato) itemMenu);
                 break;
             case "Bebida":
+                System.out.println("BEBIDA ItemMenuDao ID: " + itemMenu.getId());
                 BebidaDao bebidaDao = new BebidaDao();
                 bebidaDao.update((Bebida) itemMenu);
                 break;
             default:
+                System.out.println("DEFAULT ItemMenuDao");
                 break;
         }
 

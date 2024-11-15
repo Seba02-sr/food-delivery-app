@@ -169,7 +169,7 @@ public class FrmAgregarPlato extends javax.swing.JDialog {
         platoDto.setAptoVegetariano(aptoVegetariano);
 
         platoMemory.registrarPlato(platoDto);
-        JOptionPane.showMessageDialog(null, "Item creado exitosamente");
+        JOptionPane.showMessageDialog(null, "Plato creado exitosamente");
         this.dispose();
     }// GEN-LAST:event_btnGuardarActionPerformed
 

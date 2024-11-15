@@ -9,6 +9,7 @@ import com.mycompany.tp.dsw.memory.PlatoMemory;
 import com.mycompany.tp.dsw.model.Bebida;
 import com.mycompany.tp.dsw.model.Plato;
 import com.mycompany.tp.dsw.service.MemoryManager;
+import com.mycompany.tp.dsw.view.itemMenu.bebida.FrmModificarBebida;
 import com.mycompany.tp.dsw.view.itemMenu.plato.FrmModificarPlato;
 
 import java.util.List;
@@ -258,22 +259,31 @@ public class FrmItemMenu extends javax.swing.JFrame {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnAgregarActionPerformed
         String tipoCategoria = jComboBoxPlatoBebida.getSelectedItem().toString();
-        if (tipoCategoria.equalsIgnoreCase("Plato")) {
-            tipoCategoria = "Comida";
-        }
 
         FrmAgregarItem agregarItemForm = new FrmAgregarItem(tipoCategoria, idVendedor, this);
         agregarItemForm.setModal(true);
         agregarItemForm.setVisible(true);
 
-        List<Plato> platos = platoMemory.obtenerPlatoPorIdVendedor(idVendedor);
-
-        agregarItemForm.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent e) {
-                mostrarItemMenuEnPantalla(platos); // Refresca la tabla cuando se cierre el formulario
-            }
-        });
+        switch (tipoCategoria) {
+            case "Plato":
+                List<Plato> platos = platoMemory.obtenerPlatoPorIdVendedor(idVendedor);
+                agregarItemForm.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent e) {
+                        mostrarItemMenuEnPantalla(platos);
+                    }
+                });
+                break;
+            case "Bebida":
+                List<Bebida> bebidas = bebidaMemory.obtenerBebidaPorIdVendedor(idVendedor);
+                agregarItemForm.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent e) {
+                        mostrarItemMenuEnPantalla(bebidas);
+                    }
+                });
+                break;
+        }
 
     }// GEN-LAST:event_btnAgregarActionPerformed
 
@@ -288,18 +298,34 @@ public class FrmItemMenu extends javax.swing.JFrame {
             // 2. Obtener la instancia del item
             switch (tipoCategoria) {
                 case "Plato":
+                    System.out.println("Modifcando plato");
                     FrmModificarPlato modificarPlatoForm = new FrmModificarPlato(id);
                     modificarPlatoForm.setVisible(true);
-                    List<Plato> platos = platoMemory.obtenerPlatoPorIdVendedor(idVendedor);
 
                     modificarPlatoForm.addWindowListener(new java.awt.event.WindowAdapter() {
                         @Override
                         public void windowClosed(java.awt.event.WindowEvent e) {
+                            List<Plato> platos = platoMemory.obtenerPlatoPorIdVendedor(idVendedor);
                             mostrarItemMenuEnPantalla(platos); // Refresca la tabla cuando se cierre el formulario
                         }
                     });
                     break;
-                case "bebida":
+                case "Bebida":
+                    System.out.println("Modificando Bebida");
+                    FrmModificarBebida modificarBebidaForm = new FrmModificarBebida(id);
+                    modificarBebidaForm.setVisible(true);
+
+                    modificarBebidaForm.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosed(java.awt.event.WindowEvent e) {
+                            List<Bebida> bebidas = bebidaMemory.obtenerBebidaPorIdVendedor(idVendedor);
+                            List<Bebida> allBebidas = bebidaMemory.obtenerTodasLasBebidas();
+                            System.out
+                                    .println("Esto deberia tener todas las bebidas modificadas: " + bebidas.toString());
+                            System.out.println("Y esto todas las bebidas: " + allBebidas);
+                            mostrarItemMenuEnPantalla(bebidas); // Refresca la tabla cuando se cierre el formulario
+                        }
+                    });
                     break;
                 default:
             }
@@ -314,14 +340,23 @@ public class FrmItemMenu extends javax.swing.JFrame {
 
                         @Override
                         public void windowClosed(java.awt.event.WindowEvent e) {
-                            mostrarItemMenuEnPantalla(platos); // Refresca la tabla cuando se cierre el formulario
+                            mostrarItemMenuEnPantalla(platos);
                         }
 
                     });
                     break;
-                case "bebida":
+                case "Bebida":
+                    FrmModificarBebida modificarBebidaForm = new FrmModificarBebida();
+                    modificarBebidaForm.setVisible(true);
+                    List<Plato> bebidas = platoMemory.obtenerPlatoPorIdVendedor(idVendedor);
+
+                    modificarBebidaForm.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosed(java.awt.event.WindowEvent e) {
+                            mostrarItemMenuEnPantalla(bebidas);
+                        }
+                    });
                     break;
-                default:
             }
         }
     }// GEN-LAST:event_btnModificarActionPerformed

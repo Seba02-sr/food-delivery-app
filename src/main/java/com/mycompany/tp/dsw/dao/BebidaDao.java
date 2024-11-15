@@ -8,17 +8,19 @@ import com.mycompany.tp.dsw.model.Bebida;
 public class BebidaDao extends ItemMenuDao {
 
     public List<Bebida> getBebidas() {
-        return items.stream()
+        List<Bebida> bebidas = items.stream()
                 .filter(i -> i instanceof Bebida)
                 .map(i -> (Bebida) i)
                 .toList();
+        return bebidas;
     }
 
-    public Bebida findById(Integer id) {
-        return getBebidas().stream()
+    public Bebida findBebidaById(Integer id) {
+        Bebida bebida = getBebidas().stream()
                 .filter(b -> b.getId().equals(id))
                 .findFirst()
                 .orElse(null);
+        return bebida;
     }
 
     public List<Bebida> findByIdVendedor(Integer id) {
@@ -28,7 +30,7 @@ public class BebidaDao extends ItemMenuDao {
     }
 
     public void update(Bebida bebida) {
-        Bebida existeBebida = findById(bebida.getId());
+        Bebida existeBebida = findBebidaById(bebida.getId());
         if (existeBebida != null) {
             String nombre = bebida.getNombre().trim();
             String descripcion = bebida.getDescripcion().trim();

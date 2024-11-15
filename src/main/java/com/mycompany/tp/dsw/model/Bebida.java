@@ -19,7 +19,7 @@ public class Bebida extends ItemMenu {
 
     // Constructor para agregar Bebida
     public Bebida(BebidaDto bebidaDto) {
-        super(null,
+        super(bebidaDto.getId(),
                 bebidaDto.getNombre(),
                 bebidaDto.getDescripcion(),
                 bebidaDto.getPrecio(),

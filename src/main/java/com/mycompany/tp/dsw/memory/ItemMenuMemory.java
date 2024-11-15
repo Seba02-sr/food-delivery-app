@@ -62,6 +62,8 @@ public class ItemMenuMemory {
      */
     protected void modificarItemMenu(ItemMenuDto itemMenuDto) {
         ItemMenu itemMenu = parseItemMenu(itemMenuDto);
+        System.out.println("ItemMenu: " + itemMenu.toString());
+        System.out.println("Class: " + itemMenu.getClass().getSimpleName());
         itemMenuDao.update(itemMenu);
     }
 
@@ -106,7 +108,7 @@ public class ItemMenuMemory {
 
         String id = itemMenuDto.getIdText();
         if (!esNullOrBlank(id)) {
-            itemMenuDto.setId(Integer.parseInt(id));
+            itemMenuDto.setId(Integer.valueOf(id));
         }
 
         String precio = itemMenuDto.getPrecioText();
@@ -122,13 +124,16 @@ public class ItemMenuMemory {
         // 2. Crear el objeto
         switch (itemMenuDto.getClass().getSimpleName()) {
             case "PlatoDto":
-                System.out.println("ID en platoDto ItemMenuMemory: " + itemMenuDto.getId());
                 PlatoDto platoDto = (PlatoDto) itemMenuDto;
-                System.out.println("ID en platoDto ItemMenuMemory: " + platoDto.getId());
+                System.out.println("Aca no deberia estar");
                 return new Plato(platoDto);
             case "BebidaDto":
+                System.out.println("ID en bebidaDto ItemMenuMemory: " + itemMenuDto.getId());
                 BebidaDto bebidaDto = (BebidaDto) itemMenuDto;
-                return new Bebida(bebidaDto);
+                System.out.println("ID en bebidaDto ItemMenuMemory: " + bebidaDto.getId());
+                Bebida bebida = new Bebida(bebidaDto);
+                return bebida;
+
             default:
                 System.out.println("No tiene que pasar por aca");
                 return null;
