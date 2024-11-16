@@ -28,10 +28,7 @@ public class FrmModificarVendedor extends javax.swing.JFrame {
      */
     public FrmModificarVendedor(VendedorMemory vendedorMemory) {
         initComponents();
-        this.setTitle("Modificar Vendedor");
-        this.setLocationRelativeTo(null);
-        this.setSize(440, 320);
-        this.setResizable(false);
+        configureWindow();
         memoryManager = MemoryManager.getInstance();
         this.vendedorMemory = memoryManager.getVendedorMemory();
     }

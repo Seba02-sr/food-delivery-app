@@ -34,6 +34,7 @@ public class Cliente implements Observer<Pedido> {
         this.cuit = clienteDto.getCuit();
         this.direccion = clienteDto.getDireccion();
         this.coordenada = clienteDto.getCoordenada();
+        this.email = clienteDto.getEmail();
     }
 
     public Cliente(int id, String nombre, String cuit, String direccion, String email, Coordenada coordenada) {

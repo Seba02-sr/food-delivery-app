@@ -23,12 +23,16 @@ public class FrmAgregarVendedor extends javax.swing.JFrame {
 
     public FrmAgregarVendedor(VendedorMemory vendedorMemory) {
         initComponents();
+        configureWindow();
+        memoryManager = MemoryManager.getInstance();
+        this.vendedorMemory = memoryManager.getVendedorMemory();
+    }
+
+    private void configureWindow() {
         this.setTitle("Agregar Vendedor");
         this.setLocationRelativeTo(null);
         this.setSize(440, 280);
         this.setResizable(false);
-        memoryManager = MemoryManager.getInstance();
-        this.vendedorMemory = memoryManager.getVendedorMemory();
     }
 
     /**

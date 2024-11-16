@@ -16,13 +16,10 @@ public class ClienteDao {
         clientes.add(cliente);
     }
 
-    public List<Cliente> findByNombre(String nombre) throws ClienteNoEncontradoException {
+    public List<Cliente> findByNombre(String nombre) {
         List<Cliente> clienteBuscado = clientes.stream()
                 .filter(c -> c.getNombre().toLowerCase().equals(nombre.toLowerCase()))
                 .toList();
-        if (clienteBuscado.isEmpty()) {
-            throw new ClienteNoEncontradoException("No se encontro un Cliente con el Nombre: " + nombre);
-        }
         return clienteBuscado;
     }
 
@@ -60,11 +57,11 @@ public class ClienteDao {
         return clientes;
     }
 
-    public Cliente findById(Integer id) throws ClienteNoEncontradoException {
+    public Cliente findById(Integer id) {
         return clientes.stream()
                 .filter(c -> c.getId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new ClienteNoEncontradoException("No se ah encontrado un cliente con ID: " + id));
+                .orElse(null);
     }
 
 }

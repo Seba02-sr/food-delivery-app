@@ -38,7 +38,7 @@ public class ClienteMemory {
      * @return Lista de clientes que coinciden con el @param
      * @throws ClienteNoEncontradoException Si el cliente no se encuentra
      */
-    public List<Cliente> buscarClientePorNombre(String nombre) throws ClienteNoEncontradoException {
+    public List<Cliente> buscarClientePorNombre(String nombre) {
         return clienteDao.findByNombre(nombre);
     }
 
@@ -65,7 +65,7 @@ public class ClienteMemory {
      * @return El cliente que corresponde al @param
      * @throws ClienteNoEncontradoException Si el cliente no se encuentra
      */
-    public Cliente buscarClientePorId(Integer id) throws ClienteNoEncontradoException {
+    public Cliente buscarClientePorId(Integer id) {
         return clienteDao.findById(id);
     }
 

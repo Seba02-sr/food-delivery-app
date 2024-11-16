@@ -4,6 +4,7 @@
  */
 package com.mycompany.tp.dsw.view.cliente;
 
+import java.awt.event.ActionEvent;
 import java.util.List;
 import com.mycompany.tp.dsw.dto.ClienteDto;
 import com.mycompany.tp.dsw.memory.ClienteMemory;
@@ -50,6 +51,7 @@ public class FrmCliente extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -59,35 +61,35 @@ public class FrmCliente extends javax.swing.JFrame {
         btnModificarCliente = new javax.swing.JButton();
         btnBuscarCliente = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
-        btnBuscarItemMenu = new javax.swing.JButton();
+        btnPedidos = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbClienteDatos = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btnEliminarCliente.setText("Eliminar Vendedor");
+        btnEliminarCliente.setText("Eliminar Cliente");
         btnEliminarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarClienteActionPerformed(evt);
             }
         });
 
-        btnAgregarCliente.setText("Agregar Vendedor");
+        btnAgregarCliente.setText("Agregar Cliente");
         btnAgregarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAgregarClienteActionPerformed(evt);
             }
         });
 
-        btnModificarCliente.setText("Modificar Vendedor");
+        btnModificarCliente.setText("Modificar Cliente");
         btnModificarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnModificarClienteActionPerformed(evt);
             }
         });
 
-        btnBuscarCliente.setText("Buscar Vendedor");
+        btnBuscarCliente.setText("Buscar Cliente");
         btnBuscarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarClienteActionPerformed(evt);
@@ -101,10 +103,10 @@ public class FrmCliente extends javax.swing.JFrame {
             }
         });
 
-        btnBuscarItemMenu.setText("Items");
-        btnBuscarItemMenu.addActionListener(new java.awt.event.ActionListener() {
+        btnPedidos.setText("Pedidos");
+        btnPedidos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarItemMenuActionPerformed(evt);
+                btnPedidosActionPerformed(evt);
             }
         });
 
@@ -127,7 +129,7 @@ public class FrmCliente extends javax.swing.JFrame {
                                         .addComponent(btnBuscarCliente, javax.swing.GroupLayout.Alignment.TRAILING,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btnBuscarItemMenu, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        .addComponent(btnPedidos, javax.swing.GroupLayout.DEFAULT_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap()));
         jPanel1Layout.setVerticalGroup(
@@ -147,7 +149,7 @@ public class FrmCliente extends javax.swing.JFrame {
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16,
                                         Short.MAX_VALUE)
-                                .addComponent(btnBuscarItemMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 55,
+                                .addComponent(btnPedidos, javax.swing.GroupLayout.PREFERRED_SIZE, 55,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnSalir)
@@ -247,7 +249,7 @@ public class FrmCliente extends javax.swing.JFrame {
             String direccion = tbClienteDatos.getValueAt(selectedRow, 3).toString();
             String email = tbClienteDatos.getValueAt(selectedRow, 4).toString();
             String latitud = tbClienteDatos.getValueAt(selectedRow, 5).toString();
-            String longitud = tbClienteDatos.getValueAt(selectedRow, 4).toString();
+            String longitud = tbClienteDatos.getValueAt(selectedRow, 6).toString();
 
             ClienteDto clienteDto = new ClienteDto(id, nombre, cuit, direccion, email, latitud, longitud);
 
@@ -289,9 +291,9 @@ public class FrmCliente extends javax.swing.JFrame {
         this.dispose();
     }// GEN-LAST:event_btnSalirActionPerformed
 
-    private void btnBuscarItemMenuActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnBuscarItemMenuActionPerformed
+    private void btnPedidosActionPerformed(ActionEvent evt) {// GEN-FIRST:event_btnPedidosActionPerformed
         // TODO add your handling code here:
-    }// GEN-LAST:event_btnBuscarItemMenuActionPerformed
+    }// GEN-LAST:event_btnPedidosActionPerformed
 
     private void tbClienteDatosMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_tbClienteDatosMouseClicked
         // TODO add your handling code here:
@@ -377,9 +379,9 @@ public class FrmCliente extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarCliente;
     private javax.swing.JButton btnBuscarCliente;
-    private javax.swing.JButton btnBuscarItemMenu;
     private javax.swing.JButton btnEliminarCliente;
     private javax.swing.JButton btnModificarCliente;
+    private javax.swing.JButton btnPedidos;
     private javax.swing.JButton btnSalir;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

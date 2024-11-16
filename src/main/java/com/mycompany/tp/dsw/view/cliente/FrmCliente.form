@@ -59,7 +59,7 @@
                       <Component id="btnModificarCliente" alignment="0" max="32767" attributes="0"/>
                       <Component id="btnEliminarCliente" alignment="0" max="32767" attributes="0"/>
                       <Component id="btnBuscarCliente" alignment="1" max="32767" attributes="0"/>
-                      <Component id="btnBuscarItemMenu" alignment="0" max="32767" attributes="0"/>
+                      <Component id="btnPedidos" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -77,7 +77,7 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="btnBuscarCliente" min="-2" pref="55" max="-2" attributes="0"/>
                   <EmptySpace pref="16" max="32767" attributes="0"/>
-                  <Component id="btnBuscarItemMenu" min="-2" pref="55" max="-2" attributes="0"/>
+                  <Component id="btnPedidos" min="-2" pref="55" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="btnSalir" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -88,7 +88,7 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="btnEliminarCliente">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Eliminar Vendedor"/>
+            <Property name="text" type="java.lang.String" value="Eliminar Cliente"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEliminarClienteActionPerformed"/>
@@ -96,7 +96,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnAgregarCliente">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Agregar Vendedor"/>
+            <Property name="text" type="java.lang.String" value="Agregar Cliente"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAgregarClienteActionPerformed"/>
@@ -104,7 +104,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnModificarCliente">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Modificar Vendedor"/>
+            <Property name="text" type="java.lang.String" value="Modificar Cliente"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnModificarClienteActionPerformed"/>
@@ -112,7 +112,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnBuscarCliente">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Buscar Vendedor"/>
+            <Property name="text" type="java.lang.String" value="Buscar Cliente"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarClienteActionPerformed"/>
@@ -126,12 +126,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSalirActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnBuscarItemMenu">
+        <Component class="javax.swing.JButton" name="btnPedidos">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Items"/>
+            <Property name="text" type="java.lang.String" value="Pedidos"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarItemMenuActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPedidosActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

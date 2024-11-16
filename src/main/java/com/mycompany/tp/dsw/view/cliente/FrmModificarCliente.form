@@ -44,13 +44,13 @@
                       </Group>
                       <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txfID" max="32767" attributes="0"/>
-                          <Component id="txfNombre" max="32767" attributes="0"/>
-                          <Component id="txfCuit" alignment="0" max="32767" attributes="0"/>
-                          <Component id="txfDireccion" alignment="0" max="32767" attributes="0"/>
-                          <Component id="txfEmail" alignment="0" max="32767" attributes="0"/>
-                          <Component id="txfLatitud" alignment="0" max="32767" attributes="0"/>
-                          <Component id="txfLongitud" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txtID" max="32767" attributes="0"/>
+                          <Component id="txtNombre" max="32767" attributes="0"/>
+                          <Component id="txtCuit" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txtDireccion" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txtEmail" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txtLatitud" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txtLongitud" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -64,37 +64,37 @@
               <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txfID" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtID" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txfNombre" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtNombre" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txfCuit" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtCuit" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txfDireccion" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtDireccion" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txfEmail" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtEmail" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txfLatitud" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtLatitud" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txfLongitud" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtLongitud" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="12" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -142,19 +142,19 @@
         <Property name="text" type="java.lang.String" value="Longitud:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="txfID">
+    <Component class="javax.swing.JTextField" name="txtID">
     </Component>
-    <Component class="javax.swing.JTextField" name="txfNombre">
+    <Component class="javax.swing.JTextField" name="txtNombre">
     </Component>
-    <Component class="javax.swing.JTextField" name="txfCuit">
+    <Component class="javax.swing.JTextField" name="txtCuit">
     </Component>
-    <Component class="javax.swing.JTextField" name="txfDireccion">
+    <Component class="javax.swing.JTextField" name="txtDireccion">
     </Component>
-    <Component class="javax.swing.JTextField" name="txfEmail">
+    <Component class="javax.swing.JTextField" name="txtEmail">
     </Component>
-    <Component class="javax.swing.JTextField" name="txfLatitud">
+    <Component class="javax.swing.JTextField" name="txtLatitud">
     </Component>
-    <Component class="javax.swing.JTextField" name="txfLongitud">
+    <Component class="javax.swing.JTextField" name="txtLongitud">
     </Component>
     <Component class="javax.swing.JButton" name="btnModificar">
       <Properties>

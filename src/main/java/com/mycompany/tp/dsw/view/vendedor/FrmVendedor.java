@@ -35,9 +35,7 @@ public class FrmVendedor extends javax.swing.JFrame {
 
     public FrmVendedor() {
         initComponents();
-        this.setTitle("Restaurantes");
-        this.setLocationRelativeTo(null);
-        this.setResizable(false);
+        configureWindow();
 
         memoryManager = MemoryManager.getInstance();
 
@@ -46,6 +44,12 @@ public class FrmVendedor extends javax.swing.JFrame {
         vendedorMemory = memoryManager.getVendedorMemory();
 
         mostrarTabla();
+    }
+
+    private void configureWindow() {
+        this.setTitle("Restaurantes");
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
     }
 
     /**
@@ -362,7 +366,7 @@ public class FrmVendedor extends javax.swing.JFrame {
 
     private void mostrarTabla() {
         DefaultTableModel model;
-        String[] titulo = { "ID", "NOMBRE", "DIRECCION", "LATITUD", "LONGITUD", "FECHA REGISTRO"};
+        String[] titulo = { "ID", "NOMBRE", "DIRECCION", "LATITUD", "LONGITUD", "FECHA REGISTRO" };
         model = new DefaultTableModel(null, titulo);
 
         List<Vendedor> listaVendedores = vendedorMemory.obtenerTodosLosVendedores();
@@ -387,21 +391,21 @@ public class FrmVendedor extends javax.swing.JFrame {
                 model.addRow(fila);
             }
             tbVendedorDatos.setModel(model);
-            
+
             TableColumnModel columnModel = tbVendedorDatos.getColumnModel();
-        for (int i = 0; i < columnModel.getColumnCount(); i++) {
-            TableColumn column = columnModel.getColumn(i);
-            int width = tbVendedorDatos.getTableHeader().getFontMetrics(tbVendedorDatos.getFont())
-                    .stringWidth(tbVendedorDatos.getColumnName(i)); // Agrega padding
-            column.setPreferredWidth(width);
-        }
+            for (int i = 0; i < columnModel.getColumnCount(); i++) {
+                TableColumn column = columnModel.getColumn(i);
+                int width = tbVendedorDatos.getTableHeader().getFontMetrics(tbVendedorDatos.getFont())
+                        .stringWidth(tbVendedorDatos.getColumnName(i)); // Agrega padding
+                column.setPreferredWidth(width);
+            }
         }
 
     }
 
     public void mostrarTabla(List<Vendedor> listaVendedores) {
         DefaultTableModel model = new DefaultTableModel();
-        String[] titulo = { "ID", "NOMBRE", "DIRECCION", "LATITUD", "LONGITUD", "FECHA REGISTRO"};
+        String[] titulo = { "ID", "NOMBRE", "DIRECCION", "LATITUD", "LONGITUD", "FECHA REGISTRO" };
         model.setColumnIdentifiers(titulo); // Establece los títulos de las columnas
 
         // Llena el modelo con los vendedores encontrados

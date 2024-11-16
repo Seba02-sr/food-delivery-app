@@ -56,6 +56,6 @@ public class ItemPedido { // Item pedido por un cliente, dentro de pedido class
 
     @Override
     public String toString() {
-        return "Item: " +itemMenu.getNombre() +" precio: " + itemMenu.getPrecio() + " cantidad: " + cantidad;
+        return "Item: " + itemMenu.getNombre() + " precio: " + itemMenu.getPrecio() + " cantidad: " + cantidad;
     }
 }
