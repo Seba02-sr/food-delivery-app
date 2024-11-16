@@ -23,8 +23,9 @@ public class ClienteDto {
     private String latitud;
     private String IdText;
 
-    public ClienteDto(String idText, String nombre, String cuit, String direccion, String email, String longitud,
-            String latitud) {
+    // Constructor para modificar
+    public ClienteDto(String idText, String nombre, String cuit, String direccion, String email, String latitud,
+            String longitud) {
         this.nombre = nombre;
         this.cuit = cuit;
         this.direccion = direccion;
@@ -34,7 +35,8 @@ public class ClienteDto {
         this.IdText = idText;
     }
 
-    public ClienteDto(String nombre, String cuit, String direccion, String email, String longitud, String latitud) {
+    // Constructor para crear
+    public ClienteDto(String nombre, String cuit, String direccion, String email, String latitud, String longitud) {
         this.nombre = nombre;
         this.cuit = cuit;
         this.direccion = direccion;

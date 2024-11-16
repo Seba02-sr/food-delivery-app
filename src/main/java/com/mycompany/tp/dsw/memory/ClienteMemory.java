@@ -95,16 +95,33 @@ public class ClienteMemory {
      * @return El objeto cliente
      */
     private Cliente parseCliente(ClienteDto clienteDto) {
-        // 1. Setear la coordenada
-        Double longitud = Double.parseDouble(clienteDto.getLongitud());
-        Double latitud = Double.parseDouble(clienteDto.getLatitud());
 
-        clienteDto.setCoordenada(new Coordenada(latitud, longitud));
+        String id = clienteDto.getIdText();
+        if (!esNullOrBlank(id)) {
+            clienteDto.setId(Integer.valueOf(id));
+        }
 
-        // 2. Crear el cliente a persistir
-        Cliente cliente = new Cliente(clienteDto);
+        String latitudText = clienteDto.getLatitud();
+        Double latitud = null;
+        if (!esNullOrBlank(latitudText)) {
+            latitud = Double.parseDouble(latitudText);
+        }
 
-        return cliente;
+        String longitudText = clienteDto.getLongitud();
+        Double longitud = null;
+        if (!esNullOrBlank(longitudText)) {
+            longitud = Double.parseDouble(longitudText);
+        }
+
+        if (latitud != null && longitud != null) {
+            clienteDto.setCoordenada(new Coordenada(latitud, longitud));
+        }
+
+        return new Cliente(clienteDto);
+    }
+
+    private static Boolean esNullOrBlank(String palabra) {
+        return palabra == null || palabra.isBlank();
     }
 
 }

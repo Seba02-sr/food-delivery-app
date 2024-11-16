@@ -45,6 +45,18 @@ public class Cliente implements Observer<Pedido> {
         this.coordenada = coordenada;
     }
 
+    public LocalDateTime getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public LocalDateTime getFechaEliminacion() {
+        return fechaEliminacion;
+    }
+
     public Integer getId() {
         return id;
     }

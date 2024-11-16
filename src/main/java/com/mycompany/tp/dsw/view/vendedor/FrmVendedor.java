@@ -14,6 +14,8 @@ import com.mycompany.tp.dsw.memory.PlatoMemory;
 import com.mycompany.tp.dsw.model.Vendedor;
 import com.mycompany.tp.dsw.memory.VendedorMemory;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -360,8 +362,7 @@ public class FrmVendedor extends javax.swing.JFrame {
 
     private void mostrarTabla() {
         DefaultTableModel model;
-        String[] titulo = { "ID", "NOMBRE", "DIRECCION", "LATITUD", "LONGITUD", "FECHA REGISTRO", "FECHA ELIMINADO",
-                "ACTIVO" };
+        String[] titulo = { "ID", "NOMBRE", "DIRECCION", "LATITUD", "LONGITUD", "FECHA REGISTRO"};
         model = new DefaultTableModel(null, titulo);
 
         List<Vendedor> listaVendedores = vendedorMemory.obtenerTodosLosVendedores();
@@ -381,21 +382,26 @@ public class FrmVendedor extends javax.swing.JFrame {
                 fila[3] = vendedor.getCoordenada().getLatitud();
                 fila[4] = vendedor.getCoordenada().getLongitud();
                 fila[5] = vendedor.getFechaRegistro();
-                fila[6] = vendedor.getFechaEliminacion();
-                fila[7] = vendedor.getActivo();
 
                 // Añade la fila al modelo de la tabla
                 model.addRow(fila);
             }
             tbVendedorDatos.setModel(model);
+            
+            TableColumnModel columnModel = tbVendedorDatos.getColumnModel();
+        for (int i = 0; i < columnModel.getColumnCount(); i++) {
+            TableColumn column = columnModel.getColumn(i);
+            int width = tbVendedorDatos.getTableHeader().getFontMetrics(tbVendedorDatos.getFont())
+                    .stringWidth(tbVendedorDatos.getColumnName(i)); // Agrega padding
+            column.setPreferredWidth(width);
+        }
         }
 
     }
 
     public void mostrarTabla(List<Vendedor> listaVendedores) {
         DefaultTableModel model = new DefaultTableModel();
-        String[] titulo = { "ID", "NOMBRE", "DIRECCION", "LATITUD", "LONGITUD", "FECHA REGISTRO", "FECHA ELIMINADO",
-                "ACTIVO" };
+        String[] titulo = { "ID", "NOMBRE", "DIRECCION", "LATITUD", "LONGITUD", "FECHA REGISTRO"};
         model.setColumnIdentifiers(titulo); // Establece los títulos de las columnas
 
         // Llena el modelo con los vendedores encontrados
@@ -407,8 +413,6 @@ public class FrmVendedor extends javax.swing.JFrame {
             fila[3] = vendedor.getCoordenada().getLatitud();
             fila[4] = vendedor.getCoordenada().getLongitud();
             fila[5] = vendedor.getFechaRegistro();
-            fila[6] = vendedor.getFechaEliminacion();
-            fila[7] = vendedor.getActivo();
 
             model.addRow(fila); // Añade la fila al modelo
         }

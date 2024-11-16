@@ -105,12 +105,10 @@ public class VendedorMemory {
         String latitudText = vendedorDto.getLatitud();
         Double latitud = null;
         if (!esNullOrBlank(latitudText)) {
-            System.out.println("2");
             latitud = Double.parseDouble(latitudText);
         }
 
         if (latitud != null && longitud != null) {
-            System.out.println("3");
             vendedorDto.setCoordenada(new Coordenada(latitud, longitud));
         }
 
