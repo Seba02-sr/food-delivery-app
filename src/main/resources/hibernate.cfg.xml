@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC 
+	"-//Hibernate/Hibernate Configuration DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-configuration-2.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+
+        <!-- Configuracion Usuario MySQL -->
+
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">admin</property>
+
+        <!-- Configuracion Driver y Base de datos -->
+
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/tpdeso</property>
+        <!-- <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property> -->
+
+        <!-- Dar Formato a la tabla  (Num Max conexiones, depuracion y formato) -->
+        <property name="hibernate.connection.pool_size">1</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+        <property name="hibernate.use_sql_comments">true</property>
+
+        <!-- Manejo de los hilos en la session -->
+        <property name="hibernate.current_session_context_class">thread</property>
+
+        <!-- Generar la DB en cada ejecucion del sistema (borrando las existentes) -->
+        <!-- Otras opciones:
+            validate : valida el esquema existente, no modifica
+            update : actualiza sin borrar los datos existentes
+            create-drop : crea el esquema, lo borra al final -->
+        <property name="hibernate.hbm2ddl.auto">create</property>
+
+        <!-- Importar SQL, siempre tiene que llamarse import.sql, si se cambia el nombre hay que indicarle que lo reconozca -->
+        <!-- Ejemplo de un archivo extra llamado data.sql -->
+        <!-- <property name="hibernate.hbm2ddl.import_files">data.sql</property> -->
+
+        <!-- Entities -->
+        <mapping class="com.mycompany.tp.dsw.model.Bebida"/>
+        <mapping class="com.mycompany.tp.dsw.model.Categoria"/>
+        <mapping class="com.mycompany.tp.dsw.model.Cliente"/>
+        <mapping class="com.mycompany.tp.dsw.model.Coordenada"/>
+        <mapping class="com.mycompany.tp.dsw.model.ItemMenu"/>
+        <mapping class="com.mycompany.tp.dsw.model.ItemPedido"/>
+        <mapping class="com.mycompany.tp.dsw.model.MercadoPago"/>
+        <mapping class="com.mycompany.tp.dsw.model.Pago"/>
+        <mapping class="com.mycompany.tp.dsw.model.Pedido"/>
+        <mapping class="com.mycompany.tp.dsw.model.Plato"/>
+        <mapping class="com.mycompany.tp.dsw.model.Transferencia"/>
+        <mapping class="com.mycompany.tp.dsw.model.Vendedor"/>
+
+        <mapping class="com.mycompany.tp.dsw.model.relacion.PedidoItemPedido"/>
+        <mapping class="com.mycompany.tp.dsw.model.relacion.ItemVendedor"/>
+        
+
+
+    </session-factory>
+</hibernate-configuration>

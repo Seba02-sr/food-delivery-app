@@ -8,33 +8,60 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mycompany.tp.dsw.model.relacion.PedidoItemPedido;
 import com.mycompany.tp.dsw.patronObserver.Observable;
 import com.mycompany.tp.dsw.patronObserver.Observer;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 /**
  *
  * @author User
  */
+@Entity
+@Table(name = "pedidos")
 public class Pedido implements Observable<Pedido> { // Pedido pedido por un cliente
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private List<ItemPedido> items;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pedido")
+    private List<PedidoItemPedido> pedidoItemPedidos;
+
+    @Enumerated(EnumType.STRING)
     private Estado estado;
+
+    @OneToOne
     private Cliente cliente;
+
+    @OneToOne
     private Pago formaPago;
+
+    @Transient
     private List<Observer<Pedido>> observadores = new ArrayList<>();
 
     // ver luego en siguiente etapa el constructor
     public Pedido(Integer id, Estado estado, Cliente cliente) {
         this.id = id;
-        this.items = new ArrayList<>();
+        this.pedidoItemPedidos = new ArrayList<>();
         this.estado = estado;
         this.cliente = cliente;
     }
 
     public Pedido(Integer id, Estado estado, Cliente cliente, Pago formaPago) {
         this.id = id;
-        this.items = new ArrayList<>();
+        this.pedidoItemPedidos = new ArrayList<>();
         this.estado = estado;
         this.cliente = cliente;
         this.formaPago = formaPago;
@@ -46,14 +73,6 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public List<ItemPedido> getItems() {
-        return items;
-    }
-
-    public void setItems(List<ItemPedido> items) {
-        this.items = items;
     }
 
     public Estado getEstado() {
@@ -96,8 +115,9 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
      */
 
     public BigDecimal total() {
-        BigDecimal total = items.stream()
-                .map(item -> item.getItemMenu().getPrecio().multiply(new BigDecimal(item.getCantidad())))
+        BigDecimal total = pedidoItemPedidos.stream()
+                .map(pedidoItem -> pedidoItem.getItemPedido().getItemMenu().getPrecio()
+                        .multiply(new BigDecimal(pedidoItem.getItemPedido().getCantidad())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return formaPago.pagar(total);
     }

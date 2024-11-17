@@ -9,22 +9,51 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mycompany.tp.dsw.dto.VendedorDto;
+import com.mycompany.tp.dsw.model.relacion.ItemVendedor;
+import com.mycompany.tp.dsw.service.Activable;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 /**
  * Vendedor = Restaurante
  * 
  * @author Cristian
  */
-public class Vendedor {
 
+@Entity
+@Table(name = "vendedores")
+public class Vendedor implements Activable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String nombre;
-    private String direccion;
-    private Coordenada coordenada;
-    private List<ItemMenu> itemsMenu;
 
-    private LocalDate fechaRegistro = LocalDate.now();
+    @Column(nullable = false)
+    private String nombre;
+
+    @Column(nullable = false, unique = true)
+    private String direccion;
+
+    @OneToOne
+    private Coordenada coordenada;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "vendedor")
+    private List<ItemVendedor> itemMenuVendedor;
+
+    @Column(name = "fecha_registro", nullable = false)
+    private final LocalDate fechaRegistro = LocalDate.now();
+
     private Boolean activo = true;
+
+    @Column(name = "fecha_eliminacion")
     private LocalDate fechaEliminacion = null;
 
     public Vendedor(VendedorDto vendedorDto) {
@@ -32,47 +61,21 @@ public class Vendedor {
         this.nombre = vendedorDto.getNombre();
         this.direccion = vendedorDto.getDireccion();
         this.coordenada = vendedorDto.getCoordenada();
-        this.itemsMenu = new ArrayList<>();
-    }
-
-    public Vendedor(Integer id, String nombre, String direccion, Coordenada coordenada, List<ItemMenu> itemsMenu) {
-        this.id = id;
-        this.nombre = nombre;
-        this.direccion = direccion;
-        this.coordenada = coordenada;
-        this.itemsMenu = itemsMenu;
+        this.itemMenuVendedor = new ArrayList<>();
     }
 
     public LocalDate getFechaRegistro() {
         return fechaRegistro;
     }
 
-    public void setFechaRegistro(LocalDate fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
-    }
-
+    @Override
     public LocalDate getFechaEliminacion() {
         return fechaEliminacion;
     }
 
+    @Override
     public void setFechaEliminacion(LocalDate fechaEliminacion) {
         this.fechaEliminacion = fechaEliminacion;
-    }
-
-    public Boolean getActivo() {
-        return activo;
-    }
-
-    public void setActivo(Boolean activo) {
-        this.activo = activo;
-    }
-
-    public List<ItemMenu> getItemsMenu() {
-        return itemsMenu;
-    }
-
-    public void setItemsMenu(List<ItemMenu> itemsMenu) {
-        this.itemsMenu = itemsMenu;
     }
 
     public Integer getId() {
@@ -140,9 +143,9 @@ public class Vendedor {
      */
     public List<ItemMenu> getItemBebidas() {
         List<ItemMenu> listaBebidas = new ArrayList<>();
-        for (ItemMenu item : this.itemsMenu) {
-            if (item.getCategoria().getTipo() == TipoCategoria.BEBIDA) {
-                listaBebidas.add(item);
+        for (ItemVendedor item : this.itemMenuVendedor) {
+            if (item.getItemMenu().getCategoria().getTipo() == TipoCategoria.BEBIDA) {
+                listaBebidas.add(item.getItemMenu());
             }
         }
         return listaBebidas;
@@ -156,9 +159,9 @@ public class Vendedor {
      */
     public List<ItemMenu> getItemComidas() {
         List<ItemMenu> listaComidas = new ArrayList<>();
-        for (ItemMenu item : this.itemsMenu) {
-            if (item.getCategoria().getTipo() == TipoCategoria.COMIDA) {
-                listaComidas.add(item);
+        for (ItemVendedor item : this.itemMenuVendedor) {
+            if (item.getItemMenu().getCategoria().getTipo() == TipoCategoria.COMIDA) {
+                listaComidas.add(item.getItemMenu());
             }
         }
         return listaComidas;
@@ -172,9 +175,10 @@ public class Vendedor {
      */
     public List<ItemMenu> getItemComidasVeganas() {
         List<ItemMenu> listaComidasVeganas = new ArrayList<>();
-        for (ItemMenu item : this.itemsMenu) {
-            if (item.getCategoria().getTipo() == TipoCategoria.COMIDA && ((Plato) item).aptoVegano()) {
-                listaComidasVeganas.add(item);
+        for (ItemVendedor item : this.itemMenuVendedor) {
+            if (item.getItemMenu().getCategoria().getTipo() == TipoCategoria.COMIDA
+                    && ((Plato) item.getItemMenu()).aptoVegano()) {
+                listaComidasVeganas.add(item.getItemMenu());
             }
         }
         return listaComidasVeganas;
@@ -187,10 +191,10 @@ public class Vendedor {
      */
     public List<ItemMenu> getItemBebidasSinAlcohol() {
         List<ItemMenu> listaBebidasSinAlcohol = new ArrayList<>();
-        for (ItemMenu item : this.itemsMenu) {
-            if (item.getCategoria().getTipo() == TipoCategoria.BEBIDA
-                    && ((Bebida) item).getGraduacionAlcoholica() == 0) {
-                listaBebidasSinAlcohol.add(item);
+        for (ItemVendedor item : this.itemMenuVendedor) {
+            if (item.getItemMenu().getCategoria().getTipo() == TipoCategoria.BEBIDA
+                    && ((Bebida) item.getItemMenu()).getGraduacionAlcoholica() == 0) {
+                listaBebidasSinAlcohol.add(item.getItemMenu());
             }
         }
         return listaBebidasSinAlcohol;
@@ -200,12 +204,22 @@ public class Vendedor {
     public String toString() {
         StringBuilder listaItemString = new StringBuilder();
 
-        for (ItemMenu itemMenu : itemsMenu) {
-            listaItemString.append(itemMenu.toString()).append(" \n");
+        for (ItemVendedor itemMenu : itemMenuVendedor) {
+            listaItemString.append(itemMenu.getItemMenu().toString()).append(" \n");
         }
         return "Vendedor [id=" + id + ", Nombre=" + nombre + ", Direccion: " + direccion + "," +
                 coordenada.toString() + ", Activo: " + activo + ", Fecha Registro: " + fechaRegistro
                 + ", Fecha Eliminacion" + fechaEliminacion + ", items=" + listaItemString.toString() + "]";
+    }
+
+    @Override
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
+    @Override
+    public Boolean getActivo() {
+        return activo;
     }
 
 }

@@ -8,34 +8,38 @@ import java.math.BigDecimal;
 
 import com.mycompany.tp.dsw.dto.PlatoDto;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+
 /**
  *
  * @author Cristian
  */
+@Entity
+@Table(name = "platos")
 public class Plato extends ItemMenu {
 
+    @Column(nullable = false)
+    @Min(0)
     private Double calorias;
-    private Boolean aptoCeliaco;
-    private Boolean aptoVegetariano;
-    private Boolean aptoVegano;
-    private Double peso;
 
-    // Constructor para agregar Plato
-    /*
-     * public Plato(PlatoDto platoDto) {
-     * super(null,
-     * platoDto.getNombre(),
-     * platoDto.getDescripcion(),
-     * platoDto.getPrecio(),
-     * platoDto.getCategoria(),
-     * platoDto.getVendedor());
-     * this.calorias = platoDto.getCalorias();
-     * this.aptoCeliaco = platoDto.getAptoCeliaco();
-     * this.aptoVegetariano = platoDto.getAptoVegetariano();
-     * this.aptoVegano = platoDto.getAptoVegano();
-     * this.peso = platoDto.getPeso();
-     * }
-     */
+    @Column(nullable = false)
+    private Boolean aptoCeliaco;
+
+    @Column(nullable = false)
+    private Boolean aptoVegetariano;
+
+    @Column(nullable = false)
+    private Boolean aptoVegano;
+
+    @Column(nullable = false)
+    @DecimalMin(value = "0.05", message = "El peso debe ser al menos 50g")
+    @DecimalMax(value = "10.00", message = "El peso no puede exceder 10kg")
+    private Double peso;
 
     // Constructor para modificar Plato
     public Plato(PlatoDto platoDto) {
@@ -43,24 +47,12 @@ public class Plato extends ItemMenu {
                 platoDto.getNombre(),
                 platoDto.getDescripcion(),
                 platoDto.getPrecio(),
-                platoDto.getCategoria(),
-                platoDto.getVendedor());
+                platoDto.getCategoria());
         this.calorias = platoDto.getCalorias();
         this.aptoCeliaco = platoDto.getAptoCeliaco();
         this.aptoVegetariano = platoDto.getAptoVegetariano();
         this.aptoVegano = platoDto.getAptoVegano();
         this.peso = platoDto.getPeso();
-    }
-
-    public Plato(String nombre, Double calorias, Boolean aptoCeliaco, Boolean aptoVegetariano, Boolean aptoVegano,
-            Double peso,
-            Integer id, BigDecimal precio, String descripcion, Categoria categoria, Vendedor vendedor) {
-        super(id, nombre, descripcion, precio, categoria, vendedor);
-        this.calorias = calorias;
-        this.aptoCeliaco = aptoCeliaco;
-        this.aptoVegetariano = aptoVegetariano;
-        this.aptoVegano = aptoVegano;
-        this.peso = peso;
     }
 
     public Plato(String nombre, Double calorias, Boolean aptoCeliaco, Boolean aptoVegetariano, Boolean aptoVegano,
@@ -177,8 +169,7 @@ public class Plato extends ItemMenu {
 
     @Override
     public String toString() {
-        return "ItemMenu [id=" + this.getId() + ", nombre=" + this.getNombre() + ", vendedor="
-                + this.getVendedor().getId() + "]";
+        return "ItemMenu [id=" + this.getId() + ", nombre=" + this.getNombre() + "]";
     }
 
     public Boolean getAptoVegano() {

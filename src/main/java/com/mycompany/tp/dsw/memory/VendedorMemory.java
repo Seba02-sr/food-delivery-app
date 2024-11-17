@@ -25,7 +25,7 @@ public class VendedorMemory {
      */
     public void registrarVendedor(VendedorDto vendedorDto) {
         Vendedor vendedor = parseVendedor(vendedorDto);
-        vendedorDao.add(vendedor);
+        vendedorDao.save(vendedor);
     }
 
     /**
@@ -34,6 +34,7 @@ public class VendedorMemory {
      * 
      * @param nombre El nombre del restaurante a buscar
      * @return Los restaurante que contengan en su nombre el parametro
+     * @throws VendedorNoEncontradoException
      */
     public List<Vendedor> buscarVendedorPorNombre(String nombre) {
         return vendedorDao.findByNombre(nombre);
@@ -72,7 +73,7 @@ public class VendedorMemory {
      * @throws VendedorNoEncontradoException Si no encuentra el restaurante
      */
     public void eliminarVendedor(Integer id) throws VendedorNoEncontradoException {
-        vendedorDao.delete(id);
+        vendedorDao.deleteLogico(id);
     }
 
     /**

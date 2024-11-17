@@ -6,27 +6,53 @@ package com.mycompany.tp.dsw.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import com.mycompany.tp.dsw.dto.ClienteDto;
 import com.mycompany.tp.dsw.patronObserver.Observer;
+import com.mycompany.tp.dsw.service.Activable;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 /**
  *
  * @author Cristian
  */
-public class Cliente implements Observer<Pedido> {
+@Entity
+@Table(name = "clientes")
+public class Cliente implements Observer<Pedido>, Activable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(nullable = false)
     private String nombre;
+
+    @Column(nullable = false, unique = true)
     private String cuit;
+
+    @Column(nullable = false)
     private String direccion;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @OneToOne
     private Coordenada coordenada;
 
-    private LocalDateTime fechaRegistro = LocalDateTime.now();
+    @Column(name = "fecha_registro", nullable = false)
+    private final LocalDate fechaRegistro = LocalDate.now();
+
     private Boolean activo = true;
-    private LocalDateTime fechaEliminacion = null;
+
+    @Column(name = "fecha_eliminacion")
+    private LocalDate fechaEliminacion = null;
 
     public Cliente(ClienteDto clienteDto) {
         this.id = clienteDto.getId();
@@ -44,18 +70,6 @@ public class Cliente implements Observer<Pedido> {
         this.direccion = direccion;
         this.email = email;
         this.coordenada = coordenada;
-    }
-
-    public LocalDateTime getFechaRegistro() {
-        return fechaRegistro;
-    }
-
-    public Boolean getActivo() {
-        return activo;
-    }
-
-    public LocalDateTime getFechaEliminacion() {
-        return fechaEliminacion;
     }
 
     public Integer getId() {
@@ -146,18 +160,44 @@ public class Cliente implements Observer<Pedido> {
         if (pedido.getFormaPago() instanceof MercadoPago) {
             MercadoPago mercadoPago = new MercadoPago("miAlias");
             mercadoPago.setMonto(monto);
-            mercadoPago.setFecha(LocalDate.now());
             pedido.setFormaPago(mercadoPago);
 
         } else if (pedido.getFormaPago() instanceof Transferencia) {
             Transferencia transferencia = new Transferencia("cbu123", "20-123456-3");
             transferencia.setMonto(monto);
-            transferencia.setFecha(LocalDate.now());
             pedido.setFormaPago(transferencia);
 
         } else {
             throw new IllegalArgumentException("Tipo de pago no seteado o no soportado");
         }
+    }
+
+    @Override
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
+    @Override
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    @Override
+    public void setFechaEliminacion(LocalDate fechaEliminacion) {
+        this.fechaEliminacion = fechaEliminacion;
+    }
+
+    @Override
+    public LocalDate getFechaEliminacion() {
+        return fechaEliminacion;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public LocalDate getFechaRegistro() {
+        return fechaRegistro;
     }
 
 }

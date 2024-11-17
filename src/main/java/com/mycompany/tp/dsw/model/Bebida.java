@@ -8,13 +8,31 @@ import java.math.BigDecimal;
 
 import com.mycompany.tp.dsw.dto.BebidaDto;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+
 /**
  *
  * @author Cristian
  */
+@Entity
+@Table(name = "Bebidas")
 public class Bebida extends ItemMenu {
+
+    @Column(name = "graduacion_alcoholica")
+    @Min(0)
+    @Max(100)
     private Double graduacionAlcoholica;
+
+    @Column(nullable = false)
+    @Min(0)
     private Double tamano;
+
+    @Column(nullable = false)
+    @Min(0)
     private Double volumen;
 
     // Constructor para agregar Bebida
@@ -23,19 +41,10 @@ public class Bebida extends ItemMenu {
                 bebidaDto.getNombre(),
                 bebidaDto.getDescripcion(),
                 bebidaDto.getPrecio(),
-                bebidaDto.getCategoria(),
-                bebidaDto.getVendedor());
+                bebidaDto.getCategoria());
         this.graduacionAlcoholica = bebidaDto.getGraduacionAlcoholica();
         this.tamano = bebidaDto.getTamano();
         this.volumen = bebidaDto.getVolumen();
-    }
-
-    public Bebida(String nombre, Double graduacionAlcoholica, Double tamano, Double volumen,
-            Integer id, BigDecimal precio, String descripcion, Categoria categoria, Vendedor vendedor) {
-        super(id, nombre, descripcion, precio, categoria, vendedor);
-        this.graduacionAlcoholica = graduacionAlcoholica;
-        this.tamano = tamano;
-        this.volumen = volumen;
     }
 
     public Bebida(String nombre, Double graduacionAlcoholica, Double tamano, Double volumen,

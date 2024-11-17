@@ -5,22 +5,48 @@
 package com.mycompany.tp.dsw.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+
+import com.mycompany.tp.dsw.service.Activable;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 /**
  *
  * @author Cristian
  */
-public abstract class ItemMenu { // Items que hay en un restaurante/vendedor
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "item_menu")
+public abstract class ItemMenu implements Activable { // Items que hay en un restaurante/vendedor
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(nullable = false)
     private String nombre;
+
     private String descripcion;
+
+    @Column(nullable = false)
     private BigDecimal precio;
+
+    @OneToOne
     private Categoria categoria;
-    private Vendedor vendedor;
 
     private Boolean activo = true;
-    private LocalDateTime fechaEliminacion = null;
+
+    @Column(name = "fecha_eliminacion")
+    private LocalDate fechaEliminacion = null;
 
     public abstract Double peso();
 
@@ -29,16 +55,6 @@ public abstract class ItemMenu { // Items que hay en un restaurante/vendedor
     public abstract boolean esBebida();
 
     public abstract boolean aptoVegano();
-
-    public ItemMenu(Integer id, String nombre, String descripcion, BigDecimal precio, Categoria categoria,
-            Vendedor vendedor) { //
-        this.id = id;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.precio = precio;
-        this.categoria = categoria;
-        this.vendedor = vendedor;
-    }
 
     public ItemMenu(Integer id, String nombre, String descripcion, BigDecimal precio, Categoria categoria) { //
         this.id = id;
@@ -88,27 +104,23 @@ public abstract class ItemMenu { // Items que hay en un restaurante/vendedor
         this.categoria = categoria;
     }
 
-    public Vendedor getVendedor() {
-        return vendedor;
-    }
-
-    public void setVendedor(Vendedor vendedor) {
-        this.vendedor = vendedor;
-    }
-
+    @Override
     public Boolean getActivo() {
         return activo;
     }
 
+    @Override
     public void setActivo(Boolean activo) {
         this.activo = activo;
     }
 
-    public LocalDateTime getFechaEliminacion() {
+    @Override
+    public LocalDate getFechaEliminacion() {
         return fechaEliminacion;
     }
 
-    public void setFechaEliminacion(LocalDateTime fechaEliminacion) {
+    @Override
+    public void setFechaEliminacion(LocalDate fechaEliminacion) {
         this.fechaEliminacion = fechaEliminacion;
     }
 

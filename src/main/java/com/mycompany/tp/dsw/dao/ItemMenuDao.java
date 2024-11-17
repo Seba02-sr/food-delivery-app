@@ -26,34 +26,9 @@ public class ItemMenuDao {
         memoryManager = MemoryManager.getInstance();
         vendedorMemory = memoryManager.getVendedorMemory();
         categoriaMemory = memoryManager.getCategoriaMemory();
-        valoresInciales();
     }
 
     public ItemMenuDao() {
-
-    }
-
-    public static void valoresInciales() {
-        Vendedor vendedor = vendedorMemory.buscarVendedorPorId(101);
-        Plato platoEjemplo = new Plato(
-                "Milanesa con Papas Fritas",
-                850.0,
-                true,
-                true,
-                false,
-                500.0,
-                101,
-                new BigDecimal("12.50"),
-                "Clásico plato argentino",
-                categoriaMemory.obtenerCategoriaPorNombre("Comida Clasica"),
-                vendedor);
-        items.add(platoEjemplo);
-
-        // Actualizar la lista del vendedor
-        List<ItemMenu> listaVendedor = vendedor.getItemsMenu();
-
-        listaVendedor.add(platoEjemplo);
-        vendedor.setItemsMenu(listaVendedor);
 
     }
 

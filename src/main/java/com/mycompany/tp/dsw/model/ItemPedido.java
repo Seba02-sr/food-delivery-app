@@ -4,15 +4,35 @@
  */
 package com.mycompany.tp.dsw.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+
 /**
  *
  * @author User
  */
-public class ItemPedido { // Item pedido por un cliente, dentro de pedido class
+@Entity
+@Table(name = "item_pedidos")
+public class ItemPedido {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Min(1)
+    @Column(nullable = false)
     private Integer cantidad;
-    private ItemMenu itemMenu; // plato o bebida
+
+    @OneToOne
+    private ItemMenu itemMenu;
+
+    @OneToOne
     private Pedido pedido;
 
     public ItemPedido(Integer id, Integer cantidad, ItemMenu itemMenu, Pedido pedido) {
