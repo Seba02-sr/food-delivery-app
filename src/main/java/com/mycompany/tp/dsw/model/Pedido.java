@@ -51,17 +51,23 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
     @Transient
     private List<Observer<Pedido>> observadores = new ArrayList<>();
 
+    public Pedido(Cliente cliente) {
+        this.cliente = cliente;
+        this.estado = Estado.ACEPTADO;
+        this.items = new ArrayList<>();
+    }
+
     // ver luego en siguiente etapa el constructor
     public Pedido(Integer id, Estado estado, Cliente cliente) {
         this.id = id;
-        this.pedidoItemPedidos = new ArrayList<>();
+        this.items = new ArrayList<>();
         this.estado = estado;
         this.cliente = cliente;
     }
 
     public Pedido(Integer id, Estado estado, Cliente cliente, Pago formaPago) {
         this.id = id;
-        this.pedidoItemPedidos = new ArrayList<>();
+        this.items = new ArrayList<>();
         this.estado = estado;
         this.cliente = cliente;
         this.formaPago = formaPago;
@@ -73,6 +79,14 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public List<ItemPedido> getItems() {
+        return items;
+    }
+
+    public void setItems(List<ItemPedido> items) {
+        this.items = items;
     }
 
     public Estado getEstado() {
@@ -111,15 +125,23 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
      * Calcula el costo total del pedido, segun el precio y la cantidad
      * Aplica el recargo dependiendo la forma de pago.
      * 
-     * @return El monto total una vez aplciado el recargo de la forma de pago.
+     * @return El monto total una vez aplicado el recargo de la forma de pago.
      */
 
     public BigDecimal total() {
-        BigDecimal total = pedidoItemPedidos.stream()
-                .map(pedidoItem -> pedidoItem.getItemPedido().getItemMenu().getPrecio()
-                        .multiply(new BigDecimal(pedidoItem.getItemPedido().getCantidad())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal total = totalSinRecargo();
         return formaPago.pagar(total);
+    }
+
+    /**
+     * Calcula el costo total del pedico, sin aplicar el recargo
+     * 
+     * @return El monto total sin recargo.
+     */
+    public BigDecimal totalSinRecargo() {
+        return items.stream()
+                .map(item -> item.getItemMenu().getPrecio().multiply(new BigDecimal(item.getCantidad())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     /**
@@ -140,7 +162,7 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
     public void notificarObservadores() {
 
         for (Observer<Pedido> observer : observadores) {
-            observer.updateEstado(this);
+            observer.evento(this);
         }
     }
 
@@ -150,6 +172,30 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
     @Override
     public Pedido get() {
         return this;
+    }
+
+    public void agregarItemPedido(ItemPedido itemPedido) {
+        items.add(itemPedido);
+    }
+
+    public Vendedor obtenerVendedor() {
+        Vendedor vendedor = null;
+        if (items != null && !items.isEmpty()) {
+            vendedor = items.get(0).getItemMenu().getVendedor();
+        }
+        return vendedor;
+    }
+
+    public Integer cantidadItems() {
+        return items.stream()
+                .mapToInt(ItemPedido::getCantidad)
+                .sum();
+    }
+
+    @Override
+    public String toString() {
+        return "Pedido [id=" + id + ", items=" + items + ", estado=" + estado + ", cliente=" + cliente + ", formaPago="
+                + formaPago + "]";
     }
 
 }
