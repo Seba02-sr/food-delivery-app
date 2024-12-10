@@ -9,7 +9,6 @@ import java.time.LocalDate;
 
 import com.mycompany.tp.dsw.dto.ClienteDto;
 import com.mycompany.tp.dsw.patronObserver.Observer;
-import com.mycompany.tp.dsw.service.Activable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,14 +17,19 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/**
- *
- * @author Cristian
- */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+
 @Entity
 @Table(name = "clientes")
-public class Cliente implements Observer<Pedido>, Activable {
+public class Cliente implements Observer<Pedido> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,9 +53,11 @@ public class Cliente implements Observer<Pedido>, Activable {
     @Column(name = "fecha_registro", nullable = false)
     private final LocalDate fechaRegistro = LocalDate.now();
 
+    @Builder.Default
     private Boolean activo = true;
 
     @Column(name = "fecha_eliminacion")
+    @Builder.Default
     private LocalDate fechaEliminacion = null;
 
     public Cliente(ClienteDto clienteDto) {
@@ -61,63 +67,6 @@ public class Cliente implements Observer<Pedido>, Activable {
         this.direccion = clienteDto.getDireccion();
         this.coordenada = clienteDto.getCoordenada();
         this.email = clienteDto.getEmail();
-    }
-
-    public Cliente(int id, String nombre, String cuit, String direccion, String email, Coordenada coordenada) {
-        this.id = id;
-        this.nombre = nombre;
-        this.cuit = cuit;
-        this.direccion = direccion;
-        this.email = email;
-        this.coordenada = coordenada;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nommbre) {
-        this.nombre = nommbre;
-    }
-
-    public String getCuit() {
-        return cuit;
-    }
-
-    public void setCuit(String cuit) {
-        this.cuit = cuit;
-    }
-
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Coordenada getCoordenada() {
-        return coordenada;
-    }
-
-    public void setCoordenada(Coordenada coordenada) {
-        this.coordenada = coordenada;
     }
 
     /**
@@ -170,34 +119,6 @@ public class Cliente implements Observer<Pedido>, Activable {
         } else {
             throw new IllegalArgumentException("Tipo de pago no seteado o no soportado");
         }
-    }
-
-    @Override
-    public void setActivo(Boolean activo) {
-        this.activo = activo;
-    }
-
-    @Override
-    public Boolean getActivo() {
-        return activo;
-    }
-
-    @Override
-    public void setFechaEliminacion(LocalDate fechaEliminacion) {
-        this.fechaEliminacion = fechaEliminacion;
-    }
-
-    @Override
-    public LocalDate getFechaEliminacion() {
-        return fechaEliminacion;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public LocalDate getFechaRegistro() {
-        return fechaRegistro;
     }
 
 }

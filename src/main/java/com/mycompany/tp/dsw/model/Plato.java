@@ -14,11 +14,20 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-/**
- *
- * @author Cristian
- */
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
+
 @Entity
 @Table(name = "platos")
 public class Plato extends ItemMenu {
@@ -66,18 +75,6 @@ public class Plato extends ItemMenu {
         this.peso = peso;
     }
 
-    public Double getCalorias() {
-        return calorias;
-    }
-
-    public void setCalorias(Double calorias) {
-        this.calorias = calorias;
-    }
-
-    public Boolean getAptoVegetariano() {
-        return aptoVegetariano;
-    }
-
     /**
      * Metodo que setea si el Plato es apto vegetariano
      * - Plato que no es apto vegetariano, tampoco es apto vegano
@@ -89,28 +86,6 @@ public class Plato extends ItemMenu {
         if (!aptoVegetariano) {
             this.aptoVegano = false;
         }
-    }
-
-    /**
-     * Es el valor del atributo, peso sin envase
-     * - NO CONFUNDIR CON LA REGLA DE NEGOCIO DE PESO ( metodo peso() )
-     * 
-     * @return
-     */
-    public Double getPeso() {
-        return peso;
-    }
-
-    public void setPeso(Double peso) {
-        this.peso = peso;
-    }
-
-    public Boolean getAptoCeliaco() {
-        return aptoCeliaco;
-    }
-
-    public void setAptoCeliaco(Boolean aptoCeliaco) {
-        this.aptoCeliaco = aptoCeliaco;
     }
 
     /**
@@ -164,15 +139,6 @@ public class Plato extends ItemMenu {
      */
     @Override
     public boolean aptoVegano() {
-        return aptoVegano;
-    }
-
-    @Override
-    public String toString() {
-        return "ItemMenu [id=" + this.getId() + ", nombre=" + this.getNombre() + "]";
-    }
-
-    public Boolean getAptoVegano() {
         return aptoVegano;
     }
 

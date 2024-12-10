@@ -13,6 +13,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.validation.constraints.Min;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -24,6 +34,7 @@ public abstract class Pago {
     private Integer id;
 
     @Column(name = "fecha")
+    @Builder.Default
     private LocalDate fechaPago = LocalDate.now();
 
     @Column(nullable = false)
@@ -32,19 +43,4 @@ public abstract class Pago {
 
     public abstract BigDecimal pagar(BigDecimal monto);
 
-    public LocalDate getFechaPago() {
-        return fechaPago;
-    }
-
-    public void setFechaPago(LocalDate fechaPago) {
-        this.fechaPago = fechaPago;
-    }
-
-    public BigDecimal getMonto() {
-        return monto;
-    }
-
-    public void setMonto(BigDecimal monto) {
-        this.monto = monto;
-    }
 }

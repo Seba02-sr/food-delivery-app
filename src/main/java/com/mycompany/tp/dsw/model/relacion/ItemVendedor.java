@@ -13,6 +13,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 
 @Entity
 @Table(name = "item_vendedor")
@@ -31,49 +40,11 @@ public class ItemVendedor {
     private ItemMenu itemMenu;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean activo = true;
 
     @Column(name = "fecha_eliminacion")
+    @Builder.Default
     private LocalDate fechaEliminacion = null;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Vendedor getVendedor() {
-        return vendedor;
-    }
-
-    public void setVendedor(Vendedor vendedor) {
-        this.vendedor = vendedor;
-    }
-
-    public ItemMenu getItemMenu() {
-        return itemMenu;
-    }
-
-    public void setItemMenu(ItemMenu itemMenu) {
-        this.itemMenu = itemMenu;
-    }
-
-    public Boolean getActivo() {
-        return activo;
-    }
-
-    public void setActivo(Boolean activo) {
-        this.activo = activo;
-    }
-
-    public LocalDate getFechaEliminacion() {
-        return fechaEliminacion;
-    }
-
-    public void setFechaEliminacion(LocalDate fechaEliminacion) {
-        this.fechaEliminacion = fechaEliminacion;
-    }
 
 }

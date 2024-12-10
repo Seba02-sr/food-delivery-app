@@ -31,7 +31,7 @@
             validate : valida el esquema existente, no modifica
             update : actualiza sin borrar los datos existentes
             create-drop : crea el esquema, lo borra al final -->
-        <property name="hibernate.hbm2ddl.auto">create</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
 
         <!-- Importar SQL, siempre tiene que llamarse import.sql, si se cambia el nombre hay que indicarle que lo reconozca -->
         <!-- Ejemplo de un archivo extra llamado data.sql -->

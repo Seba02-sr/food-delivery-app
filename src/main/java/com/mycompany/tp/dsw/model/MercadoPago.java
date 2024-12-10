@@ -3,19 +3,26 @@ package com.mycompany.tp.dsw.model;
 import java.math.BigDecimal;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 
 @Entity
+@Table(name = "mercado_pago")
 public class MercadoPago extends Pago {
 
     private String alias;
-
-    public MercadoPago(String alias) {
-        this.alias = alias;
-    }
-
-    public String getAlias() {
-        return alias;
-    }
 
     /**
      * Calcula el monto total a pagar aplicando un recargo del 4%.

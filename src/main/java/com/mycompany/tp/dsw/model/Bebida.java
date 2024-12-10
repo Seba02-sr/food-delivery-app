@@ -13,11 +13,20 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-/**
- *
- * @author Cristian
- */
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
+
 @Entity
 @Table(name = "Bebidas")
 public class Bebida extends ItemMenu {
@@ -55,30 +64,6 @@ public class Bebida extends ItemMenu {
         this.volumen = volumen;
     }
 
-    public Double getGraduacionAlcoholica() {
-        return graduacionAlcoholica;
-    }
-
-    public void setGraduacionAlcoholica(Double graduacionAlcoholica) {
-        this.graduacionAlcoholica = graduacionAlcoholica;
-    }
-
-    public Double getTamano() {
-        return tamano;
-    }
-
-    public void setTamano(Double tamano) {
-        this.tamano = tamano;
-    }
-
-    public Double getVolumen() {
-        return volumen;
-    }
-
-    public void setVolumen(Double volumen) {
-        this.volumen = volumen;
-    }
-
     /**
      * Calcula el peso de la bebida considerando su volumen, tipo y 20% por envases.
      * - Bebida con alcohol: 0.99
@@ -108,13 +93,6 @@ public class Bebida extends ItemMenu {
     @Override
     public boolean aptoVegano() {
         return false;
-    }
-
-    @Override
-    public String toString() {
-        return "Bebida [graduacionAlcoholica=" + graduacionAlcoholica + ", tamano=" + tamano + ", volumen=" + volumen
-                + ", getNombre()=" + getNombre() + ", getDescripcion()=" + getDescripcion() + ", getPrecio()="
-                + getPrecio() + ", getCategoria()=" + getCategoria() + "]";
     }
 
 }

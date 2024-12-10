@@ -23,11 +23,16 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/**
- *
- * @author User
- */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+
 @Entity
 @Table(name = "pedidos")
 public class Pedido implements Observable<Pedido> { // Pedido pedido por un cliente
@@ -49,48 +54,29 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
     private Pago formaPago;
 
     @Transient
+    @Builder.Default
     private List<Observer<Pedido>> observadores = new ArrayList<>();
 
     public Pedido(Cliente cliente) {
         this.cliente = cliente;
         this.estado = Estado.ACEPTADO;
-        this.items = new ArrayList<>();
+        this.pedidoItemPedidos = new ArrayList<>();
     }
 
     // ver luego en siguiente etapa el constructor
     public Pedido(Integer id, Estado estado, Cliente cliente) {
         this.id = id;
-        this.items = new ArrayList<>();
+        this.pedidoItemPedidos = new ArrayList<>();
         this.estado = estado;
         this.cliente = cliente;
     }
 
     public Pedido(Integer id, Estado estado, Cliente cliente, Pago formaPago) {
         this.id = id;
-        this.items = new ArrayList<>();
+        this.pedidoItemPedidos = new ArrayList<>();
         this.estado = estado;
         this.cliente = cliente;
         this.formaPago = formaPago;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public List<ItemPedido> getItems() {
-        return items;
-    }
-
-    public void setItems(List<ItemPedido> items) {
-        this.items = items;
-    }
-
-    public Estado getEstado() {
-        return estado;
     }
 
     /**
@@ -103,22 +89,6 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
     public void setEstado(Estado estado) {
         this.estado = estado;
         notificarObservadores();
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public void setFormaPago(Pago formaPago) {
-        this.formaPago = formaPago;
-    }
-
-    public Pago getFormaPago() {
-        return formaPago;
     }
 
     /**
@@ -139,8 +109,10 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
      * @return El monto total sin recargo.
      */
     public BigDecimal totalSinRecargo() {
-        return items.stream()
-                .map(item -> item.getItemMenu().getPrecio().multiply(new BigDecimal(item.getCantidad())))
+        return pedidoItemPedidos.stream()
+                .map(pedidoItem -> pedidoItem.getItemPedido().getItemMenu()
+                        .getPrecio()
+                        .multiply(new BigDecimal(pedidoItem.getItemPedido().getCantidad())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
@@ -162,7 +134,7 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
     public void notificarObservadores() {
 
         for (Observer<Pedido> observer : observadores) {
-            observer.evento(this);
+            observer.updateEstado(this);
         }
     }
 
@@ -175,27 +147,28 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
     }
 
     public void agregarItemPedido(ItemPedido itemPedido) {
-        items.add(itemPedido);
+        PedidoItemPedido pedidoItemPedido = PedidoItemPedido.builder()
+                .pedido(this)
+                .itemPedido(itemPedido)
+                .build();
+        pedidoItemPedidos.add(pedidoItemPedido);
     }
 
     public Vendedor obtenerVendedor() {
-        Vendedor vendedor = null;
-        if (items != null && !items.isEmpty()) {
-            vendedor = items.get(0).getItemMenu().getVendedor();
+        if (pedidoItemPedidos != null && !pedidoItemPedidos.isEmpty()) {
+            PedidoItemPedido primerItemPedido = pedidoItemPedidos.get(0);
+            ItemMenu itemMenu = primerItemPedido.getItemPedido().getItemMenu();
+            if (itemMenu != null && !itemMenu.getItemVendedores().isEmpty()) {
+                return itemMenu.getItemVendedores().get(0).getVendedor();
+            }
         }
-        return vendedor;
+        return null;
     }
 
     public Integer cantidadItems() {
-        return items.stream()
-                .mapToInt(ItemPedido::getCantidad)
+        return pedidoItemPedidos.stream()
+                .mapToInt(pedidoItem -> pedidoItem.getItemPedido().getCantidad())
                 .sum();
-    }
-
-    @Override
-    public String toString() {
-        return "Pedido [id=" + id + ", items=" + items + ", estado=" + estado + ", cliente=" + cliente + ", formaPago="
-                + formaPago + "]";
     }
 
 }

@@ -2,6 +2,11 @@ package com.mycompany.tp.dsw.dto;
 
 import com.mycompany.tp.dsw.model.Coordenada;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
 public class ClienteDto {
     private Integer id;
     private String nombre;
@@ -43,78 +48,6 @@ public class ClienteDto {
         this.email = email;
         this.longitud = longitud;
         this.latitud = latitud;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getCuit() {
-        return cuit;
-    }
-
-    public void setCuit(String cuit) {
-        this.cuit = cuit;
-    }
-
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Coordenada getCoordenada() {
-        return coordenada;
-    }
-
-    public void setCoordenada(Coordenada coordenada) {
-        this.coordenada = coordenada;
-    }
-
-    public String getLongitud() {
-        return longitud;
-    }
-
-    public void setLongitud(String longitud) {
-        this.longitud = longitud;
-    }
-
-    public String getLatitud() {
-        return latitud;
-    }
-
-    public void setLatitud(String latitud) {
-        this.latitud = latitud;
-    }
-
-    public String getIdText() {
-        return IdText;
-    }
-
-    public void setIdText(String idText) {
-        IdText = idText;
     }
 
 }

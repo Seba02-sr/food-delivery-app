@@ -31,4 +31,5 @@ public class VendedorDao extends GenericDAOImpl<Vendedor, Integer> {
             return resultados;
         }
     }
+
 }

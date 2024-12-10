@@ -10,7 +10,6 @@ import java.util.List;
 
 import com.mycompany.tp.dsw.dto.VendedorDto;
 import com.mycompany.tp.dsw.model.relacion.ItemVendedor;
-import com.mycompany.tp.dsw.service.Activable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,16 +20,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/**
- * Vendedor = Restaurante
- * 
- * @author Cristian
- */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 
 @Entity
 @Table(name = "vendedores")
-public class Vendedor implements Activable {
+public class Vendedor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,9 +53,11 @@ public class Vendedor implements Activable {
     @Column(name = "fecha_registro", nullable = false)
     private final LocalDate fechaRegistro = LocalDate.now();
 
+    @Builder.Default
     private Boolean activo = true;
 
     @Column(name = "fecha_eliminacion")
+    @Builder.Default
     private LocalDate fechaEliminacion = null;
 
     public Vendedor(VendedorDto vendedorDto) {
@@ -62,52 +66,6 @@ public class Vendedor implements Activable {
         this.direccion = vendedorDto.getDireccion();
         this.coordenada = vendedorDto.getCoordenada();
         this.itemMenuVendedor = new ArrayList<>();
-    }
-
-    public LocalDate getFechaRegistro() {
-        return fechaRegistro;
-    }
-
-    @Override
-    public LocalDate getFechaEliminacion() {
-        return fechaEliminacion;
-    }
-
-    @Override
-    public void setFechaEliminacion(LocalDate fechaEliminacion) {
-        this.fechaEliminacion = fechaEliminacion;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-
-    public Coordenada getCoordenada() {
-        return coordenada;
-    }
-
-    public void setCoordenada(Coordenada coordenada) {
-        this.coordenada = coordenada;
     }
 
     /**
@@ -199,27 +157,4 @@ public class Vendedor implements Activable {
         }
         return listaBebidasSinAlcohol;
     }
-
-    @Override
-    public String toString() {
-        StringBuilder listaItemString = new StringBuilder();
-
-        for (ItemVendedor itemMenu : itemMenuVendedor) {
-            listaItemString.append(itemMenu.getItemMenu().toString()).append(" \n");
-        }
-        return "Vendedor [id=" + id + ", Nombre=" + nombre + ", Direccion: " + direccion + "," +
-                coordenada.toString() + ", Activo: " + activo + ", Fecha Registro: " + fechaRegistro
-                + ", Fecha Eliminacion" + fechaEliminacion + ", items=" + listaItemString.toString() + "]";
-    }
-
-    @Override
-    public void setActivo(Boolean activo) {
-        this.activo = activo;
-    }
-
-    @Override
-    public Boolean getActivo() {
-        return activo;
-    }
-
 }

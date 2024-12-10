@@ -12,11 +12,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/**
- *
- * @author Cristian
- */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+
 @Entity
 @Table(name = "categorias")
 public class Categoria {
@@ -33,44 +38,5 @@ public class Categoria {
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_categoria")
     private TipoCategoria tipo;
-
-    public Categoria(Integer id, String nombre, String descripcion, TipoCategoria tipo) {
-        this.descripcion = descripcion;
-        this.id = id;
-        this.nombre = nombre;
-        this.tipo = tipo;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public TipoCategoria getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(TipoCategoria tipo) {
-        this.tipo = tipo;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
 
 }

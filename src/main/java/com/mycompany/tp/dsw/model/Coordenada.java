@@ -10,11 +10,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/**
- *
- * @author Cristian
- */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+
 @Entity
 @Table(name = "coordenadas")
 public class Coordenada {
@@ -28,31 +33,5 @@ public class Coordenada {
 
     @Column(nullable = false)
     private Double longitud;
-
-    public Coordenada(Double lat, Double lng) {
-        this.latitud = lat;
-        this.longitud = lng;
-    }
-
-    public Double getLatitud() {
-        return latitud;
-    }
-
-    public void setLatitud(Double lat) {
-        this.latitud = lat;
-    }
-
-    public Double getLongitud() {
-        return longitud;
-    }
-
-    public void setLongitud(Double lng) {
-        this.longitud = lng;
-    }
-
-    @Override
-    public String toString() {
-        return "Coordenada [latitud=" + latitud + ", longitud=" + longitud + "]";
-    }
 
 }

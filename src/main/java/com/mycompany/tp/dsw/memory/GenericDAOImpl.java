@@ -1,7 +1,6 @@
 package com.mycompany.tp.dsw.memory;
 
 import com.mycompany.tp.dsw.dao.GenericDAO;
-import com.mycompany.tp.dsw.service.Activable;
 import com.mycompany.tp.dsw.service.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -10,7 +9,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-public abstract class GenericDAOImpl<T extends Activable, ID extends Serializable> implements GenericDAO<T, ID> {
+public abstract class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T, ID> {
     private final Class<T> persistentClass;
 
     protected GenericDAOImpl(Class<T> persistentClass) {
@@ -64,6 +63,8 @@ public abstract class GenericDAOImpl<T extends Activable, ID extends Serializabl
         }
     }
 
+    // Me parece que de aca a abajo no se puede tener, sino todas entidades que
+    // tienen dao tienen que extender de activable
     @Override
     public void deleteLogico(ID id) {
         // Actualizar el campo "activo" a false en vez de eliminar la entidad

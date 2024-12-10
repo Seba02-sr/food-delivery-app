@@ -6,27 +6,38 @@ package com.mycompany.tp.dsw.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.mycompany.tp.dsw.service.Activable;
+import com.mycompany.tp.dsw.model.relacion.ItemVendedor;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-/**
- *
- * @author Cristian
- */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
+
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "item_menu")
-public abstract class ItemMenu implements Activable { // Items que hay en un restaurante/vendedor
+public abstract class ItemMenu { // Items que hay en un restaurante/vendedor
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,10 +54,24 @@ public abstract class ItemMenu implements Activable { // Items que hay en un res
     @OneToOne
     private Categoria categoria;
 
+    @Builder.Default
     private Boolean activo = true;
 
     @Column(name = "fecha_eliminacion")
+    @Builder.Default
     private LocalDate fechaEliminacion = null;
+
+    @OneToMany(mappedBy = "itemMenu", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<ItemVendedor> itemVendedores = new ArrayList<>();
+
+    public ItemMenu(Integer id, String nombre, String descripcion, BigDecimal precio, Categoria categoria) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precio = precio;
+        this.categoria = categoria;
+    }
 
     public abstract Double peso();
 
@@ -55,73 +80,5 @@ public abstract class ItemMenu implements Activable { // Items que hay en un res
     public abstract boolean esBebida();
 
     public abstract boolean aptoVegano();
-
-    public ItemMenu(Integer id, String nombre, String descripcion, BigDecimal precio, Categoria categoria) { //
-        this.id = id;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.precio = precio;
-        this.categoria = categoria;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public BigDecimal getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(BigDecimal precio) {
-        this.precio = precio;
-    }
-
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
-
-    @Override
-    public Boolean getActivo() {
-        return activo;
-    }
-
-    @Override
-    public void setActivo(Boolean activo) {
-        this.activo = activo;
-    }
-
-    @Override
-    public LocalDate getFechaEliminacion() {
-        return fechaEliminacion;
-    }
-
-    @Override
-    public void setFechaEliminacion(LocalDate fechaEliminacion) {
-        this.fechaEliminacion = fechaEliminacion;
-    }
 
 }

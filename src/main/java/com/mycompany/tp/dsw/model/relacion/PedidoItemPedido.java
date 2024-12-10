@@ -10,6 +10,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 
 @Entity
 @Table(name = "pedido_item_pedido")
@@ -26,29 +35,5 @@ public class PedidoItemPedido {
     @ManyToOne
     @JoinColumn(name = "item_pedido_id", referencedColumnName = "id")
     private ItemPedido itemPedido;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Pedido getPedido() {
-        return pedido;
-    }
-
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
-    }
-
-    public ItemPedido getItemPedido() {
-        return itemPedido;
-    }
-
-    public void setItemPedido(ItemPedido itemPedido) {
-        this.itemPedido = itemPedido;
-    }
 
 }
