@@ -482,8 +482,6 @@ public class JplVendedor extends javax.swing.JPanel {
         }
     }// GEN-LAST:event_jmiCargarDatosActionPerformed
 
-    /////////////////////////////////////////////////////////////////////////////////
-
     private void jPanelBuscarPropertyChange(java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_jPanelBuscarPropertyChange
         // TODO add your handling code here:
     }// GEN-LAST:event_jPanelBuscarPropertyChange
