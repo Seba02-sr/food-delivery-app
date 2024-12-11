@@ -1,35 +1,62 @@
 package com.mycompany.tp.dsw.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Session;
+
+import com.mycompany.tp.dsw.exception.CategoriaNoEncontradaException;
 import com.mycompany.tp.dsw.model.Categoria;
+import com.mycompany.tp.dsw.model.TipoCategoria;
+import com.mycompany.tp.dsw.service.HibernateUtil;
 
-public class CategoriaDao {
-        private static List<Categoria> categorias;
-
-        static {
-                categorias = new ArrayList<>();
-        }
+public class CategoriaDao extends GenericDAO<Categoria, Integer> {
 
         public CategoriaDao() {
-
+                super(Categoria.class);
         }
 
         public Categoria findByNombre(String nombre) {
-                return categorias.stream()
-                                .filter(c -> c.getNombre().equalsIgnoreCase(nombre))
-                                .findFirst()
-                                .orElse(null);
+                try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+                        String hql = "FROM Categoria c " +
+                                        "WHERE c.nombre = :nombre ";
+
+                        Categoria categoria = session.createQuery(hql, Categoria.class)
+                                        .setParameter("nombre", nombre)
+                                        .uniqueResult();
+
+                        if (categoria == null) {
+                                throw new CategoriaNoEncontradaException(
+                                                "No se ha encontrado una categoria con nombre: " + nombre);
+                        }
+                        return categoria;
+
+                } catch (Exception e) {
+                        String errorMessage = "Error al intentar recuperar la categoria con nombre: " + nombre;
+                        throw new RuntimeException(errorMessage, e);
+                }
         }
 
-        public List<Categoria> findAll() {
-                return categorias;
-        }
+        public List<Categoria> findByTipoCategoria(String tipo) throws CategoriaNoEncontradaException {
+                try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+                        String hql = "FROM Categoria c " +
+                                        "WHERE c.tipo = :tipo ";
 
-        public List<Categoria> findByTipoCategoria(String tipo) {
-                return categorias.stream()
-                                .filter(c -> c.getTipo().name().equalsIgnoreCase(tipo))
-                                .toList();
+                        TipoCategoria tipoCategoria = TipoCategoria.valueOf(tipo);
+                        List<Categoria> categoria = session.createQuery(hql, Categoria.class)
+                                        .setParameter("tipo", tipoCategoria)
+                                        .getResultList();
+
+                        if (categoria == null) {
+                                throw new CategoriaNoEncontradaException(
+                                                "No se ha encontrado una categoria del tipo: " + tipo);
+                        }
+                        return categoria;
+
+                } catch (IllegalArgumentException e) {
+                        throw new CategoriaNoEncontradaException("Tipo de categoría no válido: " + tipo);
+                } catch (Exception e) {
+                        String errorMessage = "Error al intentar recuperar la categoria del tipo: " + tipo;
+                        throw new RuntimeException(errorMessage, e);
+                }
         }
 }

@@ -1,60 +1,81 @@
 package com.mycompany.tp.dsw.dao;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Session;
+
+import com.mycompany.tp.dsw.exception.ItemNoEncontradoException;
+import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.Plato;
+import com.mycompany.tp.dsw.model.Vendedor;
+import com.mycompany.tp.dsw.service.HibernateUtil;
 
 public class PlatoDao extends ItemMenuDao {
 
-    public Plato findPlatoById(Integer id) {
-        return getPlatos().stream()
-                .filter(p -> p.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public List<Plato> getPlatos() {
-        return items.stream()
-                .filter(i -> i instanceof Plato)
-                .map(i -> (Plato) i)
-                .toList();
-    }
-
-    public List<Plato> findByIdVendedor(Integer id) {
-        System.out.println("Platos en dao: " + getPlatos().toString());
-        return getPlatos().stream()
-                .filter(p -> p.getVendedor().getId().equals(id))
-                .toList();
-    }
-
-    public void update(Plato plato) {
-
-        Plato existePlato = findPlatoById(plato.getId());
-        if (existePlato != null) {
-            String nombre = plato.getNombre().trim();
-            String descripcion = plato.getDescripcion().trim();
-            BigDecimal precio = plato.getPrecio();
-            Double calorias = plato.getCalorias();
-            Double peso = plato.getPeso();
-
-            if (nombre != null) {
-                existePlato.setNombre(nombre);
+    public Plato findActivePlatoById(Integer id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Plato p " +
+                    "WHERE p.id = :id " +
+                    "AND p.activo = true";
+            Plato plato = session.createQuery(hql, Plato.class)
+                    .setParameter("id", id)
+                    .uniqueResult();
+            if (plato == null) {
+                throw new ItemNoEncontradoException("No se ha encontrado el plato con id: " + id);
             }
-            if (descripcion != null) {
-                existePlato.setDescripcion(descripcion);
-            }
-            if (precio != null) {
-                existePlato.setPrecio(precio);
-            }
-            if (calorias != null) {
-                existePlato.setCalorias(calorias);
-            }
-            if (peso != null) {
-                existePlato.setPeso(peso);
-            }
+            return plato;
+        } catch (Exception e) {
+            String errorMessage = "Error al intentar recuperar un plato con id: " + id;
+            throw new RuntimeException(errorMessage, e);
         }
-
     }
 
+    public List<Plato> findActiveByIdVendedor(Vendedor vendedor) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Plato p " +
+                    "JOIN p.itemVendedor iv " +
+                    "WHERE p.activo = true " +
+                    "AND iv.vendedor = :vendedor";
+
+            List<Plato> platos = session.createQuery(hql, Plato.class)
+                    .setParameter("vendedor", vendedor)
+                    .getResultList();
+
+            if (platos.isEmpty()) {
+                throw new ItemNoEncontradoException("No se han encontrado platos para el vendedor: " + vendedor);
+            }
+            return platos;
+        } catch (Exception e) {
+            String errorMessage = "Error al intentar recuperar los platos del vendedor: " + vendedor;
+            throw new RuntimeException(errorMessage, e);
+        }
+    }
+
+    // Sobrescribir findAll para devolver List<ItemMenu>, pero solo con objetos
+    // Plato
+    @Override
+    public List<ItemMenu> findAllActive() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Plato p " +
+                    "WHERE p.activo = true";
+            List<ItemMenu> itemsMenu = session.createQuery(hql, ItemMenu.class).getResultList();
+
+            // Filtrar para devolver solo los objetos Plato
+            List<ItemMenu> platos = new ArrayList<>();
+            for (ItemMenu item : itemsMenu) {
+                if (item instanceof Plato) {
+                    platos.add(item);
+                }
+            }
+
+            if (platos.isEmpty()) {
+                throw new ItemNoEncontradoException("No se ha encontrado platos");
+            }
+            return platos;
+        } catch (Exception e) {
+            String errorMessage = "Error al intentar recuperar todos los platos";
+            throw new RuntimeException(errorMessage, e);
+        }
+    }
 }

@@ -5,11 +5,11 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import com.mycompany.tp.dsw.memory.GenericDAOImpl;
+import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
 import com.mycompany.tp.dsw.model.Vendedor;
 import com.mycompany.tp.dsw.service.HibernateUtil;
 
-public class VendedorDao extends GenericDAOImpl<Vendedor, Integer> {
+public class VendedorDao extends GenericDAO<Vendedor, Integer> {
 
     public VendedorDao() {
         super(Vendedor.class);
@@ -28,8 +28,18 @@ public class VendedorDao extends GenericDAOImpl<Vendedor, Integer> {
             // Ejecutar la consulta y devolver los resultados
             List<Vendedor> resultados = query.list();
 
+            if (resultados.isEmpty()) {
+                throw new VendedorNoEncontradoException("No se ha encontrado el vendedor con nombre: " + nombre);
+            }
             return resultados;
+        } catch (Exception e) {
+            String errorMessage = "Error al intentar recuperar el vendedor con el nombre: " + nombre;
+            throw new RuntimeException(errorMessage, e);
         }
     }
+
+    // Delete --> Usar deleteLogico
+    // FindById --> Usar findByIdAndActive
+    // FindAll --> Usar findAllActive
 
 }

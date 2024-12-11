@@ -1,67 +1,37 @@
 package com.mycompany.tp.dsw.dao;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.Session;
 
 import com.mycompany.tp.dsw.exception.ClienteNoEncontradoException;
 import com.mycompany.tp.dsw.model.Cliente;
+import com.mycompany.tp.dsw.service.HibernateUtil;
 
-public class ClienteDao {
+public class ClienteDao extends GenericDAO<Cliente, Integer> {
 
-    private static List<Cliente> clientes = new ArrayList<>();
-    private static int currentID = 0;
-
-    public void add(Cliente cliente) {
-        cliente.setId(currentID++);
-        clientes.add(cliente);
+    public ClienteDao() {
+        super(Cliente.class);
     }
 
     public List<Cliente> findByNombre(String nombre) {
-        List<Cliente> clienteBuscado = clientes.stream()
-                .filter(c -> c.getNombre().toLowerCase().equals(nombre.toLowerCase()))
-                .toList();
-        return clienteBuscado;
-    }
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Cliente c " +
+                    "WHERE c.nombre LIKE :nombre ";
 
-    public void update(Cliente cliente) throws ClienteNoEncontradoException {
+            List<Cliente> clientes = session.createQuery(hql, Cliente.class)
+                    .setParameter("nombre", "%" + nombre + "%")
+                    .getResultList();
 
-        Cliente existeCliente = findById(cliente.getId());
+            if (clientes.isEmpty()) {
+                throw new ClienteNoEncontradoException("No se encontraron clientes con nombre:" + nombre);
+            }
+            return clientes;
 
-        if (existeCliente == null) {
-            throw new ClienteNoEncontradoException("Cliente con ID " + cliente.getId() + " no encontrado.");
+        } catch (Exception e) {
+            String errorMessage = "Error al intentar recuperar los cliente con nombre: " + nombre;
+            throw new RuntimeException(errorMessage, e);
         }
-
-        String nombreModificado = cliente.getNombre().trim();
-        String cuitModificado = cliente.getCuit();
-        String emailModificado = cliente.getEmail();
-
-        if (nombreModificado != null)
-            existeCliente.setNombre(nombreModificado);
-        if (cuitModificado != null)
-            existeCliente.setCuit(cuitModificado);
-        if (emailModificado != null)
-            existeCliente.setEmail(emailModificado);
-    }
-
-    public void delete(Integer id) throws ClienteNoEncontradoException {
-        boolean clienteEliminado = clientes.removeIf(c -> c.getId().equals(id));
-
-        if (!clienteEliminado) {
-            throw new ClienteNoEncontradoException("No se encontro el cliente con ID: " + id);
-        } else {
-            System.out.println("Cliente con ID: " + id + " borrado correctamente.");
-        }
-    }
-
-    public List<Cliente> findAll() {
-        return clientes;
-    }
-
-    public Cliente findById(Integer id) {
-        return clientes.stream()
-                .filter(c -> c.getId().equals(id))
-                .findFirst()
-                .orElse(null);
     }
 
 }

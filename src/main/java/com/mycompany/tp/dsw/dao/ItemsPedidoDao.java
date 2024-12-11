@@ -5,127 +5,108 @@
 package com.mycompany.tp.dsw.dao;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+
+import org.hibernate.Session;
 
 import com.mycompany.tp.dsw.exception.ItemNoEncontradoException;
-import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
-import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.ItemPedido;
-import com.mycompany.tp.dsw.model.Vendedor;
+import com.mycompany.tp.dsw.service.HibernateUtil;
 
 /**
  *
  * @author User
  */
-public class ItemsPedidoDao {
-
-    private static List<ItemPedido> itemsPedido;
-    private static int currentID;
-    private static final VendedorDao vendedorDao;
-
-    static {
-        itemsPedido = new ArrayList<>();
-        currentID = 0;
-        vendedorDao = new VendedorDao();
-    }
+public class ItemsPedidoDao extends GenericDAO<ItemPedido, Integer> {
 
     public ItemsPedidoDao() {
-
+        super(ItemPedido.class);
     }
 
-    // Ver con el FRM si es necesario
-    /*
-     * public ItemsPedidoDao(VendedorDao vendedorDao) {
-     * itemsPedido = new ArrayList<>();
-     * currentID = 0;
-     * this.vendedorDao = vendedorDao;
-     * }
-     */
+    public List<ItemPedido> findByIdRestaurante(Integer id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT ip FROM ItemPedido ip " +
+                    "JOIN ip.itemMenu im " +
+                    "JOIN im.itemVendedores iv " +
+                    "WHERE iv.vendedor.id = :idRestaurante";
 
-    public List<ItemPedido> findByIdRestaurante(Integer id)
-            throws ItemNoEncontradoException, VendedorNoEncontradoException {
-        List<ItemPedido> result = new ArrayList<>();
-        Vendedor vendedor = vendedorDao.findById(id);
-        if (vendedor != null) {
-            // Filtrar los items de pedido por los ítems de menú del vendedor
-            result = itemsPedido.stream()
-                    .filter(item -> vendedor.getItemsMenu().contains(item.getItemMenu()))
-                    .toList();
-        } else {
-            throw new VendedorNoEncontradoException(
-                    "No se ha encontrado el restaurante con ID: " + id);
-        }
+            List<ItemPedido> itemspedidos = session.createQuery(hql, ItemPedido.class)
+                    .setParameter("idRestaurante", id)
+                    .getResultList();
 
-        if (result.isEmpty()) {
-            throw new ItemNoEncontradoException(
-                    "No se encontraron items de pedido para el restaurante con id: " + id);
+            if (itemspedidos.isEmpty()) {
+                throw new ItemNoEncontradoException("No se encontraron item pedidos al vendedor con ID:" + id);
+            }
+            return itemspedidos;
+
+        } catch (Exception e) {
+            String errorMessage = "Error al intentar recuperar los items pedidos al vendedor con ID: " + id;
+            throw new RuntimeException(errorMessage, e);
         }
-        return result;
     }
 
-    public List<ItemPedido> sortedByPrecio() throws ItemNoEncontradoException {
-        List<ItemPedido> result = itemsPedido.stream()
-                .sorted((item1, item2) -> item1.getItemMenu().getPrecio().compareTo(item2.getItemMenu().getPrecio()))
-                .toList();
-        if (result.isEmpty()) {
-            throw new ItemNoEncontradoException("No se encontraron items de pedido para ordenar por precio");
+    public List<ItemPedido> findSortedByPrecio() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT ip FROM ItemPedido ip " +
+                    "JOIN ip.itemMenu im " +
+                    "ORDER BY im.precio ASC";
+
+            List<ItemPedido> itemPedidos = session.createQuery(hql, ItemPedido.class)
+                    .getResultList();
+
+            if (itemPedidos.isEmpty()) {
+                throw new ItemNoEncontradoException("No se encontrarion item Pedidos para ordenar");
+            }
+            return itemPedidos;
+
+        } catch (Exception e) {
+            String errorMessage = "Error al intentar recuperar los ItemPedidos ordenados por precio";
+            throw new RuntimeException(errorMessage, e);
         }
-        return result;
     }
 
-    public List<ItemPedido> findBetweenPrecios(BigDecimal min, BigDecimal max) throws ItemNoEncontradoException {
-        List<ItemPedido> result = itemsPedido.stream().filter(item -> item.getItemMenu().getPrecio().compareTo(min) >= 0
-                && item.getItemMenu().getPrecio().compareTo(max) <= 0).toList();
-        if (result.isEmpty()) {
-            throw new ItemNoEncontradoException(
-                    "No se encontraron items de pedido para el rango de precios: " + min + " - " + max);
+    public List<ItemPedido> findBetweenPrecios(BigDecimal precioMin, BigDecimal precioMax) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT ip FROM ItemPedido ip " +
+                    "JOIN ip.itemMenu im " +
+                    "WHERE im.precio BETWEEN :precioMin AND :precioMax";
+
+            List<ItemPedido> itemPedidos = session.createQuery(hql, ItemPedido.class)
+                    .setParameter("precioMin", precioMin)
+                    .setParameter("precioMax", precioMax)
+                    .getResultList();
+            if (itemPedidos.isEmpty()) {
+                throw new ItemNoEncontradoException(
+                        "No se encontrarion item Pedidos en el rango: [" + precioMin + "-" + precioMax + "]");
+            }
+            return itemPedidos;
+
+        } catch (Exception e) {
+            String errorMessage = "Error al intentar recuperar los ItemPedidos entre los precios " + precioMin + " y "
+                    + precioMax;
+            throw new RuntimeException(errorMessage, e);
         }
-        return result;
     }
 
-    public List<ItemPedido> FindByNombreVendedor(String nombreVendedor)
-            throws ItemNoEncontradoException, VendedorNoEncontradoException {
-        List<ItemPedido> result = new ArrayList<>();
-        List<Vendedor> vendedores = vendedorDao.findByNombre(nombreVendedor);
+    public List<ItemPedido> findByNombreRestaurante(String nombre) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT ip FROM ItemPedido ip " +
+                    "JOIN ip.itemMenu im " +
+                    "JOIN im.itemVendedores iv " +
+                    "WHERE iv.vendedor.nombre LIKE :nombre";
 
-        // Verifica si se encontraron vendedores
-        if (vendedores.isEmpty()) {
-            throw new VendedorNoEncontradoException("No se encontraron vendedores con el nombre: " + nombreVendedor);
+            List<ItemPedido> itemspedidos = session.createQuery(hql, ItemPedido.class)
+                    .setParameter("nombre", "%" + nombre + "%")
+                    .getResultList();
+
+            if (itemspedidos.isEmpty()) {
+                throw new ItemNoEncontradoException("No se encontraron item pedidos al vendedor con Nombre:" + nombre);
+            }
+            return itemspedidos;
+
+        } catch (Exception e) {
+            String errorMessage = "Error al intentar recuperar los items pedidos al vendedor con nombre: " + nombre;
+            throw new RuntimeException(errorMessage, e);
         }
-
-        // Obtiene los IDs de los itemsMenu de todos los vendedores encontrados
-        Set<ItemMenu> itemsMenuVendedores = vendedores.stream()
-                .flatMap(v -> v.getItemsMenu().stream())
-                .collect(Collectors.toSet());
-
-        // Filtra los items de pedido que están en el menú de los vendedores
-        result = itemsPedido.stream()
-                .filter(item -> itemsMenuVendedores.contains(item.getItemMenu()))
-                .toList();
-
-        if (result.isEmpty()) {
-            throw new ItemNoEncontradoException(
-                    "No se encontraron items de pedido para el vendedor: " + nombreVendedor);
-        }
-
-        return result;
-    }
-
-    /*
-     * public void setItemsPedido(List<ItemPedido> itemsPedido) {
-     * 
-     * }
-     */
-
-    public List<ItemPedido> findAll() {
-        return itemsPedido;
-    }
-
-    public void add(ItemPedido itemPedido) {
-        itemPedido.setId(currentID++);
-        itemsPedido.add(itemPedido);
     }
 }

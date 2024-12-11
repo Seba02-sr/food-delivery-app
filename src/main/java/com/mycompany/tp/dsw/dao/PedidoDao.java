@@ -1,85 +1,82 @@
 package com.mycompany.tp.dsw.dao;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.Session;
 
 import com.mycompany.tp.dsw.exception.ClienteNoEncontradoException;
 import com.mycompany.tp.dsw.exception.PedidoNoEncontradoException;
 import com.mycompany.tp.dsw.model.Estado;
-import com.mycompany.tp.dsw.model.ItemPedido;
 import com.mycompany.tp.dsw.model.Pedido;
+import com.mycompany.tp.dsw.service.HibernateUtil;
 
-public class PedidoDao {
-
-    private static List<Pedido> pedidos;
-    private static int currentID;
-
-    static {
-        pedidos = new ArrayList<>();
-        currentID = 0;
-    }
+public class PedidoDao extends GenericDAO<Pedido, Integer> {
 
     public PedidoDao() {
-
+        super(Pedido.class);
     }
 
-    public void add(Pedido pedido) {
-        pedido.setId(currentID++);
-        pedidos.add(pedido);
-    }
+    public List<Pedido> findByCliente(Integer idCliente) throws ClienteNoEncontradoException {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Pedido p " +
+                    "WHERE p.cliente.id = :idCliente ";
 
-    public List<Pedido> findByCliente(Integer clienteId) throws ClienteNoEncontradoException {
-        List<Pedido> pedidosCliente = pedidos.stream()
-                .filter(p -> p.getCliente().getId().equals(clienteId))
-                .toList();
-        if (pedidosCliente.isEmpty()) {
-            throw new ClienteNoEncontradoException("No se encontraron pedidos del cliente con ID:" + clienteId);
+            List<Pedido> pedidos = session.createQuery(hql, Pedido.class)
+                    .setParameter("idCliente", idCliente)
+                    .getResultList();
+
+            if (pedidos.isEmpty()) {
+                throw new ClienteNoEncontradoException("No se encontraron pedidos del cliente con ID:" + idCliente);
+            }
+            return pedidos;
+
+        } catch (Exception e) {
+            String errorMessage = "Error al intentar recuperar los pedidos para el cliente con ID: " + idCliente;
+            throw new RuntimeException(errorMessage, e);
         }
-        return pedidosCliente;
     }
 
     public List<Pedido> findByEstado(Estado estado) {
-        List<Pedido> pedidosCliente = pedidos.stream()
-                .filter(p -> p.getEstado().equals(estado))
-                .toList();
-        return pedidosCliente;
-    }
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Pedido p " +
+                    "WHERE p.estado = :estado ";
 
-    public void update(Pedido pedido) throws PedidoNoEncontradoException {
-        Pedido existePedido = findById(pedido.getId());
-        if (existePedido != null) {
-            Estado estado = pedido.getEstado();
-            List<ItemPedido> itemsPedido = pedido.getItems();
+            List<Pedido> pedidos = session.createQuery(hql, Pedido.class)
+                    .setParameter("estado", estado)
+                    .getResultList();
 
-            if (estado != null) {
-                existePedido.setEstado(estado);
+            if (pedidos.isEmpty()) {
+                throw new PedidoNoEncontradoException("No se encontraron pedido con estado:" + estado);
             }
-            if (itemsPedido != null) {
-                existePedido.setItems(itemsPedido);
-            }
+            return pedidos;
+
+        } catch (Exception e) {
+            String errorMessage = "Error al intentar recuperar los pedidos con el estado:" + estado;
+            throw new RuntimeException(errorMessage, e);
         }
     }
 
-    public void delete(Integer id) {
-        pedidos.removeIf(p -> p.getId().equals(id));
-    }
+    public List<Pedido> findByIdVendedor(Integer idVendedor) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // Consulta HQL para obtener los pedidos asociados al vendedor con el ID dado
+            String hql = "SELECT p FROM Pedido p " +
+                    "JOIN p.pedidoItemPedidos pip " +
+                    "JOIN pip.itemPedido ip " +
+                    "JOIN ip.itemMenu im " +
+                    "JOIN im.itemVendedores iv " +
+                    "WHERE iv.vendedor.id = :idVendedor";
 
-    public List<Pedido> findAll() {
-        return pedidos;
-    }
+            // Ejecutar la consulta y devolver la lista de pedidos
+            List<Pedido> pedidos = session.createQuery(hql, Pedido.class)
+                    .setParameter("idVendedor", idVendedor)
+                    .getResultList();
 
-    public Pedido findById(Integer id) throws PedidoNoEncontradoException {
-        return pedidos.stream()
-                .filter(p -> p.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new PedidoNoEncontradoException("No se ha encontrado pedido con ID: " + id));
-    }
-
-    public List<Pedido> findByVendedor(Integer idVendedor) {
-        return pedidos.stream()
-                .filter(p -> p.getEstado().equals(Estado.RECIBIDO) &&
-                        !p.getItems().isEmpty() &&
-                        p.getItems().get(0).getItemMenu().getVendedor().getId().equals(idVendedor))
-                .toList();
+            if (pedidos.isEmpty()) {
+                throw new PedidoNoEncontradoException("No se encontraron pedidos al vendedor:" + idVendedor);
+            }
+            return pedidos;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al buscar los pedidos por vendedor", e);
+        }
     }
 }

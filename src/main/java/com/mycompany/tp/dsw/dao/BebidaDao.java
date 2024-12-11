@@ -1,64 +1,81 @@
 package com.mycompany.tp.dsw.dao;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Session;
+
+import com.mycompany.tp.dsw.exception.ItemNoEncontradoException;
 import com.mycompany.tp.dsw.model.Bebida;
+import com.mycompany.tp.dsw.model.ItemMenu;
+import com.mycompany.tp.dsw.service.HibernateUtil;
 
 public class BebidaDao extends ItemMenuDao {
 
-    public List<Bebida> getBebidas() {
-        List<Bebida> bebidas = items.stream()
-                .filter(i -> i instanceof Bebida)
-                .map(i -> (Bebida) i)
-                .toList();
-        return bebidas;
-    }
+    // Sobrescribir findAll para devolver List<ItemMenu>, pero solo con objetos
+    // Bebida
+    @Override
+    public List<ItemMenu> findAllActive() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Bebida p " +
+                    "WHERE p.activo = true";
+            List<ItemMenu> itemsMenu = session.createQuery(hql, ItemMenu.class).getResultList();
 
-    public Bebida findBebidaById(Integer id) {
-        Bebida bebida = getBebidas().stream()
-                .filter(b -> b.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-        return bebida;
-    }
+            // Filtrar para devolver solo los objetos Bebida
+            List<ItemMenu> bebidas = new ArrayList<>();
+            for (ItemMenu item : itemsMenu) {
+                if (item instanceof Bebida) {
+                    bebidas.add(item);
+                }
+            }
 
-    public List<Bebida> findByIdVendedor(Integer id) {
-        return getBebidas().stream()
-                .filter(b -> b.getVendedor().getId().equals(id))
-                .toList();
-    }
-
-    public void update(Bebida bebida) {
-        Bebida existeBebida = findBebidaById(bebida.getId());
-        if (existeBebida != null) {
-            String nombre = bebida.getNombre().trim();
-            String descripcion = bebida.getDescripcion().trim();
-            BigDecimal precio = bebida.getPrecio();
-            Double graduacionAlcoholica = bebida.getGraduacionAlcoholica();
-            Double tamano = bebida.getTamano();
-            Double volumen = bebida.getVolumen();
-
-            if (nombre != null) {
-                existeBebida.setNombre(nombre);
+            if (bebidas.isEmpty()) {
+                throw new ItemNoEncontradoException("No se ha encontrado bebidas");
             }
-            if (descripcion != null) {
-                existeBebida.setDescripcion(descripcion);
-            }
-            if (precio != null) {
-                existeBebida.setPrecio(precio);
-            }
-            if (graduacionAlcoholica != null) {
-                existeBebida.setGraduacionAlcoholica(graduacionAlcoholica);
-            }
-            if (tamano != null) {
-                existeBebida.setTamano(tamano);
-            }
-            if (volumen != null) {
-                existeBebida.setVolumen(volumen);
-            }
+            return bebidas;
+        } catch (Exception e) {
+            String errorMessage = "Error al intentar recuperar todas las bebidas";
+            throw new RuntimeException(errorMessage, e);
         }
+    }
 
+    public Bebida findActiveBebidaById(Integer id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Bebida b " +
+                    "WHERE b.id = :id " +
+                    "AND b.activo = true";
+            Bebida bebida = session.createQuery(hql, Bebida.class)
+                    .setParameter("id", id)
+                    .uniqueResult();
+            if (bebida == null) {
+                throw new ItemNoEncontradoException("No se ha encontrado una bebida con id: " + id);
+            }
+            return bebida;
+        } catch (Exception e) {
+            String errorMessage = "Error al intentar recuperar la bebida con id: " + id;
+            throw new RuntimeException(errorMessage, e);
+        }
+    }
+
+    public List<Bebida> findActiveByIdVendedor(Integer id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Bebida b " +
+                    "JOIN b.itemVendedor iv " +
+                    "WHERE b.activo = true " +
+                    "AND iv.vendedor.id = :idVendedor";
+
+            List<Bebida> bebidas = session.createQuery(hql, Bebida.class)
+                    .setParameter("idVendedor", id)
+                    .getResultList();
+
+            if (bebidas.isEmpty()) {
+                throw new ItemNoEncontradoException("No se han encontrado bebidas para el vendedor con id: " + id);
+            }
+            return bebidas;
+        } catch (Exception e) {
+            String errorMessage = "Error al intentar recuperar las bebidas del vendedor con id: " + id;
+            throw new RuntimeException(errorMessage, e);
+        }
     }
 
 }

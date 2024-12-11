@@ -1,130 +1,60 @@
 package com.mycompany.tp.dsw.dao;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
-import com.mycompany.tp.dsw.memory.CategoriaMemory;
-import com.mycompany.tp.dsw.memory.VendedorMemory;
-import com.mycompany.tp.dsw.model.Bebida;
+import org.hibernate.Session;
+
+import com.mycompany.tp.dsw.exception.ItemNoEncontradoException;
 import com.mycompany.tp.dsw.model.ItemMenu;
-import com.mycompany.tp.dsw.model.Plato;
 import com.mycompany.tp.dsw.model.Vendedor;
-import com.mycompany.tp.dsw.service.MemoryManager;
+import com.mycompany.tp.dsw.service.HibernateUtil;
 
-public class ItemMenuDao {
-
-    protected static List<ItemMenu> items;
-    private static int currentID = 0;
-    private static final MemoryManager memoryManager;
-    private final static VendedorMemory vendedorMemory;
-    private final static CategoriaMemory categoriaMemory;
-
-    static {
-        items = new ArrayList<>();
-        memoryManager = MemoryManager.getInstance();
-        vendedorMemory = memoryManager.getVendedorMemory();
-        categoriaMemory = memoryManager.getCategoriaMemory();
-    }
+public class ItemMenuDao extends GenericDAO<ItemMenu, Integer> {
 
     public ItemMenuDao() {
-
+        super(ItemMenu.class);
     }
 
-    public void add(ItemMenu itemMenu) {
-        itemMenu.setId(currentID++);
-        items.add(itemMenu);
-
-        // Actualizar la lista del vendedor
-        Vendedor vendedor = itemMenu.getVendedor();
-        List<ItemMenu> listaVendedor = itemMenu.getVendedor().getItemsMenu();
-        listaVendedor.add(itemMenu);
-        vendedor.setItemsMenu(listaVendedor);
-    }
-
+    // Delete --> Usar deleteLogico
+    // findAll --> Usar findAllActive
+    // findById --> Usar findByIdAndActive
     public List<ItemMenu> findByNombre(String nombre) {
-        return items.stream().filter(i -> i.getNombre().contains(nombre))
-                .toList();
-    }
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM ItemMenu im " +
+                    "WHERE im.nombre LIKE  :nombre";
 
-    public void update(ItemMenu itemMenu) {
-        switch (itemMenu.getClass().getSimpleName()) {
-            case "Plato":
-                System.out.println("PLATO ItemMenuDao ID: " + itemMenu.getId());
-                PlatoDao platoDao = new PlatoDao();
-                platoDao.update((Plato) itemMenu);
-                break;
-            case "Bebida":
-                System.out.println("BEBIDA ItemMenuDao ID: " + itemMenu.getId());
-                BebidaDao bebidaDao = new BebidaDao();
-                bebidaDao.update((Bebida) itemMenu);
-                break;
-            default:
-                System.out.println("DEFAULT ItemMenuDao");
-                break;
+            List<ItemMenu> itemsMenu = session.createQuery(hql, ItemMenu.class)
+                    .setParameter("nombre", "%" + nombre + "%")
+                    .getResultList();
+
+            if (itemsMenu.isEmpty()) {
+                throw new ItemNoEncontradoException("No se ha encontrado el item menu con nombre: " + nombre);
+            }
+            return itemsMenu;
+        } catch (Exception e) {
+            String errorMessage = "Error al intentar recuperar los item menu con nombre: " + nombre;
+            throw new RuntimeException(errorMessage, e);
         }
-
     }
 
-    public void delete(Integer id) {
-        items.removeIf(i -> i.getId().equals(id));
-    }
+    public List<ItemMenu> findByVendedor(Vendedor vendedor) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM ItemMenu im " +
+                    "JOIN im.itemVendedor iv " +
+                    "WHERE iv.vendedor = :vendedor";
 
-    /**
-     * OJO, no es obtener los item de un restaurante
-     * - Obtiene todos los items del sistema
-     * - Mirar filtrarPorVendedor()
-     * 
-     * @return Lista de todos los item del sistema
-     */
-    public List<ItemMenu> findAll() {
-        return items;
-    }
+            List<ItemMenu> itemsMenu = session.createQuery(hql, ItemMenu.class)
+                    .setParameter("vendedor", vendedor)
+                    .getResultList();
 
-    /**
-     * Obtiene los item de un restaurante
-     * 
-     * @param vendedor Restaurante a obtener sus items
-     * @return Lista de items de un estaurante
-     * @throws VendedorNoEncontradoException Si no encuentra el restaurante
-     */
-    public List<ItemMenu> findByVendedor(Vendedor vendedor) throws VendedorNoEncontradoException {
-
-        Integer id = vendedor.getId();
-        List<ItemMenu> itemsVendedor = items.stream()
-                .filter(i -> i.getVendedor().getId().equals(id))
-                .toList();
-
-        if (itemsVendedor.isEmpty()) {
-            throw new VendedorNoEncontradoException(
-                    "No se ah encontrado un vendedor con ID: " + vendedor.getId() + " .O la lista esta vacia");
+            if (itemsMenu.isEmpty()) {
+                throw new ItemNoEncontradoException("No se ha encontrado el item menu del vendedor: " + vendedor);
+            }
+            return itemsMenu;
+        } catch (Exception e) {
+            String errorMessage = "Error al intentar recuperar los item menu del vendedor: " + vendedor;
+            throw new RuntimeException(errorMessage, e);
         }
-
-        return itemsVendedor;
     }
 
-    /**
-     * Filtra por el id del itemMenu
-     * 
-     * @param id Id a buscar
-     * @return El objeto cuyo id es el 'id', si no existe null
-     */
-    public ItemMenu findById(Integer id) {
-        return items.stream()
-                .filter(i -> i.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder listaItemString = new StringBuilder();
-
-        for (ItemMenu itemMenu : items) {
-            listaItemString.append(itemMenu.toString()).append(" \n");
-        }
-
-        return listaItemString.toString();
-    }
 }

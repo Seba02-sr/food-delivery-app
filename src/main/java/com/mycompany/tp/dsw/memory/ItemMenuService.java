@@ -15,76 +15,76 @@ import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.Plato;
 import com.mycompany.tp.dsw.model.Vendedor;
 
-public class ItemMenuMemory {
+public class ItemMenuService {
 
     private CategoriaDao categoriaDao;
     private ItemMenuDao itemMenuDao;
 
-    public ItemMenuMemory() {
+    public ItemMenuService() {
         itemMenuDao = new ItemMenuDao();
         categoriaDao = new CategoriaDao();
 
     }
 
     /**
-     * Crea y persiste un ItemMenu
-     * - ItemMenu = Plato o Bebida
-     * - Manejo de id unicos con currentID
-     * - Parseo Solo los atributos de ItemMenu
-     * - Los de la subclase en su respectivo service
+     * Crea y persiste un ItemMenu.
+     * - ItemMenu = Plato o Bebida.
+     * - Manejo de id unicos con currentID.
+     * - Parseo Solo los atributos de ItemMenu.
+     * - Los de la subclase en su respectivo service.
      * 
      * @param itemMenu
      */
     protected void registrarItemMenu(ItemMenuDto itemMenuDto) {
         ItemMenu itemMenu = parseItemMenu(itemMenuDto);
-        itemMenuDao.add(itemMenu);
+        itemMenuDao.save(itemMenu);
     }
 
     /**
-     * Busca el item filtrado por el nombre
-     * - Ignora mayusculas y minusculas
+     * Busca el item filtrado por el nombre.
+     * - Ignora mayusculas y minusculas.
      * 
      * @param nombre
-     * @return Lista de los items que coincide con el @param
+     * @return Lista de los items que coincide con el @param.
      */
     public List<ItemMenu> buscarItemMenuPorNombre(String nombre) {
         return itemMenuDao.findByNombre(nombre);
     }
 
     /**
-     * Modifica los datos de un item especifico
-     * - Del objeto itemMenu pasado como parametro
-     * - Solo los datos a modificar permanecen no nulos
-     * - Parseo solo los atributos de Item Menu
-     * - Los de la subclase en su respectivo service
+     * Modifica los datos de un item especifico.
+     * - Del objeto itemMenu pasado como parametro.
+     * - Solo los datos a modificar permanecen no nulos.
+     * - Parseo solo los atributos de Item Menu.
+     * - Los de la subclase en su respectivo service.
      * 
-     * @param itemMenu El objeto item con los datos modificados
+     * @param itemMenu El objeto item con los datos modificados.
      */
     protected void modificarItemMenu(ItemMenuDto itemMenuDto) {
         ItemMenu itemMenu = parseItemMenu(itemMenuDto);
-        System.out.println("ItemMenu: " + itemMenu.toString());
-        System.out.println("Class: " + itemMenu.getClass().getSimpleName());
         itemMenuDao.update(itemMenu);
     }
 
     /**
-     * Elimina un item del restaurante, segun el id
+     * Elimina un item del restaurante, segun el id.
+     * - Eliminar = setear atributo activo a false.
      * 
      * @param id
      */
     public void eliminarItemMenu(Integer id) {
-        itemMenuDao.delete(id);
+        ItemMenu item = itemMenuDao.findByIdAndActive(id);
+        itemMenuDao.deleteLogico(item);
     }
 
     /**
-     * Obtiene una lista de todos los item del sistema
+     * Obtiene una lista de todos los item ACTIVOS del sistema
      * - OJO no son los item de un restaurante
      * - Mirar metodo filtrarPorVendedor()
      * 
      * @return Lista con los items
      */
     public List<ItemMenu> obtenerTodosLosItemMenu() {
-        return itemMenuDao.findAll();
+        return itemMenuDao.findAllActive();
     }
 
     /**

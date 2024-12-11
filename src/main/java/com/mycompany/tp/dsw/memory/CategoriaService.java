@@ -5,11 +5,11 @@ import java.util.List;
 import com.mycompany.tp.dsw.dao.CategoriaDao;
 import com.mycompany.tp.dsw.model.Categoria;
 
-public class CategoriaMemory {
+public class CategoriaService {
 
         CategoriaDao categoriaDao;
 
-        public CategoriaMemory() {
+        public CategoriaService() {
                 categoriaDao = new CategoriaDao();
         }
 

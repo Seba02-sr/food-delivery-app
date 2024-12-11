@@ -8,11 +8,11 @@ import com.mycompany.tp.dsw.dto.BebidaDto;
 import com.mycompany.tp.dsw.model.Bebida;
 import com.mycompany.tp.dsw.model.ItemMenu;
 
-public class BebidaMemory extends ItemMenuMemory {
+public class BebidaService extends ItemMenuService {
 
     private BebidaDao bebidaDao;
 
-    public BebidaMemory() {
+    public BebidaService() {
         bebidaDao = new BebidaDao();
     }
 
@@ -22,11 +22,22 @@ public class BebidaMemory extends ItemMenuMemory {
      * @return Lista de bebidas
      */
     public List<Bebida> obtenerTodasLasBebidas() {
-        return bebidaDao.getBebidas();
+        List<ItemMenu> items = bebidaDao.findAllActive();
+
+        // Parsear los items a bebidas
+
+        List<Bebida> bebidas = new ArrayList<>();
+        for (ItemMenu item : items) {
+            if (item instanceof Bebida) {
+                bebidas.add((Bebida) item);
+            }
+        }
+
+        return bebidas;
     }
 
     public List<Bebida> obtenerBebidaPorIdVendedor(Integer id) {
-        return bebidaDao.findByIdVendedor(id);
+        return bebidaDao.findActiveByIdVendedor(id);
     }
 
     public List<Bebida> buscarBebidaPorNombre(String nombre) {
