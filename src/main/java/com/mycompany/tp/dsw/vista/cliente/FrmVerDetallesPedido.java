@@ -4,58 +4,45 @@
  */
 package com.mycompany.tp.dsw.vista.cliente;
 
-import com.mycompany.tp.dsw.controller.PedidoController;
-import com.mycompany.tp.dsw.exception.ClienteNoEncontradoException;
-import com.mycompany.tp.dsw.model.Pedido;
-import com.mycompany.tp.dsw.vista.util.HeaderFormatter;
+import java.math.BigDecimal;
 import java.util.List;
-import javax.swing.JOptionPane;
+
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import javax.swing.JTable;
+
+import com.mycompany.tp.dsw.controller.PedidoController;
+import com.mycompany.tp.dsw.model.Estado;
+import com.mycompany.tp.dsw.model.ItemPedido;
+import com.mycompany.tp.dsw.model.Pedido;
+import com.mycompany.tp.dsw.vista.util.HeaderFormatter;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Usuario
  */
-public class FrmVerPedidos extends javax.swing.JFrame {
+public class FrmVerDetallesPedido extends javax.swing.JFrame {
 
-    private String idCliente;
+    private final String idPedido;
     PedidoController pedidoController;
+    private final Pedido pedido;
 
-    public FrmVerPedidos(String idCliente) {
+    public FrmVerDetallesPedido(String idPedido) {
         initComponents();
-
         pedidoController = new PedidoController();
-        this.idCliente = idCliente;
+        this.idPedido = idPedido;
+        pedido = pedidoController.obtenerPedidoPorId(idPedido);
         this.setLocationRelativeTo(null);
         setearTituloTabla();
         initDatos();
-        poputTable();
     }
 
     public void initDatos() {
-        try {
-            List<Pedido> pedidos = pedidoController.obtenerPedidosPorCliente(idCliente);
-            for (Pedido pedido : pedidos) {
-                System.out.println("AAAAAA: " + pedido.toString());
-            }
-            mostrarTabla(pedidos);
-        } catch (ClienteNoEncontradoException e) {
-            JOptionPane.showMessageDialog(
-                    null, // El componente padre, puede ser null si no hay una referencia a la ventana
-                    e.getMessage(), // Mensaje del error
-                    "Cliente no encontrado", // Título del cuadro de diálogo
-                    JOptionPane.ERROR_MESSAGE // Tipo de mensaje (icono de error)
-            );
-        }
+        List<ItemPedido> itemsPedidos = pedido.getItems();
+        mostrarTabla(itemsPedidos);
 
-    }
-
-    public void poputTable() {
-        jPopupMenu.add(jmiVerDetalles);
-        tbPedidos.setComponentPopupMenu(jPopupMenu);
     }
 
     /**
@@ -66,26 +53,21 @@ public class FrmVerPedidos extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        jPopupMenu = new javax.swing.JPopupMenu();
-        jmiVerDetalles = new javax.swing.JMenuItem();
+
         jPanel4 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tbPedidos = new javax.swing.JTable();
+        tbDetallesPedido = new javax.swing.JTable();
         btnCancelar = new javax.swing.JButton();
-        jmiVerDetalles.setText("Ver Detalles");
-        jmiVerDetalles.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jmiVerDetallesActionPerformed(evt);
-            }
-        });
+        btnPagarMercadoPago = new javax.swing.JButton();
+        btnPagarTransferencia = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel3.setPreferredSize(new java.awt.Dimension(518, 260));
 
@@ -96,7 +78,7 @@ public class FrmVerPedidos extends javax.swing.JFrame {
                         .addGap(0, 640, Short.MAX_VALUE));
         jPanel3Layout.setVerticalGroup(
                 jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 30, Short.MAX_VALUE));
+                        .addGap(0, 42, Short.MAX_VALUE));
 
         jPanel2.setPreferredSize(new java.awt.Dimension(518, 260));
 
@@ -111,15 +93,15 @@ public class FrmVerPedidos extends javax.swing.JFrame {
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        tbPedidos.setModel(new javax.swing.table.DefaultTableModel(
+        tbDetallesPedido.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][] {
 
                 },
                 new String[] {
 
                 }));
-        tbPedidos.setRowHeight(25);
-        jScrollPane1.setViewportView(tbPedidos);
+        tbDetallesPedido.setRowHeight(25);
+        jScrollPane1.setViewportView(tbDetallesPedido);
 
         jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
@@ -130,16 +112,44 @@ public class FrmVerPedidos extends javax.swing.JFrame {
             }
         });
 
+        btnPagarMercadoPago.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        btnPagarMercadoPago.setText("Pagar \nMercado Pago");
+        btnPagarMercadoPago.setPreferredSize(new java.awt.Dimension(30, 30));
+        btnPagarMercadoPago.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPagarMercadoPagoActionPerformed(evt);
+            }
+        });
+
+        btnPagarTransferencia.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        btnPagarTransferencia.setText("Pagar Transferencia");
+        btnPagarTransferencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPagarTransferenciaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
                 jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                .addContainerGap(21, Short.MAX_VALUE)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(btnCancelar)
+                                .addContainerGap(25, Short.MAX_VALUE)
+                                .addGroup(jPanel4Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 600,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel4Layout.createSequentialGroup()
+                                                .addComponent(btnCancelar)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(btnPagarTransferencia,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 175,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(btnPagarMercadoPago,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 175,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(19, 19, 19))
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel4Layout.createSequentialGroup()
@@ -154,38 +164,47 @@ public class FrmVerPedidos extends javax.swing.JFrame {
         jPanel4Layout.setVerticalGroup(
                 jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                .addContainerGap(40, Short.MAX_VALUE)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 310,
+                                .addContainerGap(49, Short.MAX_VALUE)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 297,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCancelar)
-                                .addContainerGap())
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(btnPagarMercadoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 47,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnPagarTransferencia, javax.swing.GroupLayout.PREFERRED_SIZE, 47,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnCancelar))
+                                .addGap(12, 12, 12))
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addGap(0, 15, Short.MAX_VALUE)
                                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 30,
                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(326, 326, 326)
-                                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30,
+                                        .addGap(314, 314, 314)
+                                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 42,
                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE))));
+                                        .addGap(0, 16, Short.MAX_VALUE))));
 
-        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        getContentPane().add(jPanel4, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jmiVerDetallesActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jmiVerDetallesActionPerformed
-        int selectedRow = tbPedidos.getSelectedRow();
-        
-        if (selectedRow != -1) {
-            String idPedido = tbPedidos.getValueAt(selectedRow, 0).toString();
-            FrmVerDetallesPedido verDetallePedidoForm = new FrmVerDetallesPedido(idPedido);
-            verDetallePedidoForm.setVisible(true);
+    private void btnPagarTransferenciaActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPagarTransferenciaActionPerformed
+        if (pedido.getEstado().equals(Estado.ACEPTADO)) {
+
         } else {
-            JOptionPane.showMessageDialog(null, "Seleccione un cliente");
+            JOptionPane.showMessageDialog(null, "Espere que su pedido sea aceptado por el restaurante");
         }
-    }// GEN-LAST:event_jmiVerDetallesActionPerformed
+    }// GEN-LAST:event_btnPagarTransferenciaActionPerformed
+
+    private void btnPagarMercadoPagoActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPagarMercadoPagoActionPerformed
+        if (pedido.getEstado().equals(Estado.ACEPTADO)) {
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Espere que su pedido sea aceptado por el restaurante");
+        }
+    }// GEN-LAST:event_btnPagarMercadoPagoActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnCancelarActionPerformed
         this.dispose();
@@ -193,38 +212,49 @@ public class FrmVerPedidos extends javax.swing.JFrame {
 
     public void setearTituloTabla() {
         DefaultTableModel model = new DefaultTableModel();
-        String[] titulo = { "PEDIDO", "RESTAURANTE", "TOTAL", "CANTIDAD ARTICULOS", "ESTADO" };
+        String[] titulo = { "PRODUCTO", "PRECIO UNITARIO", "CANTIDAD" };
         model.setColumnIdentifiers(titulo);
-        tbPedidos.setModel(model);
+        tbDetallesPedido.setModel(model);
 
         // Personalizar el encabezado
-        JTableHeader header = tbPedidos.getTableHeader();
+        JTableHeader header = tbDetallesPedido.getTableHeader();
         header.setDefaultRenderer(new HeaderFormatter());
     }
 
-    public void mostrarTabla(List<Pedido> pedidos) {
+    public void mostrarTabla(List<ItemPedido> itemsPedidos) {
         // Asegurarse de que la tabla tenga el modelo configurado
-        if (tbPedidos.getModel() == null || !(tbPedidos.getModel() instanceof DefaultTableModel)) {
+        if (tbDetallesPedido.getModel() == null || !(tbDetallesPedido.getModel() instanceof DefaultTableModel)) {
             setearTituloTabla(); // Configura el encabezado y el modelo si no está configurado
         }
 
-        DefaultTableModel model = (DefaultTableModel) tbPedidos.getModel(); // Recupera el modelo
+        DefaultTableModel model = (DefaultTableModel) tbDetallesPedido.getModel(); // Recupera el modelo
 
-        if (pedidos != null && !pedidos.isEmpty()) {
-            for (Pedido pedido : pedidos) {
-                Object[] fila = new Object[5];
-                fila[0] = pedido.getId();
-                fila[1] = pedido.obtenerVendedor().getNombre();
-                fila[2] = pedido.totalSinRecargo();
-                fila[3] = pedido.cantidadItems();
-                fila[4] = pedido.getEstado();
+        // Limpiar filas existentes
+        model.setRowCount(0);
+
+        BigDecimal total = BigDecimal.ZERO;
+        if (itemsPedidos != null && !itemsPedidos.isEmpty()) {
+            for (ItemPedido item : itemsPedidos) {
+                Object[] fila = new Object[3];
+                BigDecimal precio = item.getItemMenu().getPrecio();
+                Integer cantidad = item.getCantidad();
+                fila[0] = item.getItemMenu().getNombre();
+                fila[1] = precio;
+                fila[2] = cantidad;
                 model.addRow(fila);
+
+                total = total.add(precio.multiply(BigDecimal.valueOf(cantidad)));
             }
         }
 
-        tbPedidos.setModel(model);
+        Object[] totalRow = { "TOTAL SIN RECARGO", total, "" };
+        Object[] vaciaRow = { "", "", "" };
+        model.addRow(vaciaRow);
+        model.addRow(totalRow);
+
+        tbDetallesPedido.setModel(model);
         // Ajustar el ancho de las columnas
-        ajustarAnchoColumnas(tbPedidos);
+        ajustarAnchoColumnas(tbDetallesPedido);
     }
 
     private void ajustarAnchoColumnas(JTable tabla) {
@@ -239,9 +269,6 @@ public class FrmVerPedidos extends javax.swing.JFrame {
         }
     }
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
@@ -260,37 +287,37 @@ public class FrmVerPedidos extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmVerPedidos.class.getName()).log(java.util.logging.Level.SEVERE, null,
-                    ex);
+            java.util.logging.Logger.getLogger(FrmVerDetallesPedido.class.getName()).log(java.util.logging.Level.SEVERE,
+                    null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmVerPedidos.class.getName()).log(java.util.logging.Level.SEVERE, null,
-                    ex);
+            java.util.logging.Logger.getLogger(FrmVerDetallesPedido.class.getName()).log(java.util.logging.Level.SEVERE,
+                    null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmVerPedidos.class.getName()).log(java.util.logging.Level.SEVERE, null,
-                    ex);
+            java.util.logging.Logger.getLogger(FrmVerDetallesPedido.class.getName()).log(java.util.logging.Level.SEVERE,
+                    null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmVerPedidos.class.getName()).log(java.util.logging.Level.SEVERE, null,
-                    ex);
+            java.util.logging.Logger.getLogger(FrmVerDetallesPedido.class.getName()).log(java.util.logging.Level.SEVERE,
+                    null, ex);
         }
         // </editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmVerPedidos("101").setVisible(true);
+                new FrmVerDetallesPedido("0").setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnPagarMercadoPago;
+    private javax.swing.JButton btnPagarTransferencia;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPopupMenu jPopupMenu;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JMenuItem jmiVerDetalles;
-    private javax.swing.JTable tbPedidos;
+    private javax.swing.JTable tbDetallesPedido;
     // End of variables declaration//GEN-END:variables
 }
