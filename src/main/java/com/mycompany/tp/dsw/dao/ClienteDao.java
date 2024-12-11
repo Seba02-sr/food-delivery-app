@@ -14,10 +14,14 @@ public class ClienteDao extends GenericDAO<Cliente, Integer> {
         super(Cliente.class);
     }
 
-    public List<Cliente> findByNombre(String nombre) {
+    // Delete --> Usar deleteLogico
+    // findById --> Usar findByIdAndActive
+    // finaAll --> Usar findAllActive
+    public List<Cliente> findActiveByNombre(String nombre) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM Cliente c " +
-                    "WHERE c.nombre LIKE :nombre ";
+                    "WHERE c.activo = true " +
+                    "AND c.nombre LIKE :nombre";
 
             List<Cliente> clientes = session.createQuery(hql, Cliente.class)
                     .setParameter("nombre", "%" + nombre + "%")

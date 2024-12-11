@@ -8,7 +8,6 @@ import org.hibernate.Session;
 import com.mycompany.tp.dsw.exception.ItemNoEncontradoException;
 import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.Plato;
-import com.mycompany.tp.dsw.model.Vendedor;
 import com.mycompany.tp.dsw.service.HibernateUtil;
 
 public class PlatoDao extends ItemMenuDao {
@@ -31,23 +30,24 @@ public class PlatoDao extends ItemMenuDao {
         }
     }
 
-    public List<Plato> findActiveByIdVendedor(Vendedor vendedor) {
+    public List<Plato> findActiveByIdVendedor(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM Plato p " +
                     "JOIN p.itemVendedor iv " +
                     "WHERE p.activo = true " +
-                    "AND iv.vendedor = :vendedor";
+                    "AND iv.vendedor.id = :id " +
+                    "AND iv.vendedor.activo = true";
 
             List<Plato> platos = session.createQuery(hql, Plato.class)
-                    .setParameter("vendedor", vendedor)
+                    .setParameter("id", id)
                     .getResultList();
 
             if (platos.isEmpty()) {
-                throw new ItemNoEncontradoException("No se han encontrado platos para el vendedor: " + vendedor);
+                throw new ItemNoEncontradoException("No se han encontrado platos para el vendedor con id: " + id);
             }
             return platos;
         } catch (Exception e) {
-            String errorMessage = "Error al intentar recuperar los platos del vendedor: " + vendedor;
+            String errorMessage = "Error al intentar recuperar los platos del vendedor con id: " + id;
             throw new RuntimeException(errorMessage, e);
         }
     }

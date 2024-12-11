@@ -28,7 +28,8 @@ public class ItemsPedidoDao extends GenericDAO<ItemPedido, Integer> {
             String hql = "SELECT ip FROM ItemPedido ip " +
                     "JOIN ip.itemMenu im " +
                     "JOIN im.itemVendedores iv " +
-                    "WHERE iv.vendedor.id = :idRestaurante";
+                    "WHERE iv.vendedor.id = :idRestaurante " +
+                    "AND iv.vendedor.activo = true";
 
             List<ItemPedido> itemspedidos = session.createQuery(hql, ItemPedido.class)
                     .setParameter("idRestaurante", id)

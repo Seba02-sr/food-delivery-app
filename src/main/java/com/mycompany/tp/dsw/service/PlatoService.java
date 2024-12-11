@@ -1,4 +1,4 @@
-package com.mycompany.tp.dsw.memory;
+package com.mycompany.tp.dsw.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +8,11 @@ import com.mycompany.tp.dsw.dto.PlatoDto;
 import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.Plato;
 
-public class PlatoMemory extends ItemMenuMemory {
+public class PlatoService extends ItemMenuService {
 
     private PlatoDao platoDao;
 
-    public PlatoMemory() {
+    public PlatoService() {
         platoDao = new PlatoDao();
     }
 
@@ -22,7 +22,18 @@ public class PlatoMemory extends ItemMenuMemory {
      * @return Lista de platos
      */
     public List<Plato> obtenerTodosLosPlatos() {
-        return platoDao.getPlatos();
+        List<ItemMenu> items = platoDao.findAllActive();
+
+        // Parsear los items a bebidas
+
+        List<Plato> platos = new ArrayList<>();
+        for (ItemMenu item : items) {
+            if (item instanceof Plato) {
+                platos.add((Plato) item);
+            }
+        }
+
+        return platos;
     }
 
     /**
@@ -43,7 +54,7 @@ public class PlatoMemory extends ItemMenuMemory {
      * @return Lista de platos del restaurante, cuyo id es el parametro
      */
     public List<Plato> obtenerPlatoPorIdVendedor(Integer id) {
-        List<Plato> platos = platoDao.findByIdVendedor(id);
+        List<Plato> platos = platoDao.findActiveByIdVendedor(id);
         return platos;
     }
 

@@ -1,4 +1,4 @@
-package com.mycompany.tp.dsw.memory;
+package com.mycompany.tp.dsw.service;
 
 import java.util.List;
 
@@ -8,11 +8,11 @@ import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
 import com.mycompany.tp.dsw.model.Coordenada;
 import com.mycompany.tp.dsw.model.Vendedor;
 
-public class VendedorMemory {
+public class VendedorService {
 
     private VendedorDao vendedorDao;
 
-    public VendedorMemory() {
+    public VendedorService() {
         vendedorDao = new VendedorDao();
     }
 
@@ -29,7 +29,7 @@ public class VendedorMemory {
     }
 
     /**
-     * Obtiene un restaurante, filtrado por su nombre
+     * Obtiene un restaurante ACTIVO, filtrado por su nombre
      * - Los nombres son unicos, ya que son restaurantes
      * 
      * @param nombre El nombre del restaurante a buscar
@@ -37,7 +37,7 @@ public class VendedorMemory {
      * @throws VendedorNoEncontradoException
      */
     public List<Vendedor> buscarVendedorPorNombre(String nombre) {
-        return vendedorDao.findByNombre(nombre);
+        return vendedorDao.findActiveByNombre(nombre);
     }
 
     /**
@@ -46,9 +46,8 @@ public class VendedorMemory {
      * - Solo los datos a modificar permanecen no nulos
      * 
      * @param vendedorModificado El restaurante con los datos a modificar
-     * @throws VendedorNoEncontradoException Si no encuentra el restaurante
      */
-    public void modificarVendedor(VendedorDto vendedorDto) throws VendedorNoEncontradoException {
+    public void modificarVendedor(VendedorDto vendedorDto) {
 
         Vendedor vendedor = parseVendedor(vendedorDto);
         vendedorDao.update(vendedor);
@@ -62,7 +61,7 @@ public class VendedorMemory {
      * @return El restaurante con id del @param, caso no encontrar NULL
      */
     public Vendedor buscarVendedorPorId(Integer id) {
-        return vendedorDao.findById(id);
+        return vendedorDao.findByIdAndActive(id);
     }
 
     /**
@@ -72,17 +71,18 @@ public class VendedorMemory {
      * @param id El id del restaurante a por eliminar
      * @throws VendedorNoEncontradoException Si no encuentra el restaurante
      */
-    public void eliminarVendedor(Integer id) throws VendedorNoEncontradoException {
-        vendedorDao.deleteLogico(id);
+    public void eliminarVendedor(Integer id) {
+        Vendedor vendedor = buscarVendedorPorId(id);
+        vendedorDao.deleteLogico(vendedor);
     }
 
     /**
-     * Obtiene una lista de todos los restaurantes del sistema
+     * Obtiene una lista de todos los restaurantes ACTIVOS del sistema
      * 
      * @return Lista de todos los restaurantes
      */
     public List<Vendedor> obtenerTodosLosVendedores() {
-        return vendedorDao.findAll();
+        return vendedorDao.findAllActive();
     }
 
     /**
@@ -110,7 +110,7 @@ public class VendedorMemory {
         }
 
         if (latitud != null && longitud != null) {
-            vendedorDto.setCoordenada(new Coordenada(latitud, longitud));
+            vendedorDto.setCoordenada(Coordenada.builder().latitud(latitud).longitud(longitud).build());
         }
 
         return new Vendedor(vendedorDto);

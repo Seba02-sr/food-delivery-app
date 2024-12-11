@@ -1,4 +1,4 @@
-package com.mycompany.tp.dsw.memory;
+package com.mycompany.tp.dsw.service;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,7 +13,6 @@ import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
 import com.mycompany.tp.dsw.model.Bebida;
 import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.Plato;
-import com.mycompany.tp.dsw.model.Vendedor;
 
 public class ItemMenuService {
 
@@ -95,8 +94,7 @@ public class ItemMenuService {
      * @throws VendedorNoEncontradoException Si no encuentra el Restaurante
      */
     public List<ItemMenu> filtrarPorVendedor(VendedorDto vendedorDto) throws VendedorNoEncontradoException {
-        Vendedor vendedor = VendedorMemory.parseVendedor(vendedorDto);
-        return itemMenuDao.findByVendedor(vendedor);
+        return itemMenuDao.findByVendedorId(vendedorDto.getId());
     }
 
     public ItemMenu filtrarPorId(Integer id) {

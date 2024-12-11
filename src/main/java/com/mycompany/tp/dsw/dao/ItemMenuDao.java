@@ -6,7 +6,6 @@ import org.hibernate.Session;
 
 import com.mycompany.tp.dsw.exception.ItemNoEncontradoException;
 import com.mycompany.tp.dsw.model.ItemMenu;
-import com.mycompany.tp.dsw.model.Vendedor;
 import com.mycompany.tp.dsw.service.HibernateUtil;
 
 public class ItemMenuDao extends GenericDAO<ItemMenu, Integer> {
@@ -37,22 +36,23 @@ public class ItemMenuDao extends GenericDAO<ItemMenu, Integer> {
         }
     }
 
-    public List<ItemMenu> findByVendedor(Vendedor vendedor) {
+    public List<ItemMenu> findByVendedorId(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM ItemMenu im " +
                     "JOIN im.itemVendedor iv " +
-                    "WHERE iv.vendedor = :vendedor";
+                    "WHERE iv.vendedor.id = :id " +
+                    "AND iv.vendedor.activo = true";
 
             List<ItemMenu> itemsMenu = session.createQuery(hql, ItemMenu.class)
-                    .setParameter("vendedor", vendedor)
+                    .setParameter("id", id)
                     .getResultList();
 
             if (itemsMenu.isEmpty()) {
-                throw new ItemNoEncontradoException("No se ha encontrado el item menu del vendedor: " + vendedor);
+                throw new ItemNoEncontradoException("No se ha encontrado el item menu del vendedor con id: " + id);
             }
             return itemsMenu;
         } catch (Exception e) {
-            String errorMessage = "Error al intentar recuperar los item menu del vendedor: " + vendedor;
+            String errorMessage = "Error al intentar recuperar los item menu del vendedor con id: " + id;
             throw new RuntimeException(errorMessage, e);
         }
     }

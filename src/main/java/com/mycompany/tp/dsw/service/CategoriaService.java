@@ -1,8 +1,9 @@
-package com.mycompany.tp.dsw.memory;
+package com.mycompany.tp.dsw.service;
 
 import java.util.List;
 
 import com.mycompany.tp.dsw.dao.CategoriaDao;
+import com.mycompany.tp.dsw.exception.CategoriaNoEncontradaException;
 import com.mycompany.tp.dsw.model.Categoria;
 
 public class CategoriaService {
@@ -34,7 +35,7 @@ public class CategoriaService {
                 return categoriaDao.findAll();
         }
 
-        public List<Categoria> buscarPorTipoCategoria(String tipo) {
+        public List<Categoria> buscarPorTipoCategoria(String tipo) throws CategoriaNoEncontradaException {
                 return categoriaDao.findByTipoCategoria(tipo);
         }
 

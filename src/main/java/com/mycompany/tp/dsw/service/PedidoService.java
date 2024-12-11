@@ -1,4 +1,4 @@
-package com.mycompany.tp.dsw.memory;
+package com.mycompany.tp.dsw.service;
 
 import java.util.List;
 
@@ -8,11 +8,11 @@ import com.mycompany.tp.dsw.exception.PedidoNoEncontradoException;
 import com.mycompany.tp.dsw.model.Estado;
 import com.mycompany.tp.dsw.model.Pedido;
 
-public class PedidoMemory {
+public class PedidoService {
 
     private PedidoDao pedidoDao;
 
-    public PedidoMemory() {
+    public PedidoService() {
         pedidoDao = new PedidoDao();
     }
 
@@ -23,7 +23,7 @@ public class PedidoMemory {
      * @param pedido El pedido a persistir
      */
     public void registrarPedido(Pedido pedido) {
-        pedidoDao.add(pedido);
+        pedidoDao.save(pedido);
     }
 
     /**
@@ -70,7 +70,8 @@ public class PedidoMemory {
      */
 
     public void eliminarPedido(Integer id) {
-        pedidoDao.delete(id);
+        Pedido pedido = pedidoDao.findById(id);
+        pedidoDao.delete(pedido);
     }
 
     /**
@@ -104,6 +105,6 @@ public class PedidoMemory {
      */
 
     public List<Pedido> buscarPedidoPorVendedor(Integer idVendedor) {
-        return pedidoDao.findByVendedor(idVendedor);
+        return pedidoDao.findByIdVendedor(idVendedor);
     }
 }

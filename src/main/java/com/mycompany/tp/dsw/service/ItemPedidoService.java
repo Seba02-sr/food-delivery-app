@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.tp.dsw.memory;
+package com.mycompany.tp.dsw.service;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,10 +16,10 @@ import com.mycompany.tp.dsw.model.ItemPedido;
  *
  * @author User
  */
-public class ItemPedidoMemory {
+public class ItemPedidoService {
     private ItemsPedidoDao itemPedidoDao;
 
-    public ItemPedidoMemory() {
+    public ItemPedidoService() {
         itemPedidoDao = new ItemsPedidoDao();
     }
 
@@ -32,8 +32,7 @@ public class ItemPedidoMemory {
      * @throws ItemNoEncontradoException     Si no se encontro items en el sistema
      * @throws VendedorNoEncontradoException
      */
-    public List<ItemPedido> buscarPorRestaurante(Integer id)
-            throws ItemNoEncontradoException, VendedorNoEncontradoException {
+    public List<ItemPedido> buscarPorRestaurante(Integer id) throws ItemNoEncontradoException {
         return itemPedidoDao.findByIdRestaurante(id);
     }
 
@@ -46,7 +45,7 @@ public class ItemPedidoMemory {
      * @throws ItemNoEncontradoException Si no encuentra el item
      */
     public List<ItemPedido> ordenarPorPrecio() throws ItemNoEncontradoException {
-        return itemPedidoDao.sortedByPrecio();
+        return itemPedidoDao.findSortedByPrecio();
     }
 
     /**
@@ -72,16 +71,9 @@ public class ItemPedidoMemory {
      * @throws ItemNoEncontradoException Si no encuentra item pedidos
      */
 
-    public List<ItemPedido> filtrarPorVendedor(String nombreVendedor)
-            throws ItemNoEncontradoException, VendedorNoEncontradoException {
-        return itemPedidoDao.FindByNombreVendedor(nombreVendedor);
+    public List<ItemPedido> filtrarPorVendedor(String nombreVendedor) throws ItemNoEncontradoException {
+        return itemPedidoDao.findByNombreRestaurante(nombreVendedor);
     }
-
-    /*
-     * public void setItemsPedido(List<ItemPedido> itemsPedido) {
-     * this.itemsPedido = itemsPedido;
-     * }
-     */
 
     /**
      * Obtiene una lista con todos los item pedido del sistema
@@ -101,7 +93,7 @@ public class ItemPedidoMemory {
      */
 
     public void registrarItemPedido(ItemPedido itemPedido) {
-        itemPedidoDao.add(itemPedido);
+        itemPedidoDao.save(itemPedido);
     }
 
 }
