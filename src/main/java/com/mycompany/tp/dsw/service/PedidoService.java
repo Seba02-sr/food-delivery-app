@@ -3,16 +3,22 @@ package com.mycompany.tp.dsw.service;
 import java.util.List;
 
 import com.mycompany.tp.dsw.dao.PedidoDao;
+import com.mycompany.tp.dsw.dto.PedidoDto;
 import com.mycompany.tp.dsw.exception.ClienteNoEncontradoException;
 import com.mycompany.tp.dsw.exception.PedidoNoEncontradoException;
+import com.mycompany.tp.dsw.model.Cliente;
 import com.mycompany.tp.dsw.model.Estado;
 import com.mycompany.tp.dsw.model.Pedido;
 
 public class PedidoService {
 
     private PedidoDao pedidoDao;
+    private ClienteService clienteService;
+    private ServiceManager serviceManager;
 
     public PedidoService() {
+        serviceManager = ServiceManager.getInstance();
+        clienteService = serviceManager.getClienteService();
         pedidoDao = new PedidoDao();
     }
 
@@ -22,8 +28,10 @@ public class PedidoService {
      * 
      * @param pedido El pedido a persistir
      */
-    public void registrarPedido(Pedido pedido) {
+    public Pedido registrarPedido(PedidoDto pedidoDto) {
+        Pedido pedido = parsePedido(pedidoDto);
         pedidoDao.save(pedido);
+        return pedido;
     }
 
     /**
@@ -106,5 +114,13 @@ public class PedidoService {
 
     public List<Pedido> buscarPedidoPorVendedor(Integer idVendedor) {
         return pedidoDao.findByIdVendedor(idVendedor);
+    }
+
+    private Pedido parsePedido(PedidoDto pedidoDto) {
+
+        Integer idCliente = Integer.parseInt(pedidoDto.getIdCliente());
+        Cliente cliente = clienteService.buscarClientePorId(idCliente);
+
+        return new Pedido(cliente);
     }
 }

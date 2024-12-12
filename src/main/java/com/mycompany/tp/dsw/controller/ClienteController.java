@@ -5,57 +5,46 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import com.mycompany.tp.dsw.dto.ClienteDto;
-import com.mycompany.tp.dsw.exception.ClienteNoEncontradoException;
-import com.mycompany.tp.dsw.memory.ClienteMemory;
+import com.mycompany.tp.dsw.service.ClienteService;
 import com.mycompany.tp.dsw.model.Cliente;
-import com.mycompany.tp.dsw.service.MemoryManager;
+import com.mycompany.tp.dsw.service.ServiceManager;
 
 public class ClienteController {
 
-    MemoryManager memoryManager;
-    ClienteMemory clienteMemory;
+    ServiceManager serviceManager;
+    ClienteService clienteService;
 
     public ClienteController() {
-        memoryManager = MemoryManager.getInstance();
-        clienteMemory = memoryManager.getClienteMemory();
+        serviceManager = ServiceManager.getInstance();
+        clienteService = serviceManager.getClienteService();
     }
 
     public List<Cliente> obtenerTodosLosClientes() {
-        return clienteMemory.obtenerTodosLosClientes();
+        return clienteService.obtenerTodosLosClientes();
     }
 
     public void guardarCliente(ClienteDto clienteDto) {
-        clienteMemory.registrarCliente(clienteDto);
+        clienteService.registrarCliente(clienteDto);
         JOptionPane.showMessageDialog(null, "Cliente creado exitosamente");
     }
 
     public void modificarCliente(ClienteDto clienteDto) {
-        try {
-            clienteMemory.modificarCliente(clienteDto);
-        } catch (ClienteNoEncontradoException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-        }
+        clienteService.modificarCliente(clienteDto);
     }
 
     public void eliminarCliente(String idText) {
         Integer id = Integer.parseInt(idText);
-        try {
-            clienteMemory.eliminarCliente(id);
-        } catch (ClienteNoEncontradoException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-        }
+        clienteService.eliminarCliente(id);
     }
 
     public List<Cliente> buscarClientesPorNombre(String nombre) {
-        List<Cliente> clientes = clienteMemory.buscarClientePorNombre(nombre);
+        List<Cliente> clientes = clienteService.buscarClientePorNombre(nombre);
         return clientes;
     }
 
     public Cliente buscarClientePorId(String idText) {
         Integer id = Integer.parseInt(idText);
-        return clienteMemory.buscarClientePorId(id);
+        return clienteService.buscarClientePorId(id);
     }
 
 }

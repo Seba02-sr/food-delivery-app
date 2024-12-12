@@ -91,6 +91,14 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
         notificarObservadores();
     }
 
+    public List<ItemPedido> getItems() {
+        List<ItemPedido> itemsPedidos = new ArrayList<>();
+        for (PedidoItemPedido pedidoItemPedido : pedidoItemPedidos) {
+            itemsPedidos.add(pedidoItemPedido.getItemPedido());
+        }
+        return itemsPedidos;
+    }
+
     /**
      * Calcula el costo total del pedido, segun el precio y la cantidad
      * Aplica el recargo dependiendo la forma de pago.

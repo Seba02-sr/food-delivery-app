@@ -7,27 +7,26 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 import com.mycompany.tp.dsw.dto.VendedorDto;
-import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
-import com.mycompany.tp.dsw.memory.VendedorMemory;
+import com.mycompany.tp.dsw.service.VendedorService;
 import com.mycompany.tp.dsw.model.Vendedor;
-import com.mycompany.tp.dsw.service.MemoryManager;
+import com.mycompany.tp.dsw.service.ServiceManager;
 import com.mycompany.tp.dsw.service.ValidarVendedor;
 
 public class VendedorController {
 
-    MemoryManager memoryManager;
-    VendedorMemory vendedorMemory;
+    ServiceManager serviceManager;
+    VendedorService vendedorService;
 
     public VendedorController() {
-        memoryManager = MemoryManager.getInstance();
-        vendedorMemory = memoryManager.getVendedorMemory();
+        serviceManager = ServiceManager.getInstance();
+        vendedorService = serviceManager.getVendedorService();
     }
 
     public void guardarVendedor(VendedorDto vendedorDto) {
         Map<String, String> errores = ValidarVendedor.esGuardarValido(vendedorDto);
 
         if (errores.isEmpty()) {
-            vendedorMemory.registrarVendedor(vendedorDto);
+            vendedorService.registrarVendedor(vendedorDto);
             JOptionPane.showMessageDialog(null, "Vendedor creado exitosamente");
         } else {
             errores.forEach((campo, mensaje) -> JOptionPane.showMessageDialog(null, mensaje, "Error en " + campo,
@@ -39,11 +38,7 @@ public class VendedorController {
         Map<String, String> errores = ValidarVendedor.esModificarValido(vendedorDto);
 
         if (errores.isEmpty()) {
-            try {
-                vendedorMemory.modificarVendedor(vendedorDto);
-            } catch (VendedorNoEncontradoException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            vendedorService.modificarVendedor(vendedorDto);
         }
         return errores;
     }
@@ -51,12 +46,8 @@ public class VendedorController {
     public Map<String, String> eliminarVendedor(String idText) {
         Map<String, String> errores = ValidarVendedor.esEliminarValido(idText);
         if (errores.isEmpty()) {
-            try {
-                Integer id = Integer.parseInt(idText);
-                vendedorMemory.eliminarVendedor(id);
-            } catch (VendedorNoEncontradoException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            Integer id = Integer.parseInt(idText);
+            vendedorService.eliminarVendedor(id);
         }
         return errores;
     }
@@ -65,7 +56,7 @@ public class VendedorController {
         List<Vendedor> listaVendedores = new ArrayList<>();
         try {
             Integer id = Integer.parseInt(idText);
-            Vendedor vendedor = vendedorMemory.buscarVendedorPorId(id);
+            Vendedor vendedor = vendedorService.buscarVendedorPorId(id);
 
             if (vendedor != null) {
                 listaVendedores.add(vendedor);
@@ -79,11 +70,11 @@ public class VendedorController {
 
     public List<Vendedor> buscarVendedorPorNombre(String nombre) {
 
-        List<Vendedor> listaVendedores = vendedorMemory.buscarVendedorPorNombre(nombre);
+        List<Vendedor> listaVendedores = vendedorService.buscarVendedorPorNombre(nombre);
         return listaVendedores;
     }
 
     public List<Vendedor> obtenerTodosLosVendedores() {
-        return vendedorMemory.obtenerTodosLosVendedores();
+        return vendedorService.obtenerTodosLosVendedores();
     }
 }

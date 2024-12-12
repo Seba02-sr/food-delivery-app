@@ -7,43 +7,44 @@ import com.mycompany.tp.dsw.dto.BebidaDto;
 import com.mycompany.tp.dsw.dto.ItemMenuDto;
 import com.mycompany.tp.dsw.dto.PlatoDto;
 import com.mycompany.tp.dsw.dto.VendedorDto;
-import com.mycompany.tp.dsw.memory.BebidaMemory;
-import com.mycompany.tp.dsw.memory.CategoriaMemory;
-import com.mycompany.tp.dsw.memory.PlatoMemory;
-import com.mycompany.tp.dsw.memory.VendedorMemory;
+import com.mycompany.tp.dsw.exception.CategoriaNoEncontradaException;
+import com.mycompany.tp.dsw.service.BebidaService;
+import com.mycompany.tp.dsw.service.CategoriaService;
+import com.mycompany.tp.dsw.service.PlatoService;
+import com.mycompany.tp.dsw.service.VendedorService;
 import com.mycompany.tp.dsw.model.Bebida;
 import com.mycompany.tp.dsw.model.Categoria;
 import com.mycompany.tp.dsw.model.Plato;
 import com.mycompany.tp.dsw.model.Vendedor;
 import com.mycompany.tp.dsw.model.ItemMenu;
-import com.mycompany.tp.dsw.service.MemoryManager;
+import com.mycompany.tp.dsw.service.ServiceManager;
 
 public class ItemMenuController {
 
-    private final MemoryManager memoryManager;
-    private final CategoriaMemory categoriaMemory;
-    private final PlatoMemory platoMemory;
-    private final BebidaMemory bebidaMemory;
-    private final VendedorMemory vendedorMemory;
+    private final ServiceManager serviceManager;
+    private final CategoriaService categoriaService;
+    private final PlatoService platoService;
+    private final BebidaService bebidaService;
+    private final VendedorService vendedorService;
 
     public ItemMenuController() {
-        memoryManager = MemoryManager.getInstance();
-        categoriaMemory = memoryManager.getCategoriaMemory();
+        serviceManager = ServiceManager.getInstance();
+        categoriaService = serviceManager.getCategoriaService();
 
-        platoMemory = memoryManager.getPlatoMemory();
-        bebidaMemory = memoryManager.getBebidaMemory();
-        vendedorMemory = memoryManager.getVendedorMemory();
+        platoService = serviceManager.getPlatoService();
+        bebidaService = serviceManager.getBebidaService();
+        vendedorService = serviceManager.getVendedorService();
     }
 
     public void guardarItemMenu(ItemMenuDto item, String tipoCategoria) {
         switch (tipoCategoria) {
             case "Plato":
                 PlatoDto platoDto = (PlatoDto) item;
-                platoMemory.registrarPlato(platoDto);
+                platoService.registrarPlato(platoDto);
                 break;
             case "Bebida":
                 BebidaDto bebidaDto = (BebidaDto) item;
-                bebidaMemory.registrarBebida(bebidaDto);
+                bebidaService.registrarBebida(bebidaDto);
                 break;
             default:
                 break;
@@ -54,10 +55,10 @@ public class ItemMenuController {
         Integer id = Integer.parseInt(idText);
         switch (tipoCategoria) {
             case "Plato":
-                platoMemory.eliminarItemMenu(id);
+                platoService.eliminarItemMenu(id);
                 break;
             case "Bebida":
-                bebidaMemory.eliminarItemMenu(id);
+                bebidaService.eliminarItemMenu(id);
                 break;
         }
     }
@@ -66,11 +67,11 @@ public class ItemMenuController {
         switch (tipoCategoria) {
             case "Plato":
                 PlatoDto platoDto = (PlatoDto) item;
-                platoMemory.modificarPlato(platoDto);
+                platoService.modificarPlato(platoDto);
                 break;
             case "Bebida":
                 BebidaDto bebidaDto = (BebidaDto) item;
-                bebidaMemory.modificarBebida(bebidaDto);
+                bebidaService.modificarBebida(bebidaDto);
                 break;
             default:
                 break;
@@ -79,47 +80,53 @@ public class ItemMenuController {
 
     public Vendedor obtenerVendedor(String idText) {
         Integer id = Integer.parseInt(idText);
-        return vendedorMemory.buscarVendedorPorId(id);
+        return vendedorService.buscarVendedorPorId(id);
     }
 
-    public List<String> getValoresComboBoxCategoria(String tipoCategoria) {
+    public List<String> getValoresComboBoxCategoria(String tipoCategoria) throws CategoriaNoEncontradaException {
         if (tipoCategoria.equals("Plato")) {
             tipoCategoria = "Comida";
         }
-        List<Categoria> categorias = categoriaMemory.buscarPorTipoCategoria(tipoCategoria);
-        List<String> categoriasString = new ArrayList<>();
-        for (Categoria cat : categorias) {
-            String nombre = cat.getNombre();
-            categoriasString.add(nombre);
+        List<Categoria> categorias;
+        try {
+            categorias = categoriaService.buscarPorTipoCategoria(tipoCategoria);
+            List<String> categoriasString = new ArrayList<>();
+            for (Categoria cat : categorias) {
+                String nombre = cat.getNombre();
+                categoriasString.add(nombre);
+            }
+            return categoriasString;
+        } catch (CategoriaNoEncontradaException e) {
+            throw e;
         }
-        return categoriasString;
+
     }
 
     public List<Plato> obtenerPlatoPorIdVendedor(VendedorDto vendedorDto) {
         Integer id = Integer.parseInt(vendedorDto.getIdText());
-        return platoMemory.obtenerPlatoPorIdVendedor(id);
+        return platoService.obtenerPlatoPorIdVendedor(id);
     }
 
     public List<Bebida> obtenerBebidaPorIdVendedor(VendedorDto vendedorDto) {
         Integer id = Integer.parseInt(vendedorDto.getIdText());
-        return bebidaMemory.obtenerBebidaPorIdVendedor(id);
+        return bebidaService.obtenerBebidaPorIdVendedor(id);
     }
-    
-    public List<ItemMenu> obtenerItemMenuPorIdVendedor(Integer id){
+
+    public List<ItemMenu> obtenerItemMenuPorIdVendedor(Integer id) {
         List<ItemMenu> retItems = new ArrayList<>();
-        retItems.addAll(platoMemory.obtenerPlatoPorIdVendedor(id));
-        retItems.addAll(bebidaMemory.obtenerBebidaPorIdVendedor(id));
-        
+        retItems.addAll(platoService.obtenerPlatoPorIdVendedor(id));
+        retItems.addAll(bebidaService.obtenerBebidaPorIdVendedor(id));
+
         return retItems;
     }
 
     public ItemMenu obtenerItemPorId(String idText) {
         Integer id = Integer.parseInt(idText);
-        return platoMemory.filtrarPorId(id);
+        return platoService.filtrarPorId(id);
     }
 
     public List<ItemMenu> buscarItemPorNombre(String nombre) {
-        List<ItemMenu> items = platoMemory.buscarItemMenuPorNombre(nombre);
+        List<ItemMenu> items = platoService.buscarItemMenuPorNombre(nombre);
         return items;
     }
 

@@ -11,11 +11,12 @@ import java.util.stream.Collectors;
 import com.mycompany.tp.dsw.dto.ItemPedidoDto;
 import com.mycompany.tp.dsw.dto.PedidoDto;
 import com.mycompany.tp.dsw.exception.ClienteNoEncontradoException;
-import com.mycompany.tp.dsw.memory.ClienteMemory;
-import com.mycompany.tp.dsw.memory.ItemPedidoMemory;
-import com.mycompany.tp.dsw.memory.PedidoMemory;
+import com.mycompany.tp.dsw.exception.PedidoNoEncontradoException;
+import com.mycompany.tp.dsw.service.ClienteService;
+import com.mycompany.tp.dsw.service.ItemPedidoService;
+import com.mycompany.tp.dsw.service.PedidoService;
 import com.mycompany.tp.dsw.model.Pedido;
-import com.mycompany.tp.dsw.service.MemoryManager;
+import com.mycompany.tp.dsw.service.ServiceManager;
 import com.mycompany.tp.dsw.model.ItemPedido;
 import java.util.ArrayList;
 
@@ -24,39 +25,42 @@ import java.util.ArrayList;
  * @author Usuario
  */
 public class PedidoController {
-    MemoryManager memoryManager;
-    PedidoMemory pedidoMemory;
-    ClienteMemory clienteMemory;
+    ServiceManager serviceManager;
+    PedidoService pedidoService;
+    ClienteService clienteService;
     ItemMenuController itemMenuController;
-    ItemPedidoMemory itemPedidoMemory;
+    ItemPedidoService itemPedidoService;
 
     public PedidoController() {
-        memoryManager = MemoryManager.getInstance();
-        pedidoMemory = memoryManager.getPedidoMemory();
-        clienteMemory = memoryManager.getClienteMemory();
+        serviceManager = ServiceManager.getInstance();
+        pedidoService = serviceManager.getPedidoService();
+        clienteService = serviceManager.getClienteService();
         itemMenuController = new ItemMenuController();
-        itemPedidoMemory = memoryManager.getItemPedidoMemory();
+        itemPedidoService = serviceManager.getItemPedidoService();
     }
 
     public Pedido generarPedido(String idCliente) {
 
         PedidoDto pedidoDto = new PedidoDto(idCliente);
-        return pedidoMemory.registrarPedido(pedidoDto);
+        return pedidoService.registrarPedido(pedidoDto);
     }
 
-    public List<ItemPedido> generarItemPedido(List<ItemPedidoDto> listaItemPedidoDto, Integer idPedido) {
-        List<ItemPedido> itemsPedidos = new ArrayList<>();
-        Pedido pedido = pedidoMemory.buscarPedidoPorId(idPedido);
-        List<ItemPedido> items = pedido.getItems();
-        for (ItemPedidoDto itemPedidoDto : listaItemPedidoDto) {
-            ItemPedido itemPedido = itemPedidoMemory.registrarItemPedido(itemPedidoDto);
-            itemPedido.setPedido(pedido);
-            items.add(itemPedido);
-            itemsPedidos.add(itemPedido);
-        }
-        return itemsPedidos;
-
-    }
+    /*
+     * public List<ItemPedido> generarItemPedido(List<ItemPedidoDto>
+     * listaItemPedidoDto, Integer idPedido) {
+     * List<ItemPedido> itemsPedidos = new ArrayList<>();
+     * Pedido pedido = pedidoService.buscarPedidoPorId(idPedido);
+     * List<ItemPedido> items = pedido.getItems();
+     * for (ItemPedidoDto itemPedidoDto : listaItemPedidoDto) {
+     * ItemPedido itemPedido = itemPedidoService.registrarItemPedido(itemPedidoDto);
+     * itemPedido.setPedido(pedido);
+     * items.add(itemPedido);
+     * itemsPedidos.add(itemPedido);
+     * }
+     * return itemsPedidos;
+     * 
+     * }
+     */
 
     public List<ItemPedidoDto> generarItemPedidoDto(Map<String, List<Double>> productosYCantidad) {
         return productosYCantidad.entrySet().stream().map(entry -> {
@@ -71,17 +75,21 @@ public class PedidoController {
 
     public List<Pedido> obtenerPedidosPorCliente(String idCliente) throws ClienteNoEncontradoException {
         Integer id = Integer.parseInt(idCliente);
-        return pedidoMemory.filtrarPedidosPorCliente(id);
+        return pedidoService.filtrarPedidosPorCliente(id);
     }
 
-    public Pedido obtenerPedidoPorId(String idPedido) {
+    public Pedido obtenerPedidoPorId(String idPedido) throws PedidoNoEncontradoException {
         Integer id = Integer.parseInt(idPedido);
 
-        return pedidoMemory.buscarPedidoPorId(id);
+        try {
+            return pedidoService.buscarPedidoPorId(id);
+        } catch (PedidoNoEncontradoException e) {
+            throw e;
+        }
     }
 
     public List<Pedido> obtenerPedidoPorIdVendedor(String idVendedor) {
         Integer id = Integer.parseInt(idVendedor);
-        return pedidoMemory.buscarPedidoPorVendedor(id);
+        return pedidoService.buscarPedidoPorVendedor(id);
     }
 }
