@@ -1411,7 +1411,12 @@ public class JplItemMenu extends javax.swing.JPanel {
 
             // Actualizar tabla
             List<Plato> platos = itemMenuController.obtenerPlatoPorIdVendedor(vendedorDto);
-            mostrarItemMenuEnPantalla(platos);
+            if (platos == null) {
+                mostrarItemMenuEnPantalla(new ArrayList<>());
+            } else {
+                mostrarItemMenuEnPantalla(platos);
+            }
+
         } catch (CategoriaNoEncontradaException e) {
             MensajeAlerta.mostrarError("Error: " + e.getMessage(), "Categoria no encontrada");
             e.printStackTrace();
