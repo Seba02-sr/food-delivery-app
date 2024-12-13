@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mycompany.tp.dsw.dto.VendedorDto;
-import com.mycompany.tp.dsw.model.relacion.ItemVendedor;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -31,7 +32,7 @@ import lombok.NoArgsConstructor;
 @Builder
 
 @Entity
-@Table(name = "vendedores")
+@Table(name = "vendedor")
 public class Vendedor {
 
     @Id
@@ -44,11 +45,14 @@ public class Vendedor {
     @Column(nullable = false, unique = true)
     private String direccion;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
+    @ToString.Exclude
     private Coordenada coordenada;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "vendedor")
-    private List<ItemVendedor> itemMenuVendedor;
+    @Builder.Default
+    @ToString.Exclude
+    private List<ItemMenu> itemsMenu = new ArrayList<>();
 
     @Column(name = "fecha_registro", nullable = false)
     private final LocalDate fechaRegistro = LocalDate.now();
@@ -65,7 +69,7 @@ public class Vendedor {
         this.nombre = vendedorDto.getNombre();
         this.direccion = vendedorDto.getDireccion();
         this.coordenada = vendedorDto.getCoordenada();
-        this.itemMenuVendedor = new ArrayList<>();
+        activo = true;
     }
 
     /**
@@ -101,9 +105,9 @@ public class Vendedor {
      */
     public List<ItemMenu> getItemBebidas() {
         List<ItemMenu> listaBebidas = new ArrayList<>();
-        for (ItemVendedor item : this.itemMenuVendedor) {
-            if (item.getItemMenu().getCategoria().getTipo() == TipoCategoria.BEBIDA) {
-                listaBebidas.add(item.getItemMenu());
+        for (ItemMenu item : itemsMenu) {
+            if (item.getCategoria().getTipo() == TipoCategoria.BEBIDA) {
+                listaBebidas.add(item);
             }
         }
         return listaBebidas;
@@ -117,9 +121,9 @@ public class Vendedor {
      */
     public List<ItemMenu> getItemComidas() {
         List<ItemMenu> listaComidas = new ArrayList<>();
-        for (ItemVendedor item : this.itemMenuVendedor) {
-            if (item.getItemMenu().getCategoria().getTipo() == TipoCategoria.COMIDA) {
-                listaComidas.add(item.getItemMenu());
+        for (ItemMenu item : itemsMenu) {
+            if (item.getCategoria().getTipo() == TipoCategoria.COMIDA) {
+                listaComidas.add(item);
             }
         }
         return listaComidas;
@@ -133,10 +137,9 @@ public class Vendedor {
      */
     public List<ItemMenu> getItemComidasVeganas() {
         List<ItemMenu> listaComidasVeganas = new ArrayList<>();
-        for (ItemVendedor item : this.itemMenuVendedor) {
-            if (item.getItemMenu().getCategoria().getTipo() == TipoCategoria.COMIDA
-                    && ((Plato) item.getItemMenu()).aptoVegano()) {
-                listaComidasVeganas.add(item.getItemMenu());
+        for (ItemMenu item : itemsMenu) {
+            if (item.getCategoria().getTipo() == TipoCategoria.COMIDA && ((Plato) item).aptoVegano()) {
+                listaComidasVeganas.add(item);
             }
         }
         return listaComidasVeganas;
@@ -149,10 +152,10 @@ public class Vendedor {
      */
     public List<ItemMenu> getItemBebidasSinAlcohol() {
         List<ItemMenu> listaBebidasSinAlcohol = new ArrayList<>();
-        for (ItemVendedor item : this.itemMenuVendedor) {
-            if (item.getItemMenu().getCategoria().getTipo() == TipoCategoria.BEBIDA
-                    && ((Bebida) item.getItemMenu()).getGraduacionAlcoholica() == 0) {
-                listaBebidasSinAlcohol.add(item.getItemMenu());
+        for (ItemMenu item : this.itemsMenu) {
+            if (item.getCategoria().getTipo() == TipoCategoria.BEBIDA
+                    && ((Bebida) item).getGraduacionAlcoholica() == 0) {
+                listaBebidasSinAlcohol.add(item);
             }
         }
         return listaBebidasSinAlcohol;

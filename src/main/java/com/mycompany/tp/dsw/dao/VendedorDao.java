@@ -5,7 +5,6 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
 import com.mycompany.tp.dsw.model.Vendedor;
 import com.mycompany.tp.dsw.service.HibernateUtil;
 
@@ -30,12 +29,25 @@ public class VendedorDao extends GenericDAO<Vendedor, Integer> {
             // Ejecutar la consulta y devolver los resultados
             List<Vendedor> resultados = query.list();
 
-            if (resultados.isEmpty()) {
-                throw new VendedorNoEncontradoException("No se ha encontrado el vendedor con nombre: " + nombre);
-            }
             return resultados;
         } catch (Exception e) {
             String errorMessage = "Error al intentar recuperar el vendedor con el nombre: " + nombre;
+            throw new RuntimeException(errorMessage, e);
+        }
+
+    }
+
+    public Vendedor findActiveByIdWithItemsMenu(Integer id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT v FROM Vendedor v " +
+                    "LEFT JOIN FETCH v.itemsMenu " +
+                    "WHERE v.id = :id " +
+                    "AND v.activo = true";
+            Query<Vendedor> query = session.createQuery(hql, Vendedor.class);
+            query.setParameter("id", id);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            String errorMessage = "Error al buscar el vendedor con sus itemsMenu por ID: " + id;
             throw new RuntimeException(errorMessage, e);
         }
     }

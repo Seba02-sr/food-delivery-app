@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Builder
 
 @Entity
-@Table(name = "coordenadas")
+@Table(name = "coordenada")
 public class Coordenada {
 
     @Id

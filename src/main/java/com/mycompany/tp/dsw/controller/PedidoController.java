@@ -78,18 +78,22 @@ public class PedidoController {
         return pedidoService.filtrarPedidosPorCliente(id);
     }
 
-    public Pedido obtenerPedidoPorId(String idPedido) throws PedidoNoEncontradoException {
+    public Pedido obtenerPedidoPorId(String idPedido) {
         Integer id = Integer.parseInt(idPedido);
 
         try {
             return pedidoService.buscarPedidoPorId(id);
         } catch (PedidoNoEncontradoException e) {
-            throw e;
+            throw null;
         }
     }
 
     public List<Pedido> obtenerPedidoPorIdVendedor(String idVendedor) {
         Integer id = Integer.parseInt(idVendedor);
-        return pedidoService.buscarPedidoPorVendedor(id);
+        try {
+            return pedidoService.buscarPedidoPorVendedor(id);
+        } catch (PedidoNoEncontradoException e) {
+            return null;
+        }
     }
 }

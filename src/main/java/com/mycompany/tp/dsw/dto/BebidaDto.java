@@ -1,7 +1,5 @@
 package com.mycompany.tp.dsw.dto;
 
-import com.mycompany.tp.dsw.model.Vendedor;
-
 public class BebidaDto extends ItemMenuDto {
     private Double graduacionAlcoholica;
     private Double tamano;
@@ -23,14 +21,14 @@ public class BebidaDto extends ItemMenuDto {
 
     }
 
-    public BebidaDto(String nombre, String descripcion, String precioText, String categoriaText, Vendedor vendedor) {
-        super(nombre, descripcion, precioText, categoriaText, vendedor);
+    public BebidaDto(String nombre, String descripcion, String precioText, String categoriaText, Integer idVendedor) {
+        super(nombre, descripcion, precioText, categoriaText, idVendedor);
     }
 
     // Constructor para metodo agregar bebida
-    public BebidaDto(String nombre, String descripcion, String precioText, String categoriaText, Vendedor vendedor,
+    public BebidaDto(String nombre, String descripcion, String precioText, String categoriaText, Integer idVendedor,
             String graduacionAlcoholicaText, String tamanoText, String volumenText) {
-        super(nombre, descripcion, precioText, categoriaText, vendedor);
+        super(nombre, descripcion, precioText, categoriaText, idVendedor);
         this.graduacionAlcoholicaText = graduacionAlcoholicaText;
         this.tamanoText = tamanoText;
         this.volumenText = volumenText;
@@ -38,9 +36,9 @@ public class BebidaDto extends ItemMenuDto {
 
     // Constructor para metodo modificar bebida
     public BebidaDto(String idText, String nombre, String descripcion, String precioText, String categoriaText,
-            Vendedor vendedor,
+            Integer idVendedor,
             String graduacionAlcoholicaText, String tamanoText, String volumenText) {
-        super(idText,nombre, descripcion, precioText, categoriaText, vendedor);
+        super(idText, nombre, descripcion, precioText, categoriaText, idVendedor);
         this.graduacionAlcoholicaText = graduacionAlcoholicaText;
         this.tamanoText = tamanoText;
         this.volumenText = volumenText;

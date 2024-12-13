@@ -3,7 +3,6 @@ package com.mycompany.tp.dsw.model;
 import java.math.BigDecimal;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +18,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 
 @Entity
-@Table(name = "mercado_pago")
 public class MercadoPago extends Pago {
 
     private String alias;

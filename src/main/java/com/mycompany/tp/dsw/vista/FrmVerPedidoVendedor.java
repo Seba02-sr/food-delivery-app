@@ -4,6 +4,7 @@
  */
 package com.mycompany.tp.dsw.vista;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JTable;
@@ -46,7 +47,8 @@ public class FrmVerPedidoVendedor extends javax.swing.JFrame {
 
     public void initDatos() {
 
-        List<Pedido> pedidos = pedidoController.obtenerPedidoPorIdVendedor(idVendedor);
+        List<Pedido> pedidos = new ArrayList<>();
+        pedidos = pedidoController.obtenerPedidoPorIdVendedor(idVendedor);
         mostrarTabla(pedidos);
 
     }

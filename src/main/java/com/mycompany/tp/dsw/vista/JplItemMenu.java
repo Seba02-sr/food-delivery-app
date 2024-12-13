@@ -21,10 +21,12 @@ import com.mycompany.tp.dsw.controller.ItemMenuController;
 import com.mycompany.tp.dsw.dto.BebidaDto;
 import com.mycompany.tp.dsw.dto.PlatoDto;
 import com.mycompany.tp.dsw.dto.VendedorDto;
+import com.mycompany.tp.dsw.exception.CategoriaNoEncontradaException;
 import com.mycompany.tp.dsw.model.Bebida;
 import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.Plato;
 import com.mycompany.tp.dsw.model.Vendedor;
+import com.mycompany.tp.dsw.service.MensajeAlerta;
 import com.mycompany.tp.dsw.vista.util.HeaderFormatter;
 
 import javax.swing.JComboBox;
@@ -1049,22 +1051,22 @@ public class JplItemMenu extends javax.swing.JPanel {
         String descripcion = jTextAreaAgregar.getText();
         String graduacionAlcoholica = jSpinnerGraduacionAlcoholicaAgregar.getValue().toString();
 
-        Vendedor vendedor = itemMenuController.obtenerVendedor(vendedorDto.getIdText());
-
+        Integer idVendedor = Integer.parseInt(vendedorDto.getIdText());
         switch (tipoCategoria) {
             case "Plato":
                 Map<String, Boolean> aptitudes = setearAptoAlimentacion(categoria);
                 boolean aptoVegano = aptitudes.get("aptoVegano");
                 boolean aptoVegetariano = aptitudes.get("aptoVegetariano");
 
-                PlatoDto platoDto = new PlatoDto(nombre, descripcion, precio, categoria, vendedor, caloriasTamano,
+                PlatoDto platoDto = new PlatoDto(nombre, descripcion, precio, categoria, idVendedor,
+                        caloriasTamano,
                         aptoCeliaco, aptoVegetariano, aptoVegano, pesoVolumen);
                 itemMenuController.guardarItemMenu(platoDto, tipoCategoria);
                 List<Plato> platos = itemMenuController.obtenerPlatoPorIdVendedor(vendedorDto);
                 mostrarItemMenuEnPantalla(platos);
                 break;
             case "Bebida":
-                BebidaDto bebidaDto = new BebidaDto(nombre, descripcion, precio, categoria, vendedor,
+                BebidaDto bebidaDto = new BebidaDto(nombre, descripcion, precio, categoria, idVendedor,
                         graduacionAlcoholica, caloriasTamano, pesoVolumen);
                 itemMenuController.guardarItemMenu(bebidaDto, tipoCategoria);
                 List<Bebida> bebidas = itemMenuController.obtenerBebidaPorIdVendedor(vendedorDto);
@@ -1141,11 +1143,23 @@ public class JplItemMenu extends javax.swing.JPanel {
         switch (tipoCategoria) {
             case "Plato":
                 List<Plato> platos = itemMenuController.obtenerPlatoPorIdVendedor(vendedorDto);
-                mostrarItemMenuEnPantalla(platos);
+                if (platos == null || platos.isEmpty()) {
+                    // Si la lista es null o vacía, pasamos una lista vacía
+                    mostrarItemMenuEnPantalla(new ArrayList<>());
+                } else {
+                    // Si la lista no es null ni vacía, mostramos los platos
+                    mostrarItemMenuEnPantalla(platos);
+                }
                 break;
             case "Bebida":
                 List<Bebida> bebidas = itemMenuController.obtenerBebidaPorIdVendedor(vendedorDto);
-                mostrarItemMenuEnPantalla(bebidas);
+                if (bebidas == null || bebidas.isEmpty()) {
+                    // Si la lista es null o vacía, pasamos una lista vacía
+                    mostrarItemMenuEnPantalla(new ArrayList<>());
+                } else {
+                    // Si la lista no es null ni vacía, mostramos los platos
+                    mostrarItemMenuEnPantalla(bebidas);
+                }
                 break;
         }
         vaciarFormEliminar();
@@ -1289,6 +1303,9 @@ public class JplItemMenu extends javax.swing.JPanel {
                     Boolean aptoCeliaco = plato.getAptoCeliaco();
                     jRadioButtonSIEliminar.setSelected(aptoCeliaco);
                     jRadioButtonNOEliminar.setSelected(!aptoCeliaco);
+                } else {
+                    MensajeAlerta.mostrarError("Solo puedes cargar datos en 'Modificar' o 'Eliminar'.",
+                            "Error al cargar datos en Plato");
                 }
                 break;
             case "Bebida":
@@ -1313,6 +1330,9 @@ public class JplItemMenu extends javax.swing.JPanel {
                     jComboBoxCategoriaEliminar.setSelectedItem(bebida.getCategoria().getNombre());
 
                     jSpinnerGraduacionAlcoholicaEliminar.setValue(bebida.getGraduacionAlcoholica());
+                } else {
+                    MensajeAlerta.mostrarError("Solo puedes cargar datos en 'Modificar' o 'Eliminar'.",
+                            "Error al cargar datos en Bebida");
                 }
                 break;
         }
@@ -1361,36 +1381,42 @@ public class JplItemMenu extends javax.swing.JPanel {
         border.setTitle("PLATOS");
         tipoCategoria = "Plato";
 
-        List<String> categorias = itemMenuController.getValoresComboBoxCategoria(tipoCategoria);
+        List<String> categorias;
+        try {
+            categorias = itemMenuController.getValoresComboBoxCategoria(tipoCategoria);
+            actualizarComboBox(jComboBoxCategoria, categorias);
+            actualizarComboBox(jComboBoxCategoriaEliminar, categorias);
+            actualizarComboBox(jComboBoxCategoriaModificar, categorias);
 
-        actualizarComboBox(jComboBoxCategoria, categorias);
-        actualizarComboBox(jComboBoxCategoriaEliminar, categorias);
-        actualizarComboBox(jComboBoxCategoriaModificar, categorias);
+            String CALORIAS = "Calorias";
+            actualizarTituloBorde(txtCaTmAgregar, CALORIAS);
+            actualizarTituloBorde(txtCaTmEliminar, CALORIAS);
+            actualizarTituloBorde(txtCaTmModificar, CALORIAS);
 
-        String CALORIAS = "Calorias";
-        actualizarTituloBorde(txtCaTmAgregar, CALORIAS);
-        actualizarTituloBorde(txtCaTmEliminar, CALORIAS);
-        actualizarTituloBorde(txtCaTmModificar, CALORIAS);
+            String PESO = "Peso";
+            actualizarTituloBorde(txtPeVoAgregar, PESO);
+            actualizarTituloBorde(txtPeVoEliminar, PESO);
+            actualizarTituloBorde(txtPeVoModificar, PESO);
 
-        String PESO = "Peso";
-        actualizarTituloBorde(txtPeVoAgregar, PESO);
-        actualizarTituloBorde(txtPeVoEliminar, PESO);
-        actualizarTituloBorde(txtPeVoModificar, PESO);
+            configurarAptoCeliacoButtonGroup(jRadioButtonSI, jRadioButtonNO, jLabelAcGa,
+                    jSpinnerGraduacionAlcoholicaAgregar);
+            configurarAptoCeliacoButtonGroup(jRadioButtonSIEliminar, jRadioButtonNOEliminar, jLabelAcGaEliminar,
+                    jSpinnerGraduacionAlcoholicaEliminar);
+            configurarAptoCeliacoButtonGroup(jRadioButtonSIModificar, jRadioButtonNOModificar, jLabelAcGaModificar,
+                    jSpinnerGraduacionAlcoholicaModificar);
 
-        configurarAptoCeliacoButtonGroup(jRadioButtonSI, jRadioButtonNO, jLabelAcGa,
-                jSpinnerGraduacionAlcoholicaAgregar);
-        configurarAptoCeliacoButtonGroup(jRadioButtonSIEliminar, jRadioButtonNOEliminar, jLabelAcGaEliminar,
-                jSpinnerGraduacionAlcoholicaEliminar);
-        configurarAptoCeliacoButtonGroup(jRadioButtonSIModificar, jRadioButtonNOModificar, jLabelAcGaModificar,
-                jSpinnerGraduacionAlcoholicaModificar);
+            jPanelTable.repaint();
+            txtCaTmAgregar.repaint();
+            txtPeVoAgregar.repaint();
 
-        jPanelTable.repaint();
-        txtCaTmAgregar.repaint();
-        txtPeVoAgregar.repaint();
+            // Actualizar tabla
+            List<Plato> platos = itemMenuController.obtenerPlatoPorIdVendedor(vendedorDto);
+            mostrarItemMenuEnPantalla(platos);
+        } catch (CategoriaNoEncontradaException e) {
+            MensajeAlerta.mostrarError("Error: " + e.getMessage(), "Categoria no encontrada");
+            e.printStackTrace();
+        }
 
-        // Actualizar tabla
-        List<Plato> platos = itemMenuController.obtenerPlatoPorIdVendedor(vendedorDto);
-        mostrarItemMenuEnPantalla(platos);
     }// GEN-LAST:event_tbtnPlatosActionPerformed
 
     private void actualizarComboBox(JComboBox<String> comboBox, List<String> valores) {

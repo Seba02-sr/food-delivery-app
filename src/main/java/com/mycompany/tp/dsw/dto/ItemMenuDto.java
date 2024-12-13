@@ -3,7 +3,6 @@ package com.mycompany.tp.dsw.dto;
 import java.math.BigDecimal;
 
 import com.mycompany.tp.dsw.model.Categoria;
-import com.mycompany.tp.dsw.model.Vendedor;
 
 public abstract class ItemMenuDto {
     private Integer id;
@@ -11,7 +10,7 @@ public abstract class ItemMenuDto {
     private String descripcion;
     private BigDecimal precio;
     private Categoria categoria;
-    private Vendedor vendedor;
+    private Integer idVendedor;
 
     /**
      * Atributos para el manejo de los errores.
@@ -31,23 +30,23 @@ public abstract class ItemMenuDto {
     }
 
     // Constructor para metodo agregar ItemMenu
-    public ItemMenuDto(String nombre, String descripcion, String precioText, String categoriaText, Vendedor vendedor) {
+    public ItemMenuDto(String nombre, String descripcion, String precioText, String categoriaText, Integer idVendedor) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precioText = precioText;
         this.categoriaText = categoriaText;
-        this.vendedor = vendedor;
+        this.idVendedor = idVendedor;
     }
 
     // Constructor para metodo modificar ItemMenu
     public ItemMenuDto(String idText, String nombre, String descripcion, String precioText, String categoriaText,
-            Vendedor vendedor) {
+            Integer idVendedor) {
         this.idText = idText;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precioText = precioText;
         this.categoriaText = categoriaText;
-        this.vendedor = vendedor;
+        this.idVendedor = idVendedor;
     }
 
     public Integer getId() {
@@ -114,12 +113,12 @@ public abstract class ItemMenuDto {
         this.categoriaText = categoriaText;
     }
 
-    public Vendedor getVendedor() {
-        return vendedor;
+    public Integer getIdVendedor() {
+        return idVendedor;
     }
 
-    public void setVendedor(Vendedor vendedor) {
-        this.vendedor = vendedor;
+    public void setIdVendedor(Integer idVendedor) {
+        this.idVendedor = idVendedor;
     }
 
 }

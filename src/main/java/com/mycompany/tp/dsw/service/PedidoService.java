@@ -112,8 +112,12 @@ public class PedidoService {
      * @throws PedidoNoEncontradoException
      */
 
-    public List<Pedido> buscarPedidoPorVendedor(Integer idVendedor) {
-        return pedidoDao.findByIdVendedor(idVendedor);
+    public List<Pedido> buscarPedidoPorVendedor(Integer idVendedor) throws PedidoNoEncontradoException {
+        try {
+            return pedidoDao.findByIdVendedor(idVendedor);
+        } catch (PedidoNoEncontradoException e) {
+            throw e;
+        }
     }
 
     private Pedido parsePedido(PedidoDto pedidoDto) {

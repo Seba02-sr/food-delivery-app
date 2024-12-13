@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @Builder
 
 @Entity
-@Table(name = "clientes")
+@Table(name = "cliente")
 public class Cliente implements Observer<Pedido> {
 
     @Id

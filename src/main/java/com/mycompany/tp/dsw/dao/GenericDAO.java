@@ -26,7 +26,7 @@ public class GenericDAO<T, ID extends Serializable> {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            session.persist(entity);
+            session.merge(entity);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
@@ -105,14 +105,15 @@ public class GenericDAO<T, ID extends Serializable> {
     @SuppressWarnings("deprecation")
     public void deleteLogico(T entity) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        try {
             transaction = session.beginTransaction();
             // Se asume que hay un método setActivo en la entidad
-            persistentClass.getMethod("setActivo", boolean.class).invoke(entity, false);
+            persistentClass.getMethod("setActivo", Boolean.class).invoke(entity, false);
             session.update(entity);
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) {
+            if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
             throw new RuntimeException("Error al eliminar (lógicamente) la entidad", e);
@@ -136,10 +137,11 @@ public class GenericDAO<T, ID extends Serializable> {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             T entity = session.get(persistentClass, id);
             if (entity != null) {
-                Method isActivoMethod = persistentClass.getMethod("isActivo");
+                Method isActivoMethod = persistentClass.getMethod("getActivo");
                 isActivoMethod.setAccessible(true);
-                if (!(Boolean) isActivoMethod.invoke(entity)) {
-                    return null; // Si no está activo, retorna null
+                Boolean activo = (Boolean) isActivoMethod.invoke(entity);
+                if (activo == null || !activo) {
+                    return null; // Si no está activo o es null, retorna null
                 }
             }
             return entity;

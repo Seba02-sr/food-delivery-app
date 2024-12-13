@@ -33,23 +33,23 @@ public class PlatoDao extends ItemMenuDao {
     public List<Plato> findActiveByIdVendedor(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM Plato p " +
-                    "JOIN p.itemVendedor iv " +
                     "WHERE p.activo = true " +
-                    "AND iv.vendedor.id = :id " +
-                    "AND iv.vendedor.activo = true";
+                    "AND p.vendedor.activo = true " +
+                    "AND p.vendedor.id = :id";
 
             List<Plato> platos = session.createQuery(hql, Plato.class)
                     .setParameter("id", id)
                     .getResultList();
 
             if (platos.isEmpty()) {
-                throw new ItemNoEncontradoException("No se han encontrado platos para el vendedor con id: " + id);
+                return null;
             }
             return platos;
         } catch (Exception e) {
             String errorMessage = "Error al intentar recuperar los platos del vendedor con id: " + id;
             throw new RuntimeException(errorMessage, e);
         }
+
     }
 
     // Sobrescribir findAll para devolver List<ItemMenu>, pero solo con objetos

@@ -57,25 +57,21 @@ public class PedidoDao extends GenericDAO<Pedido, Integer> {
         }
     }
 
-    public List<Pedido> findByIdVendedor(Integer idVendedor) {
+    public List<Pedido> findByIdVendedor(Integer idVendedor) throws PedidoNoEncontradoException {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // Consulta HQL para obtener los pedidos asociados al vendedor con el ID dado
             String hql = "SELECT p FROM Pedido p " +
                     "JOIN p.pedidoItemPedidos pip " +
                     "JOIN pip.itemPedido ip " +
                     "JOIN ip.itemMenu im " +
-                    "JOIN im.itemVendedores iv " +
-                    "WHERE iv.vendedor.id = :idVendedor" +
-                    "AND iv.vendedor.activo = true";
+                    "WHERE im.vendedor.activo = true " +
+                    "AND im.vendedor.id = :idVendedor";
 
             // Ejecutar la consulta y devolver la lista de pedidos
             List<Pedido> pedidos = session.createQuery(hql, Pedido.class)
                     .setParameter("idVendedor", idVendedor)
                     .getResultList();
 
-            if (pedidos.isEmpty()) {
-                throw new PedidoNoEncontradoException("No se encontraron pedidos al vendedor:" + idVendedor);
-            }
             return pedidos;
         } catch (Exception e) {
             throw new RuntimeException("Error al buscar los pedidos por vendedor", e);

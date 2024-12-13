@@ -29,7 +29,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 
 @Entity
-@Table(name = "platos")
+@Table(name = "plato")
 public class Plato extends ItemMenu {
 
     @Column(nullable = false)
@@ -51,12 +51,13 @@ public class Plato extends ItemMenu {
     private Double peso;
 
     // Constructor para modificar Plato
-    public Plato(PlatoDto platoDto) {
+    public Plato(PlatoDto platoDto, Vendedor vendedor) {
         super(platoDto.getId(),
                 platoDto.getNombre(),
                 platoDto.getDescripcion(),
                 platoDto.getPrecio(),
-                platoDto.getCategoria());
+                platoDto.getCategoria(),
+                vendedor);
         this.calorias = platoDto.getCalorias();
         this.aptoCeliaco = platoDto.getAptoCeliaco();
         this.aptoVegetariano = platoDto.getAptoVegetariano();
@@ -65,9 +66,9 @@ public class Plato extends ItemMenu {
     }
 
     public Plato(String nombre, Double calorias, Boolean aptoCeliaco, Boolean aptoVegetariano, Boolean aptoVegano,
-            Double peso,
+            Double peso, Vendedor vendedor,
             Integer id, BigDecimal precio, String descripcion, Categoria categoria) {
-        super(id, nombre, descripcion, precio, categoria);
+        super(id, nombre, descripcion, precio, categoria, vendedor);
         this.calorias = calorias;
         this.aptoCeliaco = aptoCeliaco;
         this.aptoVegetariano = aptoVegetariano;

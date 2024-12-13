@@ -27,9 +27,8 @@ public class ItemsPedidoDao extends GenericDAO<ItemPedido, Integer> {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT ip FROM ItemPedido ip " +
                     "JOIN ip.itemMenu im " +
-                    "JOIN im.itemVendedores iv " +
-                    "WHERE iv.vendedor.id = :idRestaurante " +
-                    "AND iv.vendedor.activo = true";
+                    "WHERE im.vendedor.id = :idRestaurante " +
+                    "AND im.vendedor.activo = true";
 
             List<ItemPedido> itemspedidos = session.createQuery(hql, ItemPedido.class)
                     .setParameter("idRestaurante", id)
@@ -93,8 +92,7 @@ public class ItemsPedidoDao extends GenericDAO<ItemPedido, Integer> {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT ip FROM ItemPedido ip " +
                     "JOIN ip.itemMenu im " +
-                    "JOIN im.itemVendedores iv " +
-                    "WHERE iv.vendedor.nombre LIKE :nombre";
+                    "WHERE im.vendedor.nombre LIKE :nombre";
 
             List<ItemPedido> itemspedidos = session.createQuery(hql, ItemPedido.class)
                     .setParameter("nombre", "%" + nombre + "%")

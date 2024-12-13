@@ -41,12 +41,12 @@ public class CategoriaDao extends GenericDAO<Categoria, Integer> {
                         String hql = "FROM Categoria c " +
                                         "WHERE c.tipo = :tipo ";
 
-                        TipoCategoria tipoCategoria = TipoCategoria.valueOf(tipo);
+                        TipoCategoria tipoCategoria = TipoCategoria.valueOf(tipo.toUpperCase());
                         List<Categoria> categoria = session.createQuery(hql, Categoria.class)
                                         .setParameter("tipo", tipoCategoria)
                                         .getResultList();
 
-                        if (categoria == null) {
+                        if (categoria.isEmpty()) {
                                 throw new CategoriaNoEncontradaException(
                                                 "No se ha encontrado una categoria del tipo: " + tipo);
                         }
@@ -58,5 +58,6 @@ public class CategoriaDao extends GenericDAO<Categoria, Integer> {
                         String errorMessage = "Error al intentar recuperar la categoria del tipo: " + tipo;
                         throw new RuntimeException(errorMessage, e);
                 }
+
         }
 }

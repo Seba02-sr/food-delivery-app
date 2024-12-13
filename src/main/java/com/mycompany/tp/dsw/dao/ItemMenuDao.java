@@ -39,9 +39,8 @@ public class ItemMenuDao extends GenericDAO<ItemMenu, Integer> {
     public List<ItemMenu> findByVendedorId(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM ItemMenu im " +
-                    "JOIN im.itemVendedor iv " +
-                    "WHERE iv.vendedor.id = :id " +
-                    "AND iv.vendedor.activo = true";
+                    "WHERE im.vendedor.id = :id " +
+                    "AND im.vendedor.activo = true";
 
             List<ItemMenu> itemsMenu = session.createQuery(hql, ItemMenu.class)
                     .setParameter("id", id)

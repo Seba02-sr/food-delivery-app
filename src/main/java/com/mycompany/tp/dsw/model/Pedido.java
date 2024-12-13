@@ -34,7 +34,7 @@ import lombok.NoArgsConstructor;
 @Builder
 
 @Entity
-@Table(name = "pedidos")
+@Table(name = "pedido")
 public class Pedido implements Observable<Pedido> { // Pedido pedido por un cliente
 
     @Id
@@ -166,8 +166,8 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
         if (pedidoItemPedidos != null && !pedidoItemPedidos.isEmpty()) {
             PedidoItemPedido primerItemPedido = pedidoItemPedidos.get(0);
             ItemMenu itemMenu = primerItemPedido.getItemPedido().getItemMenu();
-            if (itemMenu != null && !itemMenu.getItemVendedores().isEmpty()) {
-                return itemMenu.getItemVendedores().get(0).getVendedor();
+            if (itemMenu != null && itemMenu.getVendedor() != null) {
+                return itemMenu.getVendedor();
             }
         }
         return null;

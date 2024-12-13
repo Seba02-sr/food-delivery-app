@@ -40,6 +40,10 @@ public class VendedorService {
         return vendedorDao.findActiveByNombre(nombre);
     }
 
+    public Vendedor buscarPorIdConListaItem(Integer id) {
+        return vendedorDao.findActiveByIdWithItemsMenu(id);
+    }
+
     /**
      * Modifica los datos de un restaurante especifico
      * - Del objeto vendedor pasado como parametro

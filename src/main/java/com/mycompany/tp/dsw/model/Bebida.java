@@ -28,7 +28,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 
 @Entity
-@Table(name = "Bebidas")
+@Table(name = "Bebida")
 public class Bebida extends ItemMenu {
 
     @Column(name = "graduacion_alcoholica")
@@ -45,20 +45,21 @@ public class Bebida extends ItemMenu {
     private Double volumen;
 
     // Constructor para agregar Bebida
-    public Bebida(BebidaDto bebidaDto) {
+    public Bebida(BebidaDto bebidaDto, Vendedor vendedor) {
         super(bebidaDto.getId(),
                 bebidaDto.getNombre(),
                 bebidaDto.getDescripcion(),
                 bebidaDto.getPrecio(),
-                bebidaDto.getCategoria());
+                bebidaDto.getCategoria(),
+                vendedor);
         this.graduacionAlcoholica = bebidaDto.getGraduacionAlcoholica();
         this.tamano = bebidaDto.getTamano();
         this.volumen = bebidaDto.getVolumen();
     }
 
     public Bebida(String nombre, Double graduacionAlcoholica, Double tamano, Double volumen,
-            Integer id, BigDecimal precio, String descripcion, Categoria categoria) {
-        super(id, nombre, descripcion, precio, categoria);
+            Integer id, BigDecimal precio, String descripcion, Categoria categoria, Vendedor vendedor) {
+        super(id, nombre, descripcion, precio, categoria, vendedor);
         this.graduacionAlcoholica = graduacionAlcoholica;
         this.tamano = tamano;
         this.volumen = volumen;

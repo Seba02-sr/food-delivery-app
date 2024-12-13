@@ -60,9 +60,8 @@ public class BebidaDao extends ItemMenuDao {
     public List<Bebida> findActiveByIdVendedor(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM Bebida b " +
-                    "JOIN b.itemVendedor iv " +
                     "WHERE b.activo = true " +
-                    "AND iv.vendedor.id = :idVendedor";
+                    "AND b.vendedor.id = :idVendedor";
 
             List<Bebida> bebidas = session.createQuery(hql, Bebida.class)
                     .setParameter("idVendedor", id)

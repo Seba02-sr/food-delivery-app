@@ -1,7 +1,5 @@
 package com.mycompany.tp.dsw.dto;
 
-import com.mycompany.tp.dsw.model.Vendedor;
-
 public class PlatoDto extends ItemMenuDto {
 
     private Double calorias;
@@ -25,15 +23,16 @@ public class PlatoDto extends ItemMenuDto {
 
     }
 
-    public PlatoDto(String nombre, String descripcion, String precioText, String categoriaText, Vendedor vendedor) {
-        super(nombre, descripcion, precioText, categoriaText, vendedor);
+    public PlatoDto(String nombre, String descripcion, String precioText, String categoriaText, Integer idVendedor) {
+        super(nombre, descripcion, precioText, categoriaText, idVendedor);
     }
 
     // Constructor para metodo agregar Plato
-    public PlatoDto(String nombre, String descripcion, String precioText, String categoriaText, Vendedor vendedor,
+    public PlatoDto(String nombre, String descripcion, String precioText, String categoriaText,
+            Integer idVendedor,
             String caloriasText,
             Boolean aptoCeliaco, Boolean aptoVegetariano, Boolean aptoVegano, String pesoText) {
-        super(nombre, descripcion, precioText, categoriaText, vendedor);
+        super(nombre, descripcion, precioText, categoriaText, idVendedor);
         this.caloriasText = caloriasText;
         this.aptoCeliaco = aptoCeliaco;
         this.aptoVegetariano = aptoVegetariano;
@@ -43,10 +42,10 @@ public class PlatoDto extends ItemMenuDto {
 
     // Constructor para modificar un Plato
     public PlatoDto(String idText, String nombre, String descripcion, String precioText, String categoriaText,
-            Vendedor vendedor,
+            Integer idVendedor,
             String caloriasText,
             Boolean aptoCeliaco, Boolean aptoVegetariano, Boolean aptoVegano, String pesoText) {
-        super(idText, nombre, descripcion, precioText, categoriaText, vendedor);
+        super(idText, nombre, descripcion, precioText, categoriaText, idVendedor);
         this.caloriasText = caloriasText;
         this.aptoCeliaco = aptoCeliaco;
         this.aptoVegetariano = aptoVegetariano;

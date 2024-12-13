@@ -13,15 +13,20 @@ import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
 import com.mycompany.tp.dsw.model.Bebida;
 import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.Plato;
+import com.mycompany.tp.dsw.model.Vendedor;
 
 public class ItemMenuService {
 
     private CategoriaDao categoriaDao;
     private ItemMenuDao itemMenuDao;
+    private VendedorService vendedorService;
+    private ServiceManager serviceManager;
 
     public ItemMenuService() {
         itemMenuDao = new ItemMenuDao();
         categoriaDao = new CategoriaDao();
+        serviceManager = ServiceManager.getInstance();
+        vendedorService = serviceManager.getVendedorService();
 
     }
 
@@ -35,7 +40,10 @@ public class ItemMenuService {
      * @param itemMenu
      */
     protected void registrarItemMenu(ItemMenuDto itemMenuDto) {
-        ItemMenu itemMenu = parseItemMenu(itemMenuDto);
+
+        Vendedor vendedor = vendedorService.buscarPorIdConListaItem(itemMenuDto.getIdVendedor());
+        ItemMenu itemMenu = parseItemMenu(itemMenuDto, vendedor);
+        vendedor.getItemsMenu().add(itemMenu);
         itemMenuDao.save(itemMenu);
     }
 
@@ -60,7 +68,9 @@ public class ItemMenuService {
      * @param itemMenu El objeto item con los datos modificados.
      */
     protected void modificarItemMenu(ItemMenuDto itemMenuDto) {
-        ItemMenu itemMenu = parseItemMenu(itemMenuDto);
+        Vendedor vendedor = vendedorService.buscarPorIdConListaItem(itemMenuDto.getIdVendedor());
+        ItemMenu itemMenu = parseItemMenu(itemMenuDto, vendedor); // ver si puede ser null el vendedor
+        vendedor.getItemsMenu().add(itemMenu);
         itemMenuDao.update(itemMenu);
     }
 
@@ -101,7 +111,7 @@ public class ItemMenuService {
         return itemMenuDao.findById(id);
     }
 
-    private ItemMenu parseItemMenu(ItemMenuDto itemMenuDto) {
+    private ItemMenu parseItemMenu(ItemMenuDto itemMenuDto, Vendedor vendedor) {
         // 1. Parsear los datos del ItemMenu
 
         String id = itemMenuDto.getIdText();
@@ -123,17 +133,13 @@ public class ItemMenuService {
         switch (itemMenuDto.getClass().getSimpleName()) {
             case "PlatoDto":
                 PlatoDto platoDto = (PlatoDto) itemMenuDto;
-                System.out.println("Aca no deberia estar");
-                return new Plato(platoDto);
+                return new Plato(platoDto, vendedor);
             case "BebidaDto":
-                System.out.println("ID en bebidaDto ItemMenuMemory: " + itemMenuDto.getId());
                 BebidaDto bebidaDto = (BebidaDto) itemMenuDto;
-                System.out.println("ID en bebidaDto ItemMenuMemory: " + bebidaDto.getId());
-                Bebida bebida = new Bebida(bebidaDto);
+                Bebida bebida = new Bebida(bebidaDto, vendedor);
                 return bebida;
 
             default:
-                System.out.println("No tiene que pasar por aca");
                 return null;
         }
     }
