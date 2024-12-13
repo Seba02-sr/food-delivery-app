@@ -47,7 +47,7 @@ public abstract class ItemMenu { // Items que hay en un restaurante/vendedor
     @Column(nullable = false)
     private BigDecimal precio;
 
-    @OneToOne
+    @ManyToOne
     private Categoria categoria;
 
     @Builder.Default

@@ -17,10 +17,11 @@ public class ItemMenuDao extends GenericDAO<ItemMenu, Integer> {
     // Delete --> Usar deleteLogico
     // findAll --> Usar findAllActive
     // findById --> Usar findByIdAndActive
-    public List<ItemMenu> findByNombre(String nombre) {
+    public List<ItemMenu> findActiveByNombre(String nombre) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM ItemMenu im " +
-                    "WHERE im.nombre LIKE  :nombre";
+                    "WHERE im.nombre LIKE :nombre " +
+                    "AND im.activo = true";
 
             List<ItemMenu> itemsMenu = session.createQuery(hql, ItemMenu.class)
                     .setParameter("nombre", "%" + nombre + "%")

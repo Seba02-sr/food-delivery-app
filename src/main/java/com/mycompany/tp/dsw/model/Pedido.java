@@ -19,6 +19,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -47,7 +48,7 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
     @Enumerated(EnumType.STRING)
     private Estado estado;
 
-    @OneToOne
+    @ManyToOne
     private Cliente cliente;
 
     @OneToOne

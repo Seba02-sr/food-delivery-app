@@ -1108,26 +1108,28 @@ public class JplItemMenu extends javax.swing.JPanel {
         String descripcion = jTextAreaModificar.getText();
         String graduacionAlcoholica = jSpinnerGraduacionAlcoholicaModificar.getValue().toString();
 
-        Vendedor vendedor = itemMenuController.obtenerVendedor(vendedorDto.getIdText());
+        Integer idVendedor = Integer.parseInt(vendedorDto.getIdText());
 
         switch (tipoCategoria) {
             case "Plato":
                 Map<String, Boolean> aptitudes = setearAptoAlimentacion(categoria);
                 boolean aptoVegano = aptitudes.get("aptoVegano");
                 boolean aptoVegetariano = aptitudes.get("aptoVegetariano");
-                PlatoDto platoDto = new PlatoDto(id, nombre, descripcion, precio, categoria, vendedor, caloriasTamano,
+                PlatoDto platoDto = new PlatoDto(id, nombre, descripcion, precio, categoria, idVendedor, caloriasTamano,
                         aptoCeliaco, aptoVegetariano, aptoVegano, pesoVolumen);
                 itemMenuController.modificarItemMenu(platoDto, tipoCategoria);
                 List<Plato> platos = itemMenuController.obtenerPlatoPorIdVendedor(vendedorDto);
                 mostrarItemMenuEnPantalla(platos);
+                MensajeAlerta.mostrarInformacion("Se ha modicado el plato con exito.", "Modificar Plato");
                 break;
             case "Bebida":
 
-                BebidaDto bebidaDto = new BebidaDto(id, nombre, descripcion, precio, categoria, vendedor,
+                BebidaDto bebidaDto = new BebidaDto(id, nombre, descripcion, precio, categoria, idVendedor,
                         graduacionAlcoholica, caloriasTamano, pesoVolumen);
                 itemMenuController.modificarItemMenu(bebidaDto, tipoCategoria);
                 List<Bebida> bebidas = itemMenuController.obtenerBebidaPorIdVendedor(vendedorDto);
                 mostrarItemMenuEnPantalla(bebidas);
+                MensajeAlerta.mostrarInformacion("Se ha modicado la bebida con exito.", "Modificar Bebida");
                 break;
         }
         vaciarFormModificar();
@@ -1150,6 +1152,7 @@ public class JplItemMenu extends javax.swing.JPanel {
                     // Si la lista no es null ni vacía, mostramos los platos
                     mostrarItemMenuEnPantalla(platos);
                 }
+                MensajeAlerta.mostrarInformacion("Se ha eliminado el plato con exito.", "Eliminar Plato");
                 break;
             case "Bebida":
                 List<Bebida> bebidas = itemMenuController.obtenerBebidaPorIdVendedor(vendedorDto);
@@ -1160,6 +1163,7 @@ public class JplItemMenu extends javax.swing.JPanel {
                     // Si la lista no es null ni vacía, mostramos los platos
                     mostrarItemMenuEnPantalla(bebidas);
                 }
+                MensajeAlerta.mostrarInformacion("Se ha eliminado la bebida con exito.", "Eliminar Bebida");
                 break;
         }
         vaciarFormEliminar();
@@ -1200,27 +1204,24 @@ public class JplItemMenu extends javax.swing.JPanel {
 
     private void txtIdBuscarKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtIdBuscarKeyReleased
         String idText = txtIdBuscar.getText().trim();
-        List<ItemMenu> items = new ArrayList<>();
+        List<? extends ItemMenu> items = new ArrayList<>();
         switch (tipoCategoria) {
             case "Plato":
                 if (!idText.isEmpty()) {
-                    ItemMenu item = itemMenuController.obtenerItemPorId(idText);
-                    items.add(item);
+                    items.add(itemMenuController.obtenerPlatoPorId(idText));
+
                     txtNombreBuscar.setEnabled(false);
                 } else {
-                    List<Plato> platos = itemMenuController.obtenerPlatoPorIdVendedor(vendedorDto);
-                    items.addAll(platos);
+                    items = itemMenuController.obtenerPlatoPorIdVendedor(vendedorDto);
                     txtNombreBuscar.setEnabled(true);
                 }
                 break;
             case "Bebida":
                 if (!idText.isEmpty()) {
-                    ItemMenu item = itemMenuController.obtenerItemPorId(idText);
-                    items.add(item);
+                    items = itemMenuController.obtenerBebidaPorId(idText);
                     txtNombreBuscar.setEnabled(false);
                 } else {
-                    List<Bebida> bebidas = itemMenuController.obtenerBebidaPorIdVendedor(vendedorDto);
-                    items.addAll(bebidas);
+                    items = itemMenuController.obtenerBebidaPorIdVendedor(vendedorDto);
                     txtNombreBuscar.setEnabled(true);
                 }
                 break;
@@ -1234,22 +1235,20 @@ public class JplItemMenu extends javax.swing.JPanel {
 
     private void txtNombreBuscarKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtNombreBuscarKeyReleased
         String nombre = txtNombreBuscar.getText().trim();
-        List<ItemMenu> items = new ArrayList<>();
+        List<? extends ItemMenu> items = new ArrayList<>();
         switch (tipoCategoria) {
             case "Plato":
                 if (!nombre.isEmpty()) {
-                    items = itemMenuController.buscarItemPorNombre(nombre);
+                    items = itemMenuController.buscarPlatoPorNombre(nombre);
                 } else {
-                    List<Plato> platos = itemMenuController.obtenerPlatoPorIdVendedor(vendedorDto);
-                    items.addAll(platos);
+                    items = itemMenuController.obtenerPlatoPorIdVendedor(vendedorDto);
                 }
                 break;
             case "Bebida":
                 if (!nombre.isEmpty()) {
-                    items = itemMenuController.buscarItemPorNombre(nombre);
+                    items = itemMenuController.buscarBebidaPorNombre(nombre);
                 } else {
-                    List<Bebida> bebidas = itemMenuController.obtenerBebidaPorIdVendedor(vendedorDto);
-                    items.addAll(bebidas);
+                    items = itemMenuController.obtenerBebidaPorIdVendedor(vendedorDto);
                 }
                 break;
         }

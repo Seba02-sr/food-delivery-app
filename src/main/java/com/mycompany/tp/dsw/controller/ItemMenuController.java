@@ -120,13 +120,23 @@ public class ItemMenuController {
         return retItems;
     }
 
-    public ItemMenu obtenerItemPorId(String idText) {
+    public ItemMenu obtenerPlatoPorId(String idText) {
         Integer id = Integer.parseInt(idText);
-        return platoService.filtrarPorId(id);
+        return platoService.buscarPlatoPorId(id);
     }
 
-    public List<ItemMenu> buscarItemPorNombre(String nombre) {
-        List<ItemMenu> items = platoService.buscarItemMenuPorNombre(nombre);
+    public ItemMenu obtenerBebidaPorId(String idText) {
+        Integer id = Integer.parseInt(idText);
+        return bebidaService.buscarBebidaPorId(id);
+    }
+
+    public List<? extends ItemMenu> buscarPlatoPorNombre(String nombre) {
+        List<? extends ItemMenu> items = platoService.buscarPlatoPorNombre(nombre);
+        return items;
+    }
+
+    public List<? extends ItemMenu> buscarBebidaPorNombre(String nombre) {
+        List<? extends ItemMenu> items = bebidaService.buscarBebidaPorNombre(nombre);
         return items;
     }
 

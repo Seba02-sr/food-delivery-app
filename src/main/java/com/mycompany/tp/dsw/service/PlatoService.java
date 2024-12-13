@@ -60,13 +60,25 @@ public class PlatoService extends ItemMenuService {
 
     public List<Plato> buscarPlatoPorNombre(String nombre) {
         List<ItemMenu> items = buscarItemMenuPorNombre(nombre);
+
         List<Plato> platos = new ArrayList<>();
         for (ItemMenu itemMenu : items) {
             if (itemMenu instanceof Plato) {
                 platos.add((Plato) itemMenu);
             }
         }
+
         return platos;
+    }
+
+    public ItemMenu buscarPlatoPorId(Integer id) {
+        ItemMenu item = buscarPorId(id);
+        if (item instanceof Plato) {
+            return item;
+        } else {
+            return null;
+        }
+
     }
 
     public void modificarPlato(PlatoDto platoDto) {

@@ -51,6 +51,16 @@ public class BebidaService extends ItemMenuService {
         return bebidas;
     }
 
+    public ItemMenu buscarBebidaPorId(Integer id) {
+        ItemMenu item = buscarPorId(id);
+        if (item instanceof Bebida) {
+            return item;
+        } else {
+            return null;
+        }
+
+    }
+
     public void registrarBebida(BebidaDto bebidaDto) {
         parseBebidaDto(bebidaDto);
         super.registrarItemMenu(bebidaDto);

@@ -55,7 +55,7 @@ public class ItemMenuService {
      * @return Lista de los items que coincide con el @param.
      */
     public List<ItemMenu> buscarItemMenuPorNombre(String nombre) {
-        return itemMenuDao.findByNombre(nombre);
+        return itemMenuDao.findActiveByNombre(nombre);
     }
 
     /**
@@ -107,7 +107,7 @@ public class ItemMenuService {
         return itemMenuDao.findByVendedorId(vendedorDto.getId());
     }
 
-    public ItemMenu filtrarPorId(Integer id) {
+    public ItemMenu buscarPorId(Integer id) {
         return itemMenuDao.findById(id);
     }
 
