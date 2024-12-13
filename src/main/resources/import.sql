@@ -12,11 +12,11 @@ INSERT INTO coordenada (latitud, longitud) VALUES (37.7749, -122.4194);
 INSERT INTO coordenada (latitud, longitud) VALUES (36.1627, -86.7816);
 
 -- Insertar datos en la tabla 'categorias'
-INSERT INTO categoria (descripcion, nombre, tipo_categoria) VALUES ('Bebida Con Alcohol', 'Esta bebida es con alcohol, prohibido su consumo en menores', 'BEBIDA');
-INSERT INTO categoria (descripcion, nombre, tipo_categoria) VALUES ('Bebida Sin Alcohol', 'Esta bebida es sin alcohol', 'BEBIDA');
-INSERT INTO categoria (descripcion, nombre, tipo_categoria) VALUES ('Comida Vegana', 'Esta comida es vegana', 'COMIDA');
-INSERT INTO categoria (descripcion, nombre, tipo_categoria) VALUES ('Comida Vegetariana', 'Esta comida es vegetariana, no apta para veganos', 'COMIDA');
-INSERT INTO categoria (descripcion, nombre, tipo_categoria) VALUES ('Comida Clasica', 'Esta comida no es apta para vegetarianos, ni apta para veganos', 'COMIDA');
+INSERT INTO categoria (nombre, descripcion, tipo_categoria) VALUES ('Bebida Con Alcohol', 'Esta bebida es con alcohol, prohibido su consumo en menores', 'BEBIDA');
+INSERT INTO categoria (nombre, descripcion, tipo_categoria) VALUES ('Bebida Sin Alcohol', 'Esta bebida es sin alcohol', 'BEBIDA');
+INSERT INTO categoria (nombre, descripcion, tipo_categoria) VALUES ('Comida Vegana', 'Esta comida es vegana', 'COMIDA');
+INSERT INTO categoria (nombre, descripcion, tipo_categoria) VALUES ('Comida Vegetariana', 'Esta comida es vegetariana, no apta para veganos', 'COMIDA');
+INSERT INTO categoria (nombre, descripcion, tipo_categoria) VALUES ('Comida Clasica', 'Esta comida no es apta para vegetarianos, ni apta para veganos', 'COMIDA');
 
 -- Insertar datos en la tabla 'vendedores'
 INSERT INTO vendedor (activo, coordenada_Id, fecha_eliminacion, fecha_registro, direccion, nombre) VALUES (1, 1, NULL, CURDATE(), 'Avenida Siempre Viva 742', 'Pedro Vendedor');
