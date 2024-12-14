@@ -14,7 +14,9 @@ import javax.swing.table.TableColumn;
 
 import com.mycompany.tp.dsw.controller.ClienteController;
 import com.mycompany.tp.dsw.dto.ClienteDto;
+import com.mycompany.tp.dsw.exception.NoValidarException;
 import com.mycompany.tp.dsw.model.Cliente;
+import com.mycompany.tp.dsw.service.MensajeAlerta;
 import com.mycompany.tp.dsw.vista.cliente.FrmRealizarPedido;
 import com.mycompany.tp.dsw.vista.cliente.FrmVerPedidos;
 import com.mycompany.tp.dsw.vista.util.HeaderFormatter;
@@ -59,7 +61,6 @@ public class JplCliente extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
         txtNombreBuscar2 = new javax.swing.JTextField();
         jPopupMenu = new javax.swing.JPopupMenu();
         jmiCargarDatos = new javax.swing.JMenuItem();
@@ -629,12 +630,16 @@ public class JplCliente extends javax.swing.JPanel {
 
         ClienteDto clienteDto = new ClienteDto(nombre, cuit, direccion, email, latitud, longitud);
 
-        clienteController.guardarCliente(clienteDto);
+        try {
+            clienteController.guardarCliente(clienteDto);
+            List<Cliente> clientes = clienteController.obtenerTodosLosClientes();
+            mostrarTabla(clientes);
+            MensajeAlerta.mostrarInformacion("Cliente creado exitosamente", "Agregar Cliente");
+            btnLimpiarAgregarActionPerformed(evt);
+        } catch (NoValidarException e) {
+            MensajeAlerta.mostrarError(e.getMessage(), "Error en Agregar");
+        }
 
-        List<Cliente> clientes = clienteController.obtenerTodosLosClientes();
-
-        mostrarTabla(clientes);
-        btnLimpiarAgregarActionPerformed(evt);
     }// GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnLimpiarAgregarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnLimpiarAgregarActionPerformed

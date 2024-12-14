@@ -1,11 +1,9 @@
 package com.mycompany.tp.dsw.controller;
 
 import java.util.List;
-import java.util.Map;
-
-import javax.swing.JOptionPane;
 
 import com.mycompany.tp.dsw.dto.ClienteDto;
+import com.mycompany.tp.dsw.exception.NoValidarException;
 import com.mycompany.tp.dsw.service.ClienteService;
 import com.mycompany.tp.dsw.model.Cliente;
 import com.mycompany.tp.dsw.service.ServiceManager;
@@ -25,23 +23,18 @@ public class ClienteController {
         return clienteService.obtenerTodosLosClientes();
     }
 
-    public void guardarCliente(ClienteDto clienteDto) {
-        Map<String, String> errores = ValidarCliente.esGuardarValido(clienteDto);
-
-        if (errores.isEmpty()) {
-            clienteService.registrarCliente(clienteDto);
-            JOptionPane.showMessageDialog(null, "Cliente creado exitosamente");
-        } else {
-
-        }
-
+    public void guardarCliente(ClienteDto clienteDto) throws NoValidarException {
+        ValidarCliente.esGuardarValido(clienteDto);
+        clienteService.registrarCliente(clienteDto);
     }
 
-    public void modificarCliente(ClienteDto clienteDto) {
+    public void modificarCliente(ClienteDto clienteDto) throws NoValidarException {
+        ValidarCliente.esModificarValido(clienteDto);
         clienteService.modificarCliente(clienteDto);
     }
 
-    public void eliminarCliente(String idText) {
+    public void eliminarCliente(String idText) throws NoValidarException {
+        ValidarCliente.esEliminarValido(idText);
         Integer id = Integer.parseInt(idText);
         clienteService.eliminarCliente(id);
     }
