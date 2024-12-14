@@ -12,6 +12,8 @@ import com.mycompany.tp.dsw.model.ItemPedido;
 import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.Pedido;
 import com.mycompany.tp.dsw.model.Vendedor;
+import com.mycompany.tp.dsw.model.relacion.PedidoItemPedido;
+import com.mycompany.tp.dsw.service.MensajeAlerta;
 import com.mycompany.tp.dsw.vista.util.HeaderFormatter;
 import com.mycompany.tp.dsw.vista.util.SpinnerCellEditor;
 import com.mycompany.tp.dsw.vista.util.SpinnerCellRenderer;
@@ -227,33 +229,42 @@ public class FrmRealizarPedido extends javax.swing.JFrame {
     }// GEN-LAST:event_tbProductosFocusLost
 
     private void btnRealizarPedidoActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnRealizarPedidoActionPerformed
-        Map<String, List<Double>> productosYCantidad = obtenerProductosPedidos();
+        Map<String, List<Integer>> productosYCantidad = obtenerProductosPedidos();
 
         if (productosYCantidad.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No has seleccionado ningún producto.");
+            MensajeAlerta.mostrarInformacion("No se ha seleccionado ningún producto.", "Realizar pedido");
         } else {
             double totalGeneral = calcularTotalGeneral(productosYCantidad);
 
             // Construir un mensaje
             StringBuilder mensaje = new StringBuilder();
             productosYCantidad.forEach((producto, detalles) -> mensaje.append(producto)
-                    .append(": Cantidad = ").append(detalles.get(0).intValue()) // Mostrar la cantidad
-                    .append(", Subtotal = $").append(String.format("%.2f", detalles.get(1))) // Mostrar el subtotal
+                    .append(": Cantidad = ").append(detalles.get(0).intValue())
+                    .append(", Subtotal = $").append(String.format("%.2f", detalles.get(1).doubleValue()))
                     .append("\n"));
             mensaje.append("TOTAL: $").append(String.format("%.2f", totalGeneral));
 
-            JOptionPane.showMessageDialog(this, mensaje.toString(), "Productos Seleccionados",
-                    JOptionPane.INFORMATION_MESSAGE);
+            MensajeAlerta.mostrarInformacion(mensaje.toString(), "Productos Seleccionados");
 
-            // Gnerar el pedido, con el cliente
+            // Generar y persistir el pedido, con el cliente
             Pedido pedido = pedidoController.generarPedido(idCliente);
-            List<ItemPedidoDto> listaItemPedidoDto = pedidoController.generarItemPedidoDto(productosYCantidad);
+
+            List<ItemPedido> listaItemPedido = pedidoController.generarItemPedido(productosYCantidad);
 
             // Genera el itemPedido y agregarlo al pedido
-            Integer idPedido = pedido.getId();
-            List<ItemPedido> itemPedido = pedidoController.generarItemPedido(listaItemPedidoDto, idPedido);
-            JOptionPane.showMessageDialog(null, String
-                    .format("Pedido realizado exitosamente.%nID Pedido: %d%nID Cliente: %s", idPedido, idCliente));
+            for (ItemPedido itemPedido : listaItemPedido) {
+                PedidoItemPedido pedidoItemPedido = PedidoItemPedido.builder()
+                        .pedido(pedido)
+                        .itemPedido(itemPedido)
+                        .build();
+
+                pedido.getPedidoItemPedidos().add(pedidoItemPedido);
+            }
+
+            pedidoController.guardarPedido(pedido);
+            MensajeAlerta.mostrarInformacion(String
+                    .format("Pedido realizado exitosamente.%nID Pedido: %d%nID Cliente: %s", pedido.getId(), idCliente),
+                    "Realizar Pedido");
             this.dispose();
         }
     }// GEN-LAST:event_btnRealizarPedidoActionPerformed
@@ -298,13 +309,14 @@ public class FrmRealizarPedido extends javax.swing.JFrame {
     }
 
     public void mostrarTabla(List<ItemMenu> items) {
+
         // Asegurarse de que la tabla tenga el modelo configurado
         if (tbProductos.getModel() == null || !(tbProductos.getModel() instanceof DefaultTableModel)) {
             setearTituloTabla(); // Configura el encabezado y el modelo si no está configurado
         }
 
         DefaultTableModel model = (DefaultTableModel) tbProductos.getModel(); // Recupera el modelo
-
+        model.setRowCount(0); // Vaciar la tabla
         if (items != null && !items.isEmpty()) {
             for (ItemMenu item : items) {
                 Object[] fila = new Object[3];
@@ -335,26 +347,35 @@ public class FrmRealizarPedido extends javax.swing.JFrame {
         }
     }
 
-    private Map<String, List<Double>> obtenerProductosPedidos() {
-
+    private Map<String, List<Integer>> obtenerProductosPedidos() {
         // Crear un mapa con el nombre del producto como clave y [cantidad, subtotal]
         // como valor
-        return IntStream.range(0, tbProductos.getRowCount()) // Iterar por las filas
+        return IntStream.range(0, tbProductos.getRowCount()) // Iterar por las filas de la tabla
                 .filter(i -> Integer.parseInt(tbProductos.getValueAt(i, 2).toString()) > 0) // Filtrar donde la cantidad
                                                                                             // > 0
-                .boxed() // Convertir el IntStream a Stream<Integer>
+                .boxed() // Convertir el IntStream a Stream<Integer> para trabajar con índices
                 .collect(Collectors.toMap(
-                        i -> tbProductos.getValueAt(i, 0).toString(), // Clave: Producto (columna 0)
-                        i -> {
-                            double cantidad = Double.parseDouble(tbProductos.getValueAt(i, 2).toString()); // Cantidad
-                            double precioUnitario = Double.parseDouble(tbProductos.getValueAt(i, 1).toString()); // Precio
-                                                                                                                 // unitario
-                            double subtotal = cantidad * precioUnitario; // Calcular subtotal
-                            return List.of(cantidad, subtotal); // Crear lista con cantidad y subtotal
-                        }));
+                        i -> obtenerNombreProducto(i), // Clave: Producto (columna 0)
+                        i -> obtenerDatosProducto(i) // Valor: Lista [cantidad, subtotal]
+                ));
     }
 
-    private double calcularTotalGeneral(Map<String, List<Double>> productos) {
+    private String obtenerNombreProducto(int fila) {
+        // Recuperar el nombre del producto de la fila
+        return tbProductos.getValueAt(fila, 0).toString();
+    }
+
+    private List<Integer> obtenerDatosProducto(int fila) {
+        // Recuperar los datos de cantidad y subtotal de la fila
+        Integer cantidad = Integer.parseInt(tbProductos.getValueAt(fila, 2).toString()); // Cantidad
+        double precioUnitario = Double.parseDouble(tbProductos.getValueAt(fila, 1).toString()); // Precio unitario
+        int subtotal = (int) (cantidad * precioUnitario); // Calcular subtotal (convertir a entero)
+
+        // Retornar la lista con la cantidad y el subtotal (como Integer)
+        return List.of(cantidad, subtotal);
+    }
+
+    private double calcularTotalGeneral(Map<String, List<Integer>> productos) {
         return productos.values().stream()
                 .mapToDouble(detalles -> detalles.get(1)) // Obtener el subtotal (posición 1 de la lista)
                 .sum(); // Sumar todos los subtotales

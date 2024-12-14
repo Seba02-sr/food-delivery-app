@@ -8,17 +8,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.mycompany.tp.dsw.dto.ItemPedidoDto;
 import com.mycompany.tp.dsw.dto.PedidoDto;
 import com.mycompany.tp.dsw.exception.ClienteNoEncontradoException;
 import com.mycompany.tp.dsw.exception.PedidoNoEncontradoException;
 import com.mycompany.tp.dsw.service.ClienteService;
 import com.mycompany.tp.dsw.service.ItemPedidoService;
 import com.mycompany.tp.dsw.service.PedidoService;
+import com.mycompany.tp.dsw.model.ItemMenu;
+import com.mycompany.tp.dsw.model.ItemPedido;
 import com.mycompany.tp.dsw.model.Pedido;
 import com.mycompany.tp.dsw.service.ServiceManager;
-import com.mycompany.tp.dsw.model.ItemPedido;
-import java.util.ArrayList;
 
 /**
  *
@@ -39,37 +38,24 @@ public class PedidoController {
         itemPedidoService = serviceManager.getItemPedidoService();
     }
 
+    public void guardarPedido(Pedido pedido) {
+        pedidoService.guardarPedido(pedido);
+    }
+
     public Pedido generarPedido(String idCliente) {
 
-        PedidoDto pedidoDto = new PedidoDto(idCliente);
+        PedidoDto pedidoDto = PedidoDto.builder().idCliente(idCliente).build();
         return pedidoService.registrarPedido(pedidoDto);
     }
 
-    /*
-     * public List<ItemPedido> generarItemPedido(List<ItemPedidoDto>
-     * listaItemPedidoDto, Integer idPedido) {
-     * List<ItemPedido> itemsPedidos = new ArrayList<>();
-     * Pedido pedido = pedidoService.buscarPedidoPorId(idPedido);
-     * List<ItemPedido> items = pedido.getItems();
-     * for (ItemPedidoDto itemPedidoDto : listaItemPedidoDto) {
-     * ItemPedido itemPedido = itemPedidoService.registrarItemPedido(itemPedidoDto);
-     * itemPedido.setPedido(pedido);
-     * items.add(itemPedido);
-     * itemsPedidos.add(itemPedido);
-     * }
-     * return itemsPedidos;
-     * 
-     * }
-     */
-
-    public List<ItemPedidoDto> generarItemPedidoDto(Map<String, List<Double>> productosYCantidad) {
+    public List<ItemPedido> generarItemPedido(Map<String, List<Integer>> productosYCantidad) {
         return productosYCantidad.entrySet().stream().map(entry -> {
-            ItemPedidoDto itemPedidoDto = new ItemPedidoDto();
-            double cantidad = entry.getValue().get(0); // Tomamos el primer valor de la lista
-            itemPedidoDto.setCantidad((int) cantidad);
-            itemPedidoDto.setItemMenuText(entry.getKey());
-
-            return itemPedidoDto;
+            ItemPedido itemPedido = ItemPedido.builder().build();
+            Integer cantidad = entry.getValue().get(0); // Tomamos el primer valor de la lista
+            itemPedido.setCantidad(cantidad);
+            ItemMenu itemMenu = itemMenuController.buscarPorNombre(entry.getKey()).get(0);
+            itemPedido.setItemMenu(itemMenu);
+            return itemPedido;
         }).collect(Collectors.toList()); // Usamos collect para recolectar los resultados en una lista
     }
 

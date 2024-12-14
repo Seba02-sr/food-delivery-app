@@ -46,7 +46,6 @@ public class Vendedor {
     private String direccion;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @ToString.Exclude
     private Coordenada coordenada;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "vendedor")

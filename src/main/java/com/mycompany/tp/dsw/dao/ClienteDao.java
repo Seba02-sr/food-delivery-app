@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.hibernate.Session;
 
-import com.mycompany.tp.dsw.exception.ClienteNoEncontradoException;
 import com.mycompany.tp.dsw.model.Cliente;
 import com.mycompany.tp.dsw.service.HibernateUtil;
 
@@ -27,9 +26,6 @@ public class ClienteDao extends GenericDAO<Cliente, Integer> {
                     .setParameter("nombre", "%" + nombre + "%")
                     .getResultList();
 
-            if (clientes.isEmpty()) {
-                throw new ClienteNoEncontradoException("No se encontraron clientes con nombre:" + nombre);
-            }
             return clientes;
 
         } catch (Exception e) {

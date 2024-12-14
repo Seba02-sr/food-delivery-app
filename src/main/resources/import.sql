@@ -19,14 +19,14 @@ INSERT INTO categoria (nombre, descripcion, tipo_categoria) VALUES ('Comida Vege
 INSERT INTO categoria (nombre, descripcion, tipo_categoria) VALUES ('Comida Clasica', 'Esta comida no es apta para vegetarianos, ni apta para veganos', 'COMIDA');
 
 -- Insertar datos en la tabla 'vendedores'
-INSERT INTO vendedor (activo, coordenada_Id, fecha_eliminacion, fecha_registro, direccion, nombre) VALUES (1, 1, NULL, CURDATE(), 'Avenida Siempre Viva 742', 'Pedro Vendedor');
-INSERT INTO vendedor (activo, coordenada_Id, fecha_eliminacion, fecha_registro, direccion, nombre) VALUES (1, 2, NULL, CURDATE(), 'Calle Principal 123', 'Laura Vendedora');
-INSERT INTO vendedor (activo, coordenada_Id, fecha_eliminacion, fecha_registro, direccion, nombre) VALUES (1, 3, NULL, CURDATE(), 'Boulevard Central 456', 'Carlos Comerciante');
-INSERT INTO vendedor (activo, coordenada_Id, fecha_eliminacion, fecha_registro, direccion, nombre) VALUES (1, 4, NULL, CURDATE(), 'Avenida del Sol 789', 'Ana Vendedora');
-INSERT INTO vendedor (activo, coordenada_Id, fecha_eliminacion, fecha_registro, direccion, nombre) VALUES (1, 5, NULL, CURDATE(), 'Plaza Mayor 101', 'Jorge Empresario');
+INSERT INTO vendedor (activo, coordenada_Id, fecha_eliminacion, fecha_registro, direccion, nombre) VALUES (1, 1, NULL, CURDATE(), 'Avenida Siempre Viva 742', 'Gaia');
+INSERT INTO vendedor (activo, coordenada_Id, fecha_eliminacion, fecha_registro, direccion, nombre) VALUES (1, 2, NULL, CURDATE(), 'Calle Principal 123', 'La Buena Pizza');
+INSERT INTO vendedor (activo, coordenada_Id, fecha_eliminacion, fecha_registro, direccion, nombre) VALUES (1, 3, NULL, CURDATE(), 'Boulevard Central 456', 'Kiosko Pancho');
+INSERT INTO vendedor (activo, coordenada_Id, fecha_eliminacion, fecha_registro, direccion, nombre) VALUES (1, 4, NULL, CURDATE(), 'Avenida del Sol 789', 'Cafe Amanecer');
+INSERT INTO vendedor (activo, coordenada_Id, fecha_eliminacion, fecha_registro, direccion, nombre) VALUES (1, 5, NULL, CURDATE(), 'Plaza Mayor 101', 'Sabor y Tradicion');
 
 -- Insertar datos en la tabla 'clientes'
-INSERT INTO cliente (activo, coordenada_Id, fecha_eliminacion, fecha_registro, cuit, direccion, email, nombre) VALUES (1, 6, NULL, CURDATE(), '20-12345678-9', 'Calle Ficticia 123', 'cliente@example.com', 'Juan Pérez');
+INSERT INTO cliente (activo, coordenada_Id, fecha_eliminacion, fecha_registro, cuit, direccion, email, nombre) VALUES (1, 6, NULL, CURDATE(), '20-12345678-9', 'Calle Ficticia 123', 'cliente@example.com', 'Juan Perez');
 INSERT INTO cliente (activo, coordenada_Id, fecha_eliminacion, fecha_registro, cuit, direccion, email, nombre) VALUES (1, 7, NULL, CURDATE(), '20-23456789-0', 'Calle Imaginaria 456', 'cliente2@example.com', 'Maria Lopez');
 INSERT INTO cliente (activo, coordenada_Id, fecha_eliminacion, fecha_registro, cuit, direccion, email, nombre) VALUES (1, 8, NULL, CURDATE(), '20-34567890-1', 'Calle Ejemplo 789', 'cliente3@example.com', 'Carlos Martinez');
 INSERT INTO cliente (activo, coordenada_Id, fecha_eliminacion, fecha_registro, cuit, direccion, email, nombre) VALUES (1, 9, NULL, CURDATE(), '20-45678901-2', 'Avenida Falsa 321', 'cliente4@example.com', 'Ana Gomez');
@@ -57,8 +57,8 @@ INSERT INTO item_menu (activo, categoria_id, fecha_eliminacion, precio, descripc
 INSERT INTO item_menu (activo, categoria_id, fecha_eliminacion, precio, descripcion, nombre, vendedor_id) VALUES (1, 2, NULL, 150.00, 'Refresco sabor lima', 'Seven-Up', 5);
 INSERT INTO item_menu (activo, categoria_id, fecha_eliminacion, precio, descripcion, nombre, vendedor_id) VALUES (1, 2, NULL, 150.00, 'Refresco sabor naranja', 'Mirinda', 5);
 --20//platos
-INSERT INTO item_menu (activo, categoria_id, fecha_eliminacion, precio, descripcion, nombre, vendedor_id) VALUES (1, 5, NULL, 300.00, 'Empanadas de carne de res', 'Empanadasd de carne', 1);
-INSERT INTO item_menu (activo, categoria_id, fecha_eliminacion, precio, descripcion, nombre, vendedor_id) VALUES (1, 5, NULL, 300.00, 'Empanadas de jamon y queso', 'Empanadasd de jamon y queso', 1);
+INSERT INTO item_menu (activo, categoria_id, fecha_eliminacion, precio, descripcion, nombre, vendedor_id) VALUES (1, 5, NULL, 300.00, 'Empanadas de carne de res', 'Empanadas de carne', 1);
+INSERT INTO item_menu (activo, categoria_id, fecha_eliminacion, precio, descripcion, nombre, vendedor_id) VALUES (1, 5, NULL, 300.00, 'Empanadas de jamon y queso', 'Empanadas de jamon y queso', 1);
 INSERT INTO item_menu (activo, categoria_id, fecha_eliminacion, precio, descripcion, nombre, vendedor_id) VALUES (1, 5, NULL, 300.00, 'Sanguche de milanesa con tomate, lechuga y huevo', 'Sanguche de milanesa', 1);
 --23
 INSERT INTO item_menu (activo, categoria_id, fecha_eliminacion, precio, descripcion, nombre, vendedor_id) VALUES (1, 4, NULL, 400.00, 'Pizza Muzzarella', 'Pizza Muzzarella', 2);
@@ -76,7 +76,7 @@ INSERT INTO item_menu (activo, categoria_id, fecha_eliminacion, precio, descripc
 INSERT INTO item_menu (activo, categoria_id, fecha_eliminacion, precio, descripcion, nombre, vendedor_id) VALUES (1, 4, NULL, 50.00, 'Medialuna', 'Medialuna Salada', 4);
 INSERT INTO item_menu (activo, categoria_id, fecha_eliminacion, precio, descripcion, nombre, vendedor_id) VALUES (1, 3, NULL, 300.00, 'Cookies sin ningun alimento origen animal', 'Cookies Veganas', 4);
 --35
-INSERT INTO item_menu (activo, categoria_id, fecha_eliminacion, precio, descripcion, nombre, vendedor_id) VALUES (1, 4, NULL, 300.00, 'Empanadas de queso y choclo', 'Empanad de humita', 5);
+INSERT INTO item_menu (activo, categoria_id, fecha_eliminacion, precio, descripcion, nombre, vendedor_id) VALUES (1, 4, NULL, 300.00, 'Empanadas de queso y choclo', 'Empanada de humita', 5);
 INSERT INTO item_menu (activo, categoria_id, fecha_eliminacion, precio, descripcion, nombre, vendedor_id) VALUES (1, 5, NULL, 400.00, 'Sanguche de lomo', 'Sanguche de lomo', 5);
 INSERT INTO item_menu (activo, categoria_id, fecha_eliminacion, precio, descripcion, nombre, vendedor_id) VALUES (1, 3, NULL, 600.00, 'Hamburguesa de lenteja', 'Hamburguesa Vegana', 5);
 INSERT INTO item_menu (activo, categoria_id, fecha_eliminacion, precio, descripcion, nombre, vendedor_id) VALUES (1, 5, NULL, 350.00, 'Papas fritas con cheddar y panceta', 'Papas con cheddar y panceta', 5);

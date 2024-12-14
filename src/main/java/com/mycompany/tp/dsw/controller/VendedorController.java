@@ -52,20 +52,16 @@ public class VendedorController {
         return errores;
     }
 
-    public List<Vendedor> buscarVendedorPorId(String idText) {
-        List<Vendedor> listaVendedores = new ArrayList<>();
-        try {
-            Integer id = Integer.parseInt(idText);
-            Vendedor vendedor = vendedorService.buscarVendedorPorId(id);
+    public Vendedor buscarVendedorPorId(String idText) throws NumberFormatException {
 
-            if (vendedor != null) {
-                listaVendedores.add(vendedor);
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "El ID debe ser un número entero válido.", "Error",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-        return listaVendedores;
+        Integer id = Integer.parseInt(idText);
+        Vendedor vendedor = vendedorService.buscarVendedorPorId(id);
+
+        return vendedor;
+        // JOptionPane.showMessageDialog(null, "El ID debe ser un número entero
+        // válido.", "Error",
+        // JOptionPane.ERROR_MESSAGE);
+
     }
 
     public List<Vendedor> buscarVendedorPorNombre(String nombre) {

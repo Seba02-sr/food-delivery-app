@@ -18,7 +18,7 @@ public class ItemMenuDao extends GenericDAO<ItemMenu, Integer> {
     // Delete --> Usar deleteLogico
     // findAll --> Usar findAllActive
     // findById --> Usar findByIdAndActive
-    public List<ItemMenu> findActiveByNombre(String nombre, Integer id) {
+    public List<ItemMenu> findActiveByNombre2(String nombre, Integer id) { // Creo que no se usa
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM ItemMenu im " +
                     "WHERE im.nombre LIKE :nombre " +
@@ -58,4 +58,20 @@ public class ItemMenuDao extends GenericDAO<ItemMenu, Integer> {
         }
     }
 
+    public List<ItemMenu> findActiveByNombre(String nombre) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM ItemMenu im " +
+                    "WHERE im.nombre LIKE :nombre " +
+                    "AND im.activo = true";
+
+            List<ItemMenu> itemsMenu = session.createQuery(hql, ItemMenu.class)
+                    .setParameter("nombre", "%" + nombre + "%")
+                    .getResultList();
+
+            return itemsMenu;
+        } catch (Exception e) {
+            String errorMessage = "Error al intentar recuperar los item menu con nombre: " + nombre;
+            throw new RuntimeException(errorMessage, e);
+        }
+    }
 }

@@ -523,7 +523,7 @@ public class JplVendedor extends javax.swing.JPanel {
         int selectedRow = tbVendedorDatos.getSelectedRow();
         String id = tbVendedorDatos.getValueAt(selectedRow, 0).toString();
 
-        Vendedor vendedor = vendedorController.buscarVendedorPorId(id).get(0);
+        Vendedor vendedor = vendedorController.buscarVendedorPorId(id);
 
         if (jTabbedPaneCRUD.getSelectedIndex() == 1) { // Si esta seleccionado Modificar
             txtIdModificar.setText(id);
@@ -584,7 +584,8 @@ public class JplVendedor extends javax.swing.JPanel {
         String idText = txtIdBuscar.getText().trim();
         List<Vendedor> listaVendedores = new ArrayList<>();
         if (!idText.isEmpty()) {
-            listaVendedores = vendedorController.buscarVendedorPorId(idText);
+            Vendedor vendedor = vendedorController.buscarVendedorPorId(idText);
+            listaVendedores.add(vendedor);
             txtNombreBuscar.setEnabled(false);
         } else {
             listaVendedores = vendedorController.obtenerTodosLosVendedores();

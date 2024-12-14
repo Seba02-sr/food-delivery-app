@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import com.mycompany.tp.dsw.dto.ClienteDto;
 import com.mycompany.tp.dsw.patronObserver.Observer;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -47,7 +48,7 @@ public class Cliente implements Observer<Pedido> {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Coordenada coordenada;
 
     @Column(name = "fecha_registro", nullable = false)
@@ -67,6 +68,7 @@ public class Cliente implements Observer<Pedido> {
         this.direccion = clienteDto.getDireccion();
         this.coordenada = clienteDto.getCoordenada();
         this.email = clienteDto.getEmail();
+        this.activo = true;
     }
 
     /**

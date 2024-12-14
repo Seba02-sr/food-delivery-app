@@ -12,6 +12,7 @@ import com.mycompany.tp.dsw.model.relacion.PedidoItemPedido;
 import com.mycompany.tp.dsw.patronObserver.Observable;
 import com.mycompany.tp.dsw.patronObserver.Observer;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -42,8 +43,9 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pedido")
-    private List<PedidoItemPedido> pedidoItemPedidos;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pedido", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<PedidoItemPedido> pedidoItemPedidos = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Estado estado;
@@ -52,33 +54,12 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
     private Cliente cliente;
 
     @OneToOne
-    private Pago formaPago;
+    @Builder.Default
+    private Pago formaPago = null;
 
     @Transient
     @Builder.Default
     private List<Observer<Pedido>> observadores = new ArrayList<>();
-
-    public Pedido(Cliente cliente) {
-        this.cliente = cliente;
-        this.estado = Estado.ACEPTADO;
-        this.pedidoItemPedidos = new ArrayList<>();
-    }
-
-    // ver luego en siguiente etapa el constructor
-    public Pedido(Integer id, Estado estado, Cliente cliente) {
-        this.id = id;
-        this.pedidoItemPedidos = new ArrayList<>();
-        this.estado = estado;
-        this.cliente = cliente;
-    }
-
-    public Pedido(Integer id, Estado estado, Cliente cliente, Pago formaPago) {
-        this.id = id;
-        this.pedidoItemPedidos = new ArrayList<>();
-        this.estado = estado;
-        this.cliente = cliente;
-        this.formaPago = formaPago;
-    }
 
     /**
      * Setea nuevo estado del pedido y notifica a los observadores sobre el cambio.

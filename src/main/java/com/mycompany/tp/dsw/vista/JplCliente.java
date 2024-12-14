@@ -546,9 +546,7 @@ public class JplCliente extends javax.swing.JPanel {
                 txtEmailModificar.setText(selectedCliente.getEmail());
                 txtLatitudModificar.setText(selectedCliente.getCoordenada().getLatitud().toString());
                 txtLongitudModificar.setText(selectedCliente.getCoordenada().getLongitud().toString());
-            }
-
-            if (jTabbedPane.getSelectedIndex() == 2) { // Eliminar
+            } else if (jTabbedPane.getSelectedIndex() == 2) { // Eliminar
                 txtIDEliminar.setText(selectedCliente.getId().toString());
                 txtNombreEliminar.setText(selectedCliente.getNombre());
                 txtCuitEliminar.setText(selectedCliente.getCuit());
@@ -556,6 +554,9 @@ public class JplCliente extends javax.swing.JPanel {
                 txtEmailEliminar.setText(selectedCliente.getEmail());
                 txtLatitudEliminar.setText(selectedCliente.getCoordenada().getLatitud().toString());
                 txtLongitudEliminar.setText(selectedCliente.getCoordenada().getLongitud().toString());
+            } else {
+                MensajeAlerta.mostrarError("Solamente se puede cargar datos en 'Modificar' o 'Eliminar'.",
+                        "Error al cargar datos");
             }
         }
     }// GEN-LAST:event_jmiCargarDatosActionPerformed
@@ -593,7 +594,13 @@ public class JplCliente extends javax.swing.JPanel {
             clientes = clienteController.obtenerTodosLosClientes();
             txtNombreBuscar.setEnabled(true);
         }
-        mostrarTabla(clientes);
+
+        if (clientes == null) {
+            mostrarTabla(new ArrayList<>());
+        } else {
+            mostrarTabla(clientes);
+        }
+
     }// GEN-LAST:event_txtIDBuscarKeyReleased
 
     private void txtIDModificarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtIDModificarActionPerformed
@@ -633,8 +640,9 @@ public class JplCliente extends javax.swing.JPanel {
         try {
             clienteController.guardarCliente(clienteDto);
             List<Cliente> clientes = clienteController.obtenerTodosLosClientes();
-            mostrarTabla(clientes);
             MensajeAlerta.mostrarInformacion("Cliente creado exitosamente", "Agregar Cliente");
+            mostrarTabla(clientes);
+
             btnLimpiarAgregarActionPerformed(evt);
         } catch (NoValidarException e) {
             MensajeAlerta.mostrarError(e.getMessage(), "Error en Agregar");
@@ -685,18 +693,20 @@ public class JplCliente extends javax.swing.JPanel {
         String longitud = txtLongitudModificar.getText();
 
         ClienteDto clienteDto = new ClienteDto(id, nombre, cuit, direccion, email, latitud, longitud);
-        int confirmacion = JOptionPane.showConfirmDialog(
-                this,
-                "¿Está seguro de que desea modificar el cliente con ID: " + id + "?",
-                "Confirmar modificación",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE);
+        Integer confirmacion = MensajeAlerta.mostrarConfirmacion(
+                "¿Está seguro de que desea modificar el cliente con ID: " + id + "?", "Confirmar modificación", this);
+
         if (confirmacion == JOptionPane.YES_OPTION) {
-            clienteController.modificarCliente(clienteDto);
-            JOptionPane.showMessageDialog(null, "Vendedor modificado exitosamente");
-            List<Cliente> clientes = clienteController.obtenerTodosLosClientes();
-            mostrarTabla(clientes);
-            btnLimpiarModificarActionPerformed(evt);
+            try {
+                clienteController.modificarCliente(clienteDto);
+
+                MensajeAlerta.mostrarInformacion("Vendedor modificado exitosamente", "Modificar Cliente");
+                List<Cliente> clientes = clienteController.obtenerTodosLosClientes();
+                mostrarTabla(clientes);
+                btnLimpiarModificarActionPerformed(evt);
+            } catch (NoValidarException e) {
+                MensajeAlerta.mostrarError(e.getMessage(), "Error en Modificar");
+            }
         }
     }// GEN-LAST:event_btnModificarActionPerformed
 
@@ -743,19 +753,19 @@ public class JplCliente extends javax.swing.JPanel {
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnEliminarActionPerformed
         String idText = txtIDEliminar.getText();
 
-        int confirmacion = JOptionPane.showConfirmDialog(
-                this,
-                "¿Está seguro de que desea eliminar el cliente con ID: " + idText + "?",
-                "Confirmar eliminación",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE);
+        Integer confirmacion = MensajeAlerta.mostrarConfirmacion(
+                "¿Está seguro de que desea eliminar el cliente con ID: " + idText + "?", "Confirmar eliminación", this);
 
         if (confirmacion == JOptionPane.YES_OPTION) {
-            clienteController.eliminarCliente(idText);
-            JOptionPane.showMessageDialog(null, "Cliente Eliminado exitosamente");
-            List<Cliente> clientes = clienteController.obtenerTodosLosClientes();
-            mostrarTabla(clientes);
-            btnLimpiarEliminarActionPerformed(evt);
+            try {
+                clienteController.eliminarCliente(idText);
+                MensajeAlerta.mostrarInformacion("Cliente Eliminado exitosamente", "Eliminar Mensaje");
+                List<Cliente> clientes = clienteController.obtenerTodosLosClientes();
+                mostrarTabla(clientes);
+                btnLimpiarEliminarActionPerformed(evt);
+            } catch (NoValidarException e) {
+                MensajeAlerta.mostrarError(e.getMessage(), "Error en Eliminar");
+            }
         }
     }// GEN-LAST:event_btnEliminarActionPerformed
 
@@ -788,7 +798,13 @@ public class JplCliente extends javax.swing.JPanel {
         } else {
             clientes = clienteController.buscarClientesPorNombre(nombre);
         }
-        mostrarTabla(clientes);
+
+        if (clientes == null) {
+            mostrarTabla(new ArrayList<>());
+        } else {
+            mostrarTabla(clientes);
+        }
+
     }// GEN-LAST:event_txtNombreBuscarKeyReleased
 
     private void jPanelBuscarPropertyChange(java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_jPanelBuscarPropertyChange

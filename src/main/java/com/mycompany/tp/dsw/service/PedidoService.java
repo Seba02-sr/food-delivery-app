@@ -34,6 +34,10 @@ public class PedidoService {
         return pedido;
     }
 
+    public void guardarPedido(Pedido pedido) {
+        pedidoDao.save(pedido);
+    }
+
     /**
      * Obtiene los pedidos, filtrados por cliente
      * 
@@ -125,6 +129,9 @@ public class PedidoService {
         Integer idCliente = Integer.parseInt(pedidoDto.getIdCliente());
         Cliente cliente = clienteService.buscarClientePorId(idCliente);
 
-        return new Pedido(cliente);
+        return Pedido.builder()
+                .cliente(cliente)
+                .estado(Estado.ACEPTADO)
+                .build();
     }
 }

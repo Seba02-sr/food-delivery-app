@@ -1,31 +1,16 @@
 package com.mycompany.tp.dsw.dto;
 
-import com.mycompany.tp.dsw.model.Cliente;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class PedidoDto {
 
     private String idCliente;
-
-    private Cliente cliente;
-
-    public PedidoDto(String idCliente) {
-        this.idCliente = idCliente;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public String getIdCliente() {
-        return idCliente;
-    }
-
-    public void setIdCliente(String idCliente) {
-        this.idCliente = idCliente;
-    }
 
 }

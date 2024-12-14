@@ -3,6 +3,7 @@ package com.mycompany.tp.dsw.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mycompany.tp.dsw.dao.ItemMenuDao;
 import com.mycompany.tp.dsw.dto.BebidaDto;
 import com.mycompany.tp.dsw.dto.ItemMenuDto;
 import com.mycompany.tp.dsw.dto.PlatoDto;
@@ -27,7 +28,10 @@ public class ItemMenuController {
     private final BebidaService bebidaService;
     private final VendedorService vendedorService;
 
+    private final ItemMenuDao itemMenuDao;
+
     public ItemMenuController() {
+        itemMenuDao = new ItemMenuDao();
         serviceManager = ServiceManager.getInstance();
         categoriaService = serviceManager.getCategoriaService();
 
@@ -151,8 +155,12 @@ public class ItemMenuController {
 
     public List<? extends ItemMenu> buscarBebidaPorNombreYVendedor(String nombre, String idText) {
         Integer id = Integer.parseInt(idText);
-        List<? extends ItemMenu> items = bebidaService.buscarBebidaPorNombreYVendedor(nombre, id);
-        return items;
+        List<Bebida> bebidas = bebidaService.buscarBebidaPorNombreYVendedor(nombre, id);
+        return bebidas;
+    }
+
+    public List<ItemMenu> buscarPorNombre(String nombre) {
+        return itemMenuDao.findActiveByNombre(nombre);
     }
 
 }

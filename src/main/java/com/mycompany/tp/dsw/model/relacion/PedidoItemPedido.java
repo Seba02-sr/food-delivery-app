@@ -3,6 +3,7 @@ package com.mycompany.tp.dsw.model.relacion;
 import com.mycompany.tp.dsw.model.ItemPedido;
 import com.mycompany.tp.dsw.model.Pedido;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,7 +33,7 @@ public class PedidoItemPedido {
     @JoinColumn(name = "pedido_id", referencedColumnName = "id")
     private Pedido pedido;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "item_pedido_id", referencedColumnName = "id")
     private ItemPedido itemPedido;
 
