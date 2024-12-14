@@ -628,9 +628,11 @@ public class JplCliente extends javax.swing.JPanel {
         String longitud = txtLongitudAgregar.getText();
 
         ClienteDto clienteDto = new ClienteDto(nombre, cuit, direccion, email, latitud, longitud);
+
         clienteController.guardarCliente(clienteDto);
 
         List<Cliente> clientes = clienteController.obtenerTodosLosClientes();
+
         mostrarTabla(clientes);
         btnLimpiarAgregarActionPerformed(evt);
     }// GEN-LAST:event_btnGuardarActionPerformed

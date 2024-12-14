@@ -2,6 +2,7 @@ package com.mycompany.tp.dsw.dao;
 
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
 import com.mycompany.tp.dsw.exception.ItemNoEncontradoException;
@@ -17,14 +18,17 @@ public class ItemMenuDao extends GenericDAO<ItemMenu, Integer> {
     // Delete --> Usar deleteLogico
     // findAll --> Usar findAllActive
     // findById --> Usar findByIdAndActive
-    public List<ItemMenu> findActiveByNombre(String nombre) {
+    public List<ItemMenu> findActiveByNombre(String nombre, Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM ItemMenu im " +
                     "WHERE im.nombre LIKE :nombre " +
-                    "AND im.activo = true";
+                    "AND im.activo = true " +
+                    "AND im.vendedor.id = :id " +
+                    "AND im.vendedor.activo = true";
 
             List<ItemMenu> itemsMenu = session.createQuery(hql, ItemMenu.class)
                     .setParameter("nombre", "%" + nombre + "%")
+                    .setParameter("id", id)
                     .getResultList();
 
             if (itemsMenu.isEmpty()) {
@@ -47,11 +51,8 @@ public class ItemMenuDao extends GenericDAO<ItemMenu, Integer> {
                     .setParameter("id", id)
                     .getResultList();
 
-            if (itemsMenu.isEmpty()) {
-                throw new ItemNoEncontradoException("No se ha encontrado el item menu del vendedor con id: " + id);
-            }
             return itemsMenu;
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             String errorMessage = "Error al intentar recuperar los item menu del vendedor con id: " + id;
             throw new RuntimeException(errorMessage, e);
         }

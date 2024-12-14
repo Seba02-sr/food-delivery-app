@@ -58,8 +58,8 @@ public class PlatoService extends ItemMenuService {
         return platos;
     }
 
-    public List<Plato> buscarPlatoPorNombre(String nombre) {
-        List<ItemMenu> items = buscarItemMenuPorNombre(nombre);
+    public List<Plato> buscarPlatoPorNombreYVendedor(String nombre, Integer id) {
+        List<ItemMenu> items = buscarItemMenuPorNombreYVendedor(nombre, id);
 
         List<Plato> platos = new ArrayList<>();
         for (ItemMenu itemMenu : items) {
@@ -71,13 +71,15 @@ public class PlatoService extends ItemMenuService {
         return platos;
     }
 
-    public ItemMenu buscarPlatoPorId(Integer id) {
-        ItemMenu item = buscarPorId(id);
-        if (item instanceof Plato) {
-            return item;
-        } else {
-            return null;
+    public ItemMenu buscarPlatoPorId(Integer idPlato, Integer idVendedor) {
+        List<Plato> platos = obtenerPlatoPorIdVendedor(idVendedor);
+
+        for (Plato plato : platos) {
+            if (plato.getId().equals(idPlato)) {
+                return plato;
+            }
         }
+        return null;
 
     }
 

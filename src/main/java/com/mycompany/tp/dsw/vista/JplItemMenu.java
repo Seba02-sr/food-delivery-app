@@ -25,7 +25,6 @@ import com.mycompany.tp.dsw.exception.CategoriaNoEncontradaException;
 import com.mycompany.tp.dsw.model.Bebida;
 import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.Plato;
-import com.mycompany.tp.dsw.model.Vendedor;
 import com.mycompany.tp.dsw.service.MensajeAlerta;
 import com.mycompany.tp.dsw.vista.util.HeaderFormatter;
 
@@ -1208,8 +1207,12 @@ public class JplItemMenu extends javax.swing.JPanel {
         switch (tipoCategoria) {
             case "Plato":
                 if (!idText.isEmpty()) {
-                    items.add(itemMenuController.obtenerPlatoPorId(idText));
-
+                    ItemMenu itemEncontrado = itemMenuController.obtenerPlatoVendedorPorId(idText, vendedorDto);
+                    List<ItemMenu> temp = new ArrayList<>();
+                    temp.add(itemEncontrado);
+                    if (itemEncontrado != null) {
+                        items = temp;
+                    }
                     txtNombreBuscar.setEnabled(false);
                 } else {
                     items = itemMenuController.obtenerPlatoPorIdVendedor(vendedorDto);
@@ -1218,7 +1221,12 @@ public class JplItemMenu extends javax.swing.JPanel {
                 break;
             case "Bebida":
                 if (!idText.isEmpty()) {
-                    items = itemMenuController.obtenerBebidaPorId(idText);
+                    ItemMenu itemEncontrado = itemMenuController.obtenerBebidaVendedorPorId(idText, vendedorDto);
+                    List<ItemMenu> temp = new ArrayList<>();
+                    temp.add(itemEncontrado);
+                    if (itemEncontrado != null) {
+                        items = temp;
+                    }
                     txtNombreBuscar.setEnabled(false);
                 } else {
                     items = itemMenuController.obtenerBebidaPorIdVendedor(vendedorDto);
@@ -1239,14 +1247,14 @@ public class JplItemMenu extends javax.swing.JPanel {
         switch (tipoCategoria) {
             case "Plato":
                 if (!nombre.isEmpty()) {
-                    items = itemMenuController.buscarPlatoPorNombre(nombre);
+                    items = itemMenuController.buscarPlatoPorNombreYVendedor(nombre, vendedorDto.getIdText());
                 } else {
                     items = itemMenuController.obtenerPlatoPorIdVendedor(vendedorDto);
                 }
                 break;
             case "Bebida":
                 if (!nombre.isEmpty()) {
-                    items = itemMenuController.buscarBebidaPorNombre(nombre);
+                    items = itemMenuController.buscarBebidaPorNombreYVendedor(nombre, vendedorDto.getIdText());
                 } else {
                     items = itemMenuController.obtenerBebidaPorIdVendedor(vendedorDto);
                 }
@@ -1342,36 +1350,46 @@ public class JplItemMenu extends javax.swing.JPanel {
         border.setTitle("BEBIDAS");
         tipoCategoria = "Bebida";
 
-        List<String> categorias = itemMenuController.getValoresComboBoxCategoria(tipoCategoria);
+        List<String> categorias;
+        try {
+            categorias = itemMenuController.getValoresComboBoxCategoria(tipoCategoria);
+            actualizarComboBox(jComboBoxCategoria, categorias);
+            actualizarComboBox(jComboBoxCategoriaEliminar, categorias);
+            actualizarComboBox(jComboBoxCategoriaModificar, categorias);
 
-        actualizarComboBox(jComboBoxCategoria, categorias);
-        actualizarComboBox(jComboBoxCategoriaEliminar, categorias);
-        actualizarComboBox(jComboBoxCategoriaModificar, categorias);
+            String TAMANO = "Tamaño";
+            actualizarTituloBorde(txtCaTmAgregar, TAMANO);
+            actualizarTituloBorde(txtCaTmEliminar, TAMANO);
+            actualizarTituloBorde(txtCaTmModificar, TAMANO);
 
-        String TAMANO = "Tamaño";
-        actualizarTituloBorde(txtCaTmAgregar, TAMANO);
-        actualizarTituloBorde(txtCaTmEliminar, TAMANO);
-        actualizarTituloBorde(txtCaTmModificar, TAMANO);
+            String VOLUMEN = "Volumen";
+            actualizarTituloBorde(txtPeVoAgregar, VOLUMEN);
+            actualizarTituloBorde(txtPeVoEliminar, VOLUMEN);
+            actualizarTituloBorde(txtPeVoModificar, VOLUMEN);
 
-        String VOLUMEN = "Volumen";
-        actualizarTituloBorde(txtPeVoAgregar, VOLUMEN);
-        actualizarTituloBorde(txtPeVoEliminar, VOLUMEN);
-        actualizarTituloBorde(txtPeVoModificar, VOLUMEN);
+            configurarGraduacionAlcoholicaSpinner(jRadioButtonSI, jRadioButtonNO, jLabelAcGa,
+                    jSpinnerGraduacionAlcoholicaAgregar);
+            configurarGraduacionAlcoholicaSpinner(jRadioButtonSIEliminar, jRadioButtonNOEliminar, jLabelAcGaEliminar,
+                    jSpinnerGraduacionAlcoholicaEliminar);
+            configurarGraduacionAlcoholicaSpinner(jRadioButtonSIModificar, jRadioButtonNOModificar, jLabelAcGaModificar,
+                    jSpinnerGraduacionAlcoholicaModificar);
 
-        configurarGraduacionAlcoholicaSpinner(jRadioButtonSI, jRadioButtonNO, jLabelAcGa,
-                jSpinnerGraduacionAlcoholicaAgregar);
-        configurarGraduacionAlcoholicaSpinner(jRadioButtonSIEliminar, jRadioButtonNOEliminar, jLabelAcGaEliminar,
-                jSpinnerGraduacionAlcoholicaEliminar);
-        configurarGraduacionAlcoholicaSpinner(jRadioButtonSIModificar, jRadioButtonNOModificar, jLabelAcGaModificar,
-                jSpinnerGraduacionAlcoholicaModificar);
+            txtCaTmAgregar.repaint();
+            txtPeVoAgregar.repaint();
+            jPanelTable.repaint();
 
-        txtCaTmAgregar.repaint();
-        txtPeVoAgregar.repaint();
-        jPanelTable.repaint();
+            // Actualizar tabla
+            List<Bebida> bebidas = itemMenuController.obtenerBebidaPorIdVendedor(vendedorDto);
+            if (bebidas == null) {
+                mostrarItemMenuEnPantalla(new ArrayList<>());
+            } else {
+                mostrarItemMenuEnPantalla(bebidas);
+            }
 
-        // Actualizar tabla
-        List<Bebida> bebidas = itemMenuController.obtenerBebidaPorIdVendedor(vendedorDto);
-        mostrarItemMenuEnPantalla(bebidas);
+        } catch (CategoriaNoEncontradaException e) {
+            MensajeAlerta.mostrarError("Error: " + e.getMessage(), "Categoria no encontrada");
+            e.printStackTrace();
+        }
 
     }// GEN-LAST:event_tbtnBebidasActionPerformed
 

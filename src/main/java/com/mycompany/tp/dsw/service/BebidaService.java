@@ -40,8 +40,8 @@ public class BebidaService extends ItemMenuService {
         return bebidaDao.findActiveByIdVendedor(id);
     }
 
-    public List<Bebida> buscarBebidaPorNombre(String nombre) {
-        List<ItemMenu> items = buscarItemMenuPorNombre(nombre);
+    public List<Bebida> buscarBebidaPorNombreYVendedor(String nombre, Integer id) {
+        List<ItemMenu> items = buscarItemMenuPorNombreYVendedor(nombre, id);
         List<Bebida> bebidas = new ArrayList<>();
         for (ItemMenu itemMenu : items) {
             if (itemMenu instanceof Bebida) {
@@ -51,14 +51,14 @@ public class BebidaService extends ItemMenuService {
         return bebidas;
     }
 
-    public ItemMenu buscarBebidaPorId(Integer id) {
-        ItemMenu item = buscarPorId(id);
-        if (item instanceof Bebida) {
-            return item;
-        } else {
-            return null;
+    public ItemMenu buscarBebidaPorId(Integer idBebida, Integer idVendedor) {
+        List<Bebida> bebidas = obtenerBebidaPorIdVendedor(idVendedor);
+        for (Bebida bebida : bebidas) {
+            if (bebida.getId().equals(idBebida)) {
+                return bebida;
+            }
         }
-
+        return null;
     }
 
     public void registrarBebida(BebidaDto bebidaDto) {

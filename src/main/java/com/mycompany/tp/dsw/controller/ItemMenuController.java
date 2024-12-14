@@ -120,23 +120,38 @@ public class ItemMenuController {
         return retItems;
     }
 
-    public ItemMenu obtenerPlatoPorId(String idText) {
-        Integer id = Integer.parseInt(idText);
-        return platoService.buscarPlatoPorId(id);
+    public ItemMenu obtenerPlatoVendedorPorId(String idPlatoText, VendedorDto vendedorDto) {
+        List<Plato> platos = obtenerPlatoPorIdVendedor(vendedorDto);
+        Integer idPlato = Integer.parseInt(idPlatoText);
+        for (Plato plato : platos) {
+            if (plato.getId().equals(idPlato)) {
+                return plato;
+            }
+        }
+        return null;
     }
 
-    public ItemMenu obtenerBebidaPorId(String idText) {
-        Integer id = Integer.parseInt(idText);
-        return bebidaService.buscarBebidaPorId(id);
+    public ItemMenu obtenerBebidaVendedorPorId(String idText, VendedorDto vendedorDto) {
+
+        Integer idBebida = Integer.parseInt(idText);
+        Integer idVendedor = Integer.parseInt(vendedorDto.getIdText());
+        return bebidaService.buscarBebidaPorId(idBebida, idVendedor);
     }
 
-    public List<? extends ItemMenu> buscarPlatoPorNombre(String nombre) {
-        List<? extends ItemMenu> items = platoService.buscarPlatoPorNombre(nombre);
+    public ItemMenu obtenerItemPorId(String idText) {
+        Integer id = Integer.parseInt(idText);
+        return platoService.buscarPorId(id);
+    }
+
+    public List<? extends ItemMenu> buscarPlatoPorNombreYVendedor(String nombre, String idText) {
+        Integer id = Integer.parseInt(idText);
+        List<? extends ItemMenu> items = platoService.buscarPlatoPorNombreYVendedor(nombre, id);
         return items;
     }
 
-    public List<? extends ItemMenu> buscarBebidaPorNombre(String nombre) {
-        List<? extends ItemMenu> items = bebidaService.buscarBebidaPorNombre(nombre);
+    public List<? extends ItemMenu> buscarBebidaPorNombreYVendedor(String nombre, String idText) {
+        Integer id = Integer.parseInt(idText);
+        List<? extends ItemMenu> items = bebidaService.buscarBebidaPorNombreYVendedor(nombre, id);
         return items;
     }
 
