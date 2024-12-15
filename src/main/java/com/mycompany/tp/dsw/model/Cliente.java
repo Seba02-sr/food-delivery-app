@@ -5,6 +5,7 @@
 package com.mycompany.tp.dsw.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 import com.mycompany.tp.dsw.dto.ClienteDto;
@@ -85,7 +86,7 @@ public class Cliente implements Observer<Pedido> {
         System.out.println("Se le notifica a " + nombre + ": El estado de su pedido (ID: " + pedido.getId()
                 + ") ha cambiado a " + pedido.getEstado());
 
-        if (pedido.getEstado().equals(Estado.ENVIADO)) {
+        if (pedido.getEstado().equals(Estado.PAGADO)) {
             generarPago(pedido);
         }
     }
@@ -103,18 +104,18 @@ public class Cliente implements Observer<Pedido> {
     private void generarPago(Pedido pedido) {
 
         BigDecimal monto = pedido.total();
-
-        if (monto.compareTo(BigDecimal.ZERO) > 0) {
+        monto = monto.setScale(2, RoundingMode.HALF_UP);
+        if (monto.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Monto negativo");
         }
 
-        if (pedido.getFormaPago() instanceof MercadoPago) {
-            MercadoPago mercadoPago = new MercadoPago("miAlias");
+        Pago pago = pedido.getFormaPago();
+        if (pago instanceof MercadoPago) {
+            MercadoPago mercadoPago = (MercadoPago) pago;
             mercadoPago.setMonto(monto);
-            pedido.setFormaPago(mercadoPago);
 
-        } else if (pedido.getFormaPago() instanceof Transferencia) {
-            Transferencia transferencia = new Transferencia("cbu123", "20-123456-3");
+        } else if (pago instanceof Transferencia) {
+            Transferencia transferencia = (Transferencia) pago;
             transferencia.setMonto(monto);
             pedido.setFormaPago(transferencia);
 

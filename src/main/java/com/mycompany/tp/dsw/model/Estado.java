@@ -9,5 +9,5 @@ package com.mycompany.tp.dsw.model;
  * @author User
  */
 public enum Estado {
-    RECIBIDO, ACEPTADO, PREPARADO, ENVIADO, ENTREGADO
+    RECIBIDO, ACEPTADO, PAGADO
 }

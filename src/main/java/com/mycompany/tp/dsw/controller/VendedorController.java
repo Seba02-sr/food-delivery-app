@@ -2,8 +2,6 @@ package com.mycompany.tp.dsw.controller;
 
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import com.mycompany.tp.dsw.dto.VendedorDto;
 import com.mycompany.tp.dsw.exception.NoValidarException;
 import com.mycompany.tp.dsw.service.VendedorService;

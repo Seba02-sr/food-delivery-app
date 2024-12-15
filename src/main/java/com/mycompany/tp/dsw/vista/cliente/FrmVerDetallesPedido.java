@@ -25,14 +25,20 @@ import javax.swing.JOptionPane;
  */
 public class FrmVerDetallesPedido extends javax.swing.JFrame {
 
-    private final String idPedido;
-    PedidoController pedidoController;
-    private final Pedido pedido;
+    private String idPedido;
+    private String idCliente;
+    private PedidoController pedidoController;
+    private Pedido pedido;
 
-    public FrmVerDetallesPedido(String idPedido) {
+    public FrmVerDetallesPedido() {
+
+    }
+
+    public FrmVerDetallesPedido(String idPedido, String idCliente) {
         initComponents();
         pedidoController = new PedidoController();
         this.idPedido = idPedido;
+        this.idCliente = idCliente;
         pedido = pedidoController.obtenerPedidoPorId(idPedido);
         this.setLocationRelativeTo(null);
         setearTituloTabla();
@@ -192,7 +198,9 @@ public class FrmVerDetallesPedido extends javax.swing.JFrame {
 
     private void btnPagarTransferenciaActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPagarTransferenciaActionPerformed
         if (pedido.getEstado().equals(Estado.ACEPTADO)) {
-
+            FrmTransferencia transferenciaForm = new FrmTransferencia(idPedido, idCliente);
+            transferenciaForm.setVisible(true);
+            this.dispose();
         } else {
             JOptionPane.showMessageDialog(null, "Espere que su pedido sea aceptado por el restaurante");
         }
@@ -200,7 +208,8 @@ public class FrmVerDetallesPedido extends javax.swing.JFrame {
 
     private void btnPagarMercadoPagoActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPagarMercadoPagoActionPerformed
         if (pedido.getEstado().equals(Estado.ACEPTADO)) {
-
+            FrmMercadoPago mercadoPagoForm = new FrmMercadoPago(idPedido, idCliente);
+            mercadoPagoForm.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "Espere que su pedido sea aceptado por el restaurante");
         }
@@ -304,7 +313,7 @@ public class FrmVerDetallesPedido extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmVerDetallesPedido("0").setVisible(true);
+                new FrmVerDetallesPedido().setVisible(true);
             }
         });
     }

@@ -173,7 +173,7 @@ public class FrmVerPedidos extends javax.swing.JFrame {
 
         if (selectedRow != -1) {
             String idPedido = tbPedidos.getValueAt(selectedRow, 0).toString();
-            FrmVerDetallesPedido verDetallePedidoForm = new FrmVerDetallesPedido(idPedido);
+            FrmVerDetallesPedido verDetallePedidoForm = new FrmVerDetallesPedido(idPedido, idCliente);
             verDetallePedidoForm.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "Seleccione un cliente");

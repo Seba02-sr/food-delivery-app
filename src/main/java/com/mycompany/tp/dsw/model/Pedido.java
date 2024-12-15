@@ -53,7 +53,7 @@ public class Pedido implements Observable<Pedido> { // Pedido pedido por un clie
     @ManyToOne
     private Cliente cliente;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @Builder.Default
     private Pago formaPago = null;
 
