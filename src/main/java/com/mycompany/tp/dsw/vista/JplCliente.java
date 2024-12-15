@@ -529,7 +529,7 @@ public class JplCliente extends javax.swing.JPanel {
             FrmVerPedidos verPedidosForm = new FrmVerPedidos(idCliente);
             verPedidosForm.setVisible(true);
         } else {
-            JOptionPane.showMessageDialog(null, "Seleccione un cliente");
+            MensajeAlerta.mostrarInformacion("Seleccione un cliente para ver sus pedidos", "Ver Pedido Cliente");
         }
     }// GEN-LAST:event_jmiVerPedidosActionPerformed
 
@@ -721,7 +721,7 @@ public class JplCliente extends javax.swing.JPanel {
     }// GEN-LAST:event_btnLimpiarModificarActionPerformed
 
     private void jPanelModificarPropertyChange(java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_jPanelModificarPropertyChange
-        // TODO add your handling code here:
+        txtIDModificar.setEnabled(false);
     }// GEN-LAST:event_jPanelModificarPropertyChange
 
     private void btnLimpiarEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnLimpiarEliminarActionPerformed
@@ -778,7 +778,10 @@ public class JplCliente extends javax.swing.JPanel {
     }// GEN-LAST:event_jPanelEliminarMouseClicked
 
     private void jPanelEliminarPropertyChange(java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_jPanelEliminarPropertyChange
-        // TODO add your handling code here:
+        txtNombreEliminar.setEnabled(false);
+        txtDireccionEliminar.setEnabled(false);
+        txtLatitudEliminar.setEnabled(false);
+        txtLongitudEliminar.setEnabled(false);
     }// GEN-LAST:event_jPanelEliminarPropertyChange
 
     private void btnLimpiarBuscarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnLimpiarBuscarActionPerformed

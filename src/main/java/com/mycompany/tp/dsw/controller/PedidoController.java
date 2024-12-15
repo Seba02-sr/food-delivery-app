@@ -42,6 +42,10 @@ public class PedidoController {
         pedidoService.guardarPedido(pedido);
     }
 
+    public void actualizarPedido(Pedido pedido) throws PedidoNoEncontradoException {
+        pedidoService.modificarPedido(pedido);
+    }
+
     public Pedido generarPedido(String idCliente) {
 
         PedidoDto pedidoDto = PedidoDto.builder().idCliente(idCliente).build();
@@ -82,4 +86,5 @@ public class PedidoController {
             return null;
         }
     }
+
 }

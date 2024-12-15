@@ -105,7 +105,7 @@ public class PedidoService {
      */
 
     public Pedido buscarPedidoPorId(Integer id) throws PedidoNoEncontradoException {
-        return pedidoDao.findById(id);
+        return pedidoDao.findPedidoByIdWithItem(id);
     }
 
     /**

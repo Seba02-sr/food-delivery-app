@@ -55,7 +55,7 @@ public class ItemMenuService {
      * @return Lista de los items que coincide con el @param.
      */
     public List<ItemMenu> buscarItemMenuPorNombreYVendedor(String nombre, Integer id) {
-        return itemMenuDao.findActiveByNombre(nombre, id);
+        return itemMenuDao.findActiveByNombreAndVendedor(nombre, id);
     }
 
     /**

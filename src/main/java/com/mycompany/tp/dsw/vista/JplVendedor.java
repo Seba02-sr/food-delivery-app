@@ -6,7 +6,6 @@ package com.mycompany.tp.dsw.vista;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
@@ -16,6 +15,7 @@ import javax.swing.table.TableColumn;
 
 import com.mycompany.tp.dsw.controller.VendedorController;
 import com.mycompany.tp.dsw.dto.VendedorDto;
+import com.mycompany.tp.dsw.exception.NoValidarException;
 import com.mycompany.tp.dsw.model.Vendedor;
 import com.mycompany.tp.dsw.service.MensajeAlerta;
 import com.mycompany.tp.dsw.vista.util.HeaderFormatter;
@@ -638,12 +638,15 @@ public class JplVendedor extends javax.swing.JPanel {
 
         VendedorDto vendedorDto = new VendedorDto(nombre, direccion, latitud, longitud);
 
-        vendedorController.guardarVendedor(vendedorDto);
-
-        List<Vendedor> vendedores = vendedorController.obtenerTodosLosVendedores();
-
-        mostrarTabla(vendedores);
-        btnLimpiarAgregarActionPerformed(evt);
+        try {
+            vendedorController.guardarVendedor(vendedorDto);
+            List<Vendedor> vendedores = vendedorController.obtenerTodosLosVendedores();
+            MensajeAlerta.mostrarInformacion("Vendedor creado exitosamente", "Agregar Vendedor");
+            mostrarTabla(vendedores);
+            btnLimpiarAgregarActionPerformed(evt);
+        } catch (NoValidarException e) {
+            MensajeAlerta.mostrarError(e.getMessage(), "Error en Agregar");
+        }
 
     }// GEN-LAST:event_btnGuardarActionPerformed
 
@@ -680,16 +683,16 @@ public class JplVendedor extends javax.swing.JPanel {
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE);
         if (confirmacion == JOptionPane.YES_OPTION) {
-            Map<String, String> errores = vendedorController.modificarVendedor(vendedorDto);
-            if (errores.isEmpty()) {
+            try {
+                vendedorController.modificarVendedor(vendedorDto);
                 List<Vendedor> vendedores = vendedorController.obtenerTodosLosVendedores();
                 JOptionPane.showMessageDialog(null, "Vendedor modificado exitosamente");
                 mostrarTabla(vendedores);
                 btnLimpiarModificarActionPerformed(evt);
-            } else {
-                errores.forEach((campo, mensaje) -> JOptionPane.showMessageDialog(null, mensaje, "Error en " + campo,
-                        JOptionPane.ERROR_MESSAGE));
+            } catch (NoValidarException e) {
+                MensajeAlerta.mostrarError(e.getMessage(), "Error en Modificar");
             }
+
         }
 
     }// GEN-LAST:event_btnModificarActionPerformed
@@ -753,15 +756,15 @@ public class JplVendedor extends javax.swing.JPanel {
                 JOptionPane.WARNING_MESSAGE);
 
         if (confirmacion == JOptionPane.YES_OPTION) {
-            Map<String, String> errores = vendedorController.eliminarVendedor(id);
-            if (errores.isEmpty()) {
+            try {
+                vendedorController.eliminarVendedor(id);
                 List<Vendedor> vendedores = vendedorController.obtenerTodosLosVendedores();
-                JOptionPane.showMessageDialog(null, "Vendedor Eliminado exitosamente");
+                MensajeAlerta.mostrarInformacion("Vendedor eliminado exitosamente", "Eliminar Vendedor");
                 mostrarTabla(vendedores);
                 btnLimpiarEliminarActionPerformed(evt);
-            } else {
-                errores.forEach((campo, mensaje) -> JOptionPane.showMessageDialog(null, mensaje, "Error en " + campo,
-                        JOptionPane.ERROR_MESSAGE));
+            } catch (NoValidarException e) {
+
+                MensajeAlerta.mostrarError(e.getMessage(), "Error en Eliminar");
             }
 
         }

@@ -152,13 +152,13 @@ INSERT INTO pedido (cliente_id, formaPago_id, estado) VALUES (1, 1, 'RECIBIDO');
 
 INSERT INTO pedido (cliente_id, formaPago_id, estado) VALUES (2, 2, 'RECIBIDO');
 
-INSERT INTO pedido (cliente_id, formaPago_id, estado) VALUES (3, 3, 'ENVIADO');
+INSERT INTO pedido (cliente_id, formaPago_id, estado) VALUES (3, 3, 'RECIBIDO');
 
-INSERT INTO pedido (cliente_id, formaPago_id, estado) VALUES (4, 4, 'PREPARADO');
+INSERT INTO pedido (cliente_id, formaPago_id, estado) VALUES (4, 4, 'RECIBIDO');
 
-INSERT INTO pedido (cliente_id, formaPago_id, estado) VALUES (5, 5, 'ENTREGADO');
+INSERT INTO pedido (cliente_id, formaPago_id, estado) VALUES (5, 5, 'RECIBIDO');
 
-INSERT INTO pedido (cliente_id, formaPago_id, estado) VALUES (6, 6, 'ENTREGADO');
+INSERT INTO pedido (cliente_id, formaPago_id, estado) VALUES (6, 6, 'RECIBIDO');
 
 -- Insertar datos en la tabla 'item_pedidos'
 INSERT INTO item_pedido (cantidad, itemMenu_id, pedido_item_pedido_id) VALUES (2, 1, NULL);

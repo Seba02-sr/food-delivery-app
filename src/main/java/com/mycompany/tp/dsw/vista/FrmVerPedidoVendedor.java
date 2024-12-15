@@ -14,9 +14,11 @@ import javax.swing.table.TableColumn;
 import java.awt.Component;
 
 import com.mycompany.tp.dsw.controller.PedidoController;
+import com.mycompany.tp.dsw.exception.PedidoNoEncontradoException;
 import com.mycompany.tp.dsw.model.Cliente;
 import com.mycompany.tp.dsw.model.Estado;
 import com.mycompany.tp.dsw.model.Pedido;
+import com.mycompany.tp.dsw.service.MensajeAlerta;
 import com.mycompany.tp.dsw.vista.util.CheckBoxEditor;
 import com.mycompany.tp.dsw.vista.util.CheckBoxRenderer;
 import com.mycompany.tp.dsw.vista.util.HeaderFormatter;
@@ -190,6 +192,11 @@ public class FrmVerPedidoVendedor extends javax.swing.JFrame {
                 .map(pedidoId -> pedidoController.obtenerPedidoPorId(pedidoId.toString()))
                 .forEach(pedido -> { // Actualizar el estado del pedido
                     pedido.setEstado(Estado.ACEPTADO);
+                    try {
+                        pedidoController.actualizarPedido(pedido);
+                    } catch (PedidoNoEncontradoException e) {
+                        MensajeAlerta.mostrarError(e.getMessage(), "Error Aceptar Pedidos");
+                    }
                 });
 
         // Actualizar la tabla después de los cambios

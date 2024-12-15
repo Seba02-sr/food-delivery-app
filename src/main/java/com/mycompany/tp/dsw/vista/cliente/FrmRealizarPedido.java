@@ -7,7 +7,6 @@ package com.mycompany.tp.dsw.vista.cliente;
 import com.mycompany.tp.dsw.controller.ItemMenuController;
 import com.mycompany.tp.dsw.controller.PedidoController;
 import com.mycompany.tp.dsw.controller.VendedorController;
-import com.mycompany.tp.dsw.dto.ItemPedidoDto;
 import com.mycompany.tp.dsw.model.ItemPedido;
 import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.Pedido;
@@ -22,7 +21,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;

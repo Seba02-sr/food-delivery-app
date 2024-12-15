@@ -7,6 +7,7 @@ package com.mycompany.tp.dsw.vista.cliente;
 import com.mycompany.tp.dsw.controller.PedidoController;
 import com.mycompany.tp.dsw.exception.ClienteNoEncontradoException;
 import com.mycompany.tp.dsw.model.Pedido;
+import com.mycompany.tp.dsw.service.MensajeAlerta;
 import com.mycompany.tp.dsw.vista.util.HeaderFormatter;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -38,17 +39,9 @@ public class FrmVerPedidos extends javax.swing.JFrame {
     public void initDatos() {
         try {
             List<Pedido> pedidos = pedidoController.obtenerPedidosPorCliente(idCliente);
-            for (Pedido pedido : pedidos) {
-                System.out.println("AAAAAA: " + pedido.toString());
-            }
             mostrarTabla(pedidos);
         } catch (ClienteNoEncontradoException e) {
-            JOptionPane.showMessageDialog(
-                    null, // El componente padre, puede ser null si no hay una referencia a la ventana
-                    e.getMessage(), // Mensaje del error
-                    "Cliente no encontrado", // Título del cuadro de diálogo
-                    JOptionPane.ERROR_MESSAGE // Tipo de mensaje (icono de error)
-            );
+            MensajeAlerta.mostrarError("Cliente no encontrado. \nID: " + idCliente, "Error Ver Pedidos");
         }
 
     }
@@ -177,7 +170,7 @@ public class FrmVerPedidos extends javax.swing.JFrame {
 
     private void jmiVerDetallesActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jmiVerDetallesActionPerformed
         int selectedRow = tbPedidos.getSelectedRow();
-        
+
         if (selectedRow != -1) {
             String idPedido = tbPedidos.getValueAt(selectedRow, 0).toString();
             FrmVerDetallesPedido verDetallePedidoForm = new FrmVerDetallesPedido(idPedido);
