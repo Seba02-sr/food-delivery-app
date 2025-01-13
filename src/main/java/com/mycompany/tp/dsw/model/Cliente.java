@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 
-import com.mycompany.tp.dsw.dto.ClienteDto;
 import com.mycompany.tp.dsw.patronObserver.Observer;
 
 import jakarta.persistence.CascadeType;
@@ -62,15 +61,17 @@ public class Cliente implements Observer<Pedido> {
     @Builder.Default
     private LocalDate fechaEliminacion = null;
 
-    public Cliente(ClienteDto clienteDto) {
-        this.id = clienteDto.getId();
-        this.nombre = clienteDto.getNombre();
-        this.cuit = clienteDto.getCuit();
-        this.direccion = clienteDto.getDireccion();
-        this.coordenada = clienteDto.getCoordenada();
-        this.email = clienteDto.getEmail();
-        this.activo = true;
-    }
+    /*
+     * public Cliente(ClienteDto clienteDto) {
+     * this.id = clienteDto.getId();
+     * this.nombre = clienteDto.getNombre();
+     * this.cuit = clienteDto.getCuit();
+     * this.direccion = clienteDto.getDireccion();
+     * this.coordenada = clienteDto.getCoordenada();
+     * this.email = clienteDto.getEmail();
+     * this.activo = true;
+     * }
+     */
 
     /**
      * Metodo que actua como observador del Cliente

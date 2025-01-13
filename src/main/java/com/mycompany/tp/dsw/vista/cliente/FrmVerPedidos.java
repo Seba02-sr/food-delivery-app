@@ -5,8 +5,10 @@
 package com.mycompany.tp.dsw.vista.cliente;
 
 import com.mycompany.tp.dsw.controller.PedidoController;
+import com.mycompany.tp.dsw.dto.PedidoDto;
 import com.mycompany.tp.dsw.exception.ClienteNoEncontradoException;
-import com.mycompany.tp.dsw.model.Pedido;
+import com.mycompany.tp.dsw.exception.NoValidarException;
+import com.mycompany.tp.dsw.exception.PedidoNoEncontradoException;
 import com.mycompany.tp.dsw.service.MensajeAlerta;
 import com.mycompany.tp.dsw.vista.util.HeaderFormatter;
 import java.util.List;
@@ -23,7 +25,7 @@ import javax.swing.JTable;
 public class FrmVerPedidos extends javax.swing.JFrame {
 
     private String idCliente;
-    PedidoController pedidoController;
+    private PedidoController pedidoController;
 
     public FrmVerPedidos(String idCliente) {
         initComponents();
@@ -38,10 +40,12 @@ public class FrmVerPedidos extends javax.swing.JFrame {
 
     public void initDatos() {
         try {
-            List<Pedido> pedidos = pedidoController.obtenerPedidosPorCliente(idCliente);
-            mostrarTabla(pedidos);
+            List<PedidoDto> pedidosDto = pedidoController.obtenerPedidosPorCliente(idCliente);
+            mostrarTabla(pedidosDto);
         } catch (ClienteNoEncontradoException e) {
             MensajeAlerta.mostrarError("Cliente no encontrado. \nID: " + idCliente, "Error Ver Pedidos");
+        } catch (NoValidarException e) {
+            MensajeAlerta.mostrarError(e.getMessage(), "Error al ver pedidos");
         }
 
     }
@@ -195,24 +199,27 @@ public class FrmVerPedidos extends javax.swing.JFrame {
         header.setDefaultRenderer(new HeaderFormatter());
     }
 
-    public void mostrarTabla(List<Pedido> pedidos) {
+    public void mostrarTabla(List<PedidoDto> pedidos) {
         // Asegurarse de que la tabla tenga el modelo configurado
         if (tbPedidos.getModel() == null || !(tbPedidos.getModel() instanceof DefaultTableModel)) {
             setearTituloTabla(); // Configura el encabezado y el modelo si no está configurado
         }
 
         DefaultTableModel model = (DefaultTableModel) tbPedidos.getModel(); // Recupera el modelo
-
-        if (pedidos != null && !pedidos.isEmpty()) {
-            for (Pedido pedido : pedidos) {
-                Object[] fila = new Object[5];
-                fila[0] = pedido.getId();
-                fila[1] = pedido.obtenerVendedor().getNombre();
-                fila[2] = pedido.totalSinRecargo();
-                fila[3] = pedido.cantidadItems();
-                fila[4] = pedido.getEstado();
-                model.addRow(fila);
+        try {
+            if (pedidos != null && !pedidos.isEmpty()) {
+                for (PedidoDto pedido : pedidos) {
+                    Object[] fila = new Object[5];
+                    fila[0] = pedido.getId();
+                    fila[1] = pedidoController.obtenerNombreVendedor(pedido);
+                    fila[2] = pedidoController.calcularTotalAPagar(pedido);
+                    fila[3] = pedidoController.obtenerCantidadItems(pedido);
+                    fila[4] = pedido.getEstado();
+                    model.addRow(fila);
+                }
             }
+        } catch (PedidoNoEncontradoException e) {
+            MensajeAlerta.mostrarError(e.getMessage(), "Error al ver pedidos");
         }
 
         tbPedidos.setModel(model);

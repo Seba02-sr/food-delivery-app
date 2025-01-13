@@ -16,7 +16,6 @@ import javax.swing.table.TableColumn;
 import com.mycompany.tp.dsw.controller.VendedorController;
 import com.mycompany.tp.dsw.dto.VendedorDto;
 import com.mycompany.tp.dsw.exception.NoValidarException;
-import com.mycompany.tp.dsw.model.Vendedor;
 import com.mycompany.tp.dsw.service.MensajeAlerta;
 import com.mycompany.tp.dsw.vista.util.HeaderFormatter;
 import javax.swing.table.JTableHeader;
@@ -26,8 +25,8 @@ import javax.swing.table.JTableHeader;
  * @author Usuario
  */
 public class JplVendedor extends javax.swing.JPanel {
-    FrmApp parentFrame;
-    VendedorController vendedorController;
+    private FrmApp parentFrame;
+    private VendedorController vendedorController;
     private static final Logger logger = Logger.getLogger(JplVendedor.class.getName());
 
     public JplVendedor(FrmApp parentFrame) {
@@ -138,11 +137,6 @@ public class JplVendedor extends javax.swing.JPanel {
                 jTabbedPaneCRUDStateChanged(evt);
             }
         });
-        jTabbedPaneCRUD.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                jTabbedPaneCRUDPropertyChange(evt);
-            }
-        });
 
         jPanelAgregar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -166,44 +160,24 @@ public class JplVendedor extends javax.swing.JPanel {
         txtLongitudAgregar.setBorder(javax.swing.BorderFactory.createTitledBorder("Longitud"));
         txtLongitudAgregar.setFocusCycleRoot(true);
         txtLongitudAgregar.setName(""); // NOI18N
-        txtLongitudAgregar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtLongitudAgregarActionPerformed(evt);
-            }
-        });
         jPanelAgregar.add(txtLongitudAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 220, -1));
 
         txtLatitudAgregar.setForeground(new java.awt.Color(51, 51, 51));
         txtLatitudAgregar.setBorder(javax.swing.BorderFactory.createTitledBorder("Latitud"));
         txtLatitudAgregar.setFocusCycleRoot(true);
         txtLatitudAgregar.setName(""); // NOI18N
-        txtLatitudAgregar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtLatitudAgregarActionPerformed(evt);
-            }
-        });
         jPanelAgregar.add(txtLatitudAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 190, 220, -1));
 
         txtDireccionAgregar.setForeground(new java.awt.Color(51, 51, 51));
         txtDireccionAgregar.setBorder(javax.swing.BorderFactory.createTitledBorder("Dirección"));
         txtDireccionAgregar.setFocusCycleRoot(true);
         txtDireccionAgregar.setName(""); // NOI18N
-        txtDireccionAgregar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDireccionAgregarActionPerformed(evt);
-            }
-        });
         jPanelAgregar.add(txtDireccionAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 220, -1));
 
         txtNombreAgregar.setForeground(new java.awt.Color(51, 51, 51));
         txtNombreAgregar.setBorder(javax.swing.BorderFactory.createTitledBorder("Nombre"));
         txtNombreAgregar.setFocusCycleRoot(true);
         txtNombreAgregar.setName(""); // NOI18N
-        txtNombreAgregar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNombreAgregarActionPerformed(evt);
-            }
-        });
         jPanelAgregar.add(txtNombreAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 220, -1));
 
         jTabbedPaneCRUD.addTab("Agregar", jPanelAgregar);
@@ -219,55 +193,30 @@ public class JplVendedor extends javax.swing.JPanel {
         txtIdModificar.setBorder(javax.swing.BorderFactory.createTitledBorder("ID"));
         txtIdModificar.setFocusCycleRoot(true);
         txtIdModificar.setName(""); // NOI18N
-        txtIdModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtIdModificarActionPerformed(evt);
-            }
-        });
         jPanelModificar.add(txtIdModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 220, -1));
 
         txtNombreModificar.setForeground(new java.awt.Color(51, 51, 51));
         txtNombreModificar.setBorder(javax.swing.BorderFactory.createTitledBorder("Nombre"));
         txtNombreModificar.setFocusCycleRoot(true);
         txtNombreModificar.setName(""); // NOI18N
-        txtNombreModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNombreModificarActionPerformed(evt);
-            }
-        });
         jPanelModificar.add(txtNombreModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 220, -1));
 
         txtDireccionModificar.setForeground(new java.awt.Color(51, 51, 51));
         txtDireccionModificar.setBorder(javax.swing.BorderFactory.createTitledBorder("Dirección"));
         txtDireccionModificar.setFocusCycleRoot(true);
         txtDireccionModificar.setName(""); // NOI18N
-        txtDireccionModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDireccionModificarActionPerformed(evt);
-            }
-        });
         jPanelModificar.add(txtDireccionModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 220, -1));
 
         txtLatitudModificar.setForeground(new java.awt.Color(51, 51, 51));
         txtLatitudModificar.setBorder(javax.swing.BorderFactory.createTitledBorder("Latitud"));
         txtLatitudModificar.setFocusCycleRoot(true);
         txtLatitudModificar.setName(""); // NOI18N
-        txtLatitudModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtLatitudModificarActionPerformed(evt);
-            }
-        });
         jPanelModificar.add(txtLatitudModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 190, 220, -1));
 
         txtLongitudModificar.setForeground(new java.awt.Color(51, 51, 51));
         txtLongitudModificar.setBorder(javax.swing.BorderFactory.createTitledBorder("Longitud"));
         txtLongitudModificar.setFocusCycleRoot(true);
         txtLongitudModificar.setName(""); // NOI18N
-        txtLongitudModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtLongitudModificarActionPerformed(evt);
-            }
-        });
         jPanelModificar.add(txtLongitudModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 220, -1));
 
         btnModificar.setText("Modificar");
@@ -307,55 +256,30 @@ public class JplVendedor extends javax.swing.JPanel {
         txtIdEliminar.setBorder(javax.swing.BorderFactory.createTitledBorder("ID"));
         txtIdEliminar.setFocusCycleRoot(true);
         txtIdEliminar.setName(""); // NOI18N
-        txtIdEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtIdEliminarActionPerformed(evt);
-            }
-        });
         jPanelEliminar.add(txtIdEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 220, -1));
 
         txtNombreEliminar.setForeground(new java.awt.Color(51, 51, 51));
         txtNombreEliminar.setBorder(javax.swing.BorderFactory.createTitledBorder("Nombre"));
         txtNombreEliminar.setFocusCycleRoot(true);
         txtNombreEliminar.setName(""); // NOI18N
-        txtNombreEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNombreEliminarActionPerformed(evt);
-            }
-        });
         jPanelEliminar.add(txtNombreEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 220, -1));
 
         txtDireccionEliminar.setForeground(new java.awt.Color(51, 51, 51));
         txtDireccionEliminar.setBorder(javax.swing.BorderFactory.createTitledBorder("Dirección"));
         txtDireccionEliminar.setFocusCycleRoot(true);
         txtDireccionEliminar.setName(""); // NOI18N
-        txtDireccionEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDireccionEliminarActionPerformed(evt);
-            }
-        });
         jPanelEliminar.add(txtDireccionEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 220, -1));
 
         txtLatitudEliminar.setForeground(new java.awt.Color(51, 51, 51));
         txtLatitudEliminar.setBorder(javax.swing.BorderFactory.createTitledBorder("Latitud"));
         txtLatitudEliminar.setFocusCycleRoot(true);
         txtLatitudEliminar.setName(""); // NOI18N
-        txtLatitudEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtLatitudEliminarActionPerformed(evt);
-            }
-        });
         jPanelEliminar.add(txtLatitudEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 190, 220, -1));
 
         txtLongitudEliminar.setForeground(new java.awt.Color(51, 51, 51));
         txtLongitudEliminar.setBorder(javax.swing.BorderFactory.createTitledBorder("Longitud"));
         txtLongitudEliminar.setFocusCycleRoot(true);
         txtLongitudEliminar.setName(""); // NOI18N
-        txtLongitudEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtLongitudEliminarActionPerformed(evt);
-            }
-        });
         jPanelEliminar.add(txtLongitudEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 220, -1));
 
         btnEliminar.setText("Eliminar");
@@ -368,11 +292,6 @@ public class JplVendedor extends javax.swing.JPanel {
 
         jTabbedPaneCRUD.addTab("Eliminar", jPanelEliminar);
 
-        jPanelBuscar.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                jPanelBuscarPropertyChange(evt);
-            }
-        });
         jPanelBuscar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btnLimpiarBuscar.setText("Limpiar");
@@ -387,11 +306,6 @@ public class JplVendedor extends javax.swing.JPanel {
         txtIdBuscar.setBorder(javax.swing.BorderFactory.createTitledBorder("ID"));
         txtIdBuscar.setFocusCycleRoot(true);
         txtIdBuscar.setName(""); // NOI18N
-        txtIdBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtIdBuscarActionPerformed(evt);
-            }
-        });
         txtIdBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtIdBuscarKeyReleased(evt);
@@ -403,11 +317,6 @@ public class JplVendedor extends javax.swing.JPanel {
         txtNombreBuscar.setBorder(javax.swing.BorderFactory.createTitledBorder("Nombre"));
         txtNombreBuscar.setFocusCycleRoot(true);
         txtNombreBuscar.setName(""); // NOI18N
-        txtNombreBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNombreBuscarActionPerformed(evt);
-            }
-        });
         txtNombreBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtNombreBuscarKeyReleased(evt);
@@ -438,11 +347,6 @@ public class JplVendedor extends javax.swing.JPanel {
         tbVendedorDatos.setShowGrid(true);
         tbVendedorDatos.getTableHeader().setResizingAllowed(false);
         tbVendedorDatos.getTableHeader().setReorderingAllowed(false);
-        tbVendedorDatos.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbVendedorDatosMouseClicked(evt);
-            }
-        });
         jScrollPane1.setViewportView(tbVendedorDatos);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -488,10 +392,6 @@ public class JplVendedor extends javax.swing.JPanel {
         }
     }// GEN-LAST:event_jTabbedPaneCRUDStateChanged
 
-    private void jTabbedPaneCRUDPropertyChange(java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_jTabbedPaneCRUDPropertyChange
-
-    }// GEN-LAST:event_jTabbedPaneCRUDPropertyChange
-
     private void jmiVerPedidosActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jmiVerPedidosActionPerformed
         int selectedRow = tbVendedorDatos.getSelectedRow();
         if (selectedRow != -1) {
@@ -511,9 +411,15 @@ public class JplVendedor extends javax.swing.JPanel {
             String nombre = tbVendedorDatos.getValueAt(selectedRow, 1).toString();
             String direccion = tbVendedorDatos.getValueAt(selectedRow, 2).toString();
 
-            VendedorDto vendedorDto = new VendedorDto(id, nombre, direccion, null, null);
-            parentFrame.itemMenuPane.setTitulo(vendedorDto);
-            parentFrame.cambiarPanel(parentFrame.itemMenuPane);
+            try {
+                VendedorDto vendedorDto = vendedorController.crearVendedorDto(id, nombre, direccion, null, null);
+                parentFrame.itemMenuPane.setTitulo(vendedorDto);
+                parentFrame.cambiarPanel(parentFrame.itemMenuPane);
+
+            } catch (NoValidarException e) {
+                MensajeAlerta.mostrarError(e.getMessage(), "Error en Ver Productos");
+            }
+
         } else {
             JOptionPane.showMessageDialog(null, "Seleccione un Restaurante");
         }
@@ -523,32 +429,29 @@ public class JplVendedor extends javax.swing.JPanel {
         int selectedRow = tbVendedorDatos.getSelectedRow();
         String id = tbVendedorDatos.getValueAt(selectedRow, 0).toString();
 
-        Vendedor vendedor = vendedorController.buscarVendedorPorId(id);
-
-        if (jTabbedPaneCRUD.getSelectedIndex() == 1) { // Si esta seleccionado Modificar
-            txtIdModificar.setText(id);
-            txtNombreModificar.setText(vendedor.getNombre());
-            txtDireccionModificar.setText(vendedor.getDireccion());
-            txtLatitudModificar.setText(vendedor.getCoordenada().getLatitud().toString());
-            txtLongitudModificar.setText(vendedor.getCoordenada().getLongitud().toString());
-        } else if (jTabbedPaneCRUD.getSelectedIndex() == 2) { // Si esta seleccionado Eliminar
-            txtIdEliminar.setText(id);
-            txtNombreEliminar.setText(vendedor.getNombre());
-            txtDireccionEliminar.setText(vendedor.getDireccion());
-            txtLatitudEliminar.setText(vendedor.getCoordenada().getLatitud().toString());
-            txtLongitudEliminar.setText(vendedor.getCoordenada().getLongitud().toString());
-        } else {
-            MensajeAlerta.mostrarInformacion("Solo se puede cargar datos en 'Modificar' o 'Eliminar'",
-                    "Alerta Cargar Datos");
+        try {
+            VendedorDto vendedor = vendedorController.buscarVendedorPorId(id);
+            if (jTabbedPaneCRUD.getSelectedIndex() == 1) { // Si esta seleccionado Modificar
+                txtIdModificar.setText(id);
+                txtNombreModificar.setText(vendedor.getNombre());
+                txtDireccionModificar.setText(vendedor.getDireccion());
+                txtLatitudModificar.setText(vendedor.getCoordenadaDto().getLatitud().toString());
+                txtLongitudModificar.setText(vendedor.getCoordenadaDto().getLongitud().toString());
+            } else if (jTabbedPaneCRUD.getSelectedIndex() == 2) { // Si esta seleccionado Eliminar
+                txtIdEliminar.setText(id);
+                txtNombreEliminar.setText(vendedor.getNombre());
+                txtDireccionEliminar.setText(vendedor.getDireccion());
+                txtLatitudEliminar.setText(vendedor.getCoordenadaDto().getLatitud().toString());
+                txtLongitudEliminar.setText(vendedor.getCoordenadaDto().getLongitud().toString());
+            } else {
+                MensajeAlerta.mostrarInformacion("Solo se puede cargar datos en 'Modificar' o 'Eliminar'",
+                        "Alerta Cargar Datos");
+            }
+        } catch (NoValidarException e) {
+            MensajeAlerta.mostrarError(e.getMessage(), "Error en Cargar Datos");
         }
 
     }// GEN-LAST:event_jmiCargarDatosActionPerformed
-
-    /////////////////////////////////////////////////////////////////////////////////
-
-    private void jPanelBuscarPropertyChange(java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_jPanelBuscarPropertyChange
-        // TODO add your handling code here:
-    }// GEN-LAST:event_jPanelBuscarPropertyChange
 
     private void jPanelEliminarPropertyChange(java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_jPanelEliminarPropertyChange
         txtNombreEliminar.setEnabled(false);
@@ -565,7 +468,7 @@ public class JplVendedor extends javax.swing.JPanel {
 
     private void txtNombreBuscarKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtNombreBuscarKeyReleased
         String nombre = txtNombreBuscar.getText().trim();
-        List<Vendedor> listaVendedores = new ArrayList<>();
+        List<VendedorDto> listaVendedores = new ArrayList<>();
         if (nombre.isEmpty()) {
             listaVendedores = vendedorController.obtenerTodosLosVendedores();
         } else {
@@ -582,11 +485,17 @@ public class JplVendedor extends javax.swing.JPanel {
 
     private void txtIdBuscarKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtIdBuscarKeyReleased
         String idText = txtIdBuscar.getText().trim();
-        List<Vendedor> listaVendedores = new ArrayList<>();
+        List<VendedorDto> listaVendedores = new ArrayList<>();
         if (!idText.isEmpty()) {
-            Vendedor vendedor = vendedorController.buscarVendedorPorId(idText);
-            listaVendedores.add(vendedor);
-            txtNombreBuscar.setEnabled(false);
+
+            try {
+                VendedorDto vendedor = vendedorController.buscarVendedorPorId(idText);
+                listaVendedores.add(vendedor);
+                txtNombreBuscar.setEnabled(false);
+            } catch (NoValidarException e) {
+                MensajeAlerta.mostrarError(e.getMessage(), "Error en Buscar");
+            }
+
         } else {
             listaVendedores = vendedorController.obtenerTodosLosVendedores();
             txtNombreBuscar.setEnabled(true);
@@ -599,36 +508,9 @@ public class JplVendedor extends javax.swing.JPanel {
 
     }// GEN-LAST:event_txtIdBuscarKeyReleased
 
-    private void txtNombreAgregarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtNombreAgregarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtNombreAgregarActionPerformed
-
-    private void txtDireccionAgregarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtDireccionAgregarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtDireccionAgregarActionPerformed
-
-    private void txtLatitudAgregarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtLatitudAgregarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtLatitudAgregarActionPerformed
-
-    private void txtLongitudAgregarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtLongitudAgregarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtLongitudAgregarActionPerformed
-
-    private void tbVendedorDatosMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_tbVendedorDatosMouseClicked
-        // TODO add your handling code here:
-    }// GEN-LAST:event_tbVendedorDatosMouseClicked
-
     private void btnLimpiarAgregarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnLimpiarAgregarActionPerformed
         vaciarCamposAgregar();
     }// GEN-LAST:event_btnLimpiarAgregarActionPerformed
-
-    private void vaciarCamposAgregar() {
-        txtNombreAgregar.setText("");
-        txtDireccionAgregar.setText("");
-        txtLatitudAgregar.setText("");
-        txtLongitudAgregar.setText("");
-    }
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnGuardarActionPerformed
         String nombre = txtNombreAgregar.getText();
@@ -636,11 +518,10 @@ public class JplVendedor extends javax.swing.JPanel {
         String latitud = txtLatitudAgregar.getText();
         String longitud = txtLongitudAgregar.getText();
 
-        VendedorDto vendedorDto = new VendedorDto(nombre, direccion, latitud, longitud);
-
         try {
+            VendedorDto vendedorDto = vendedorController.crearVendedorDto(null, nombre, direccion, latitud, longitud);
             vendedorController.guardarVendedor(vendedorDto);
-            List<Vendedor> vendedores = vendedorController.obtenerTodosLosVendedores();
+            List<VendedorDto> vendedores = vendedorController.obtenerTodosLosVendedores();
             MensajeAlerta.mostrarInformacion("Vendedor creado exitosamente", "Agregar Vendedor");
             mostrarTabla(vendedores);
             btnLimpiarAgregarActionPerformed(evt);
@@ -650,22 +531,6 @@ public class JplVendedor extends javax.swing.JPanel {
 
     }// GEN-LAST:event_btnGuardarActionPerformed
 
-    private void txtNombreModificarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtNombreModificarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtNombreModificarActionPerformed
-
-    private void txtDireccionModificarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtDireccionModificarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtDireccionModificarActionPerformed
-
-    private void txtLatitudModificarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtLatitudModificarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtLatitudModificarActionPerformed
-
-    private void txtLongitudModificarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtLongitudModificarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtLongitudModificarActionPerformed
-
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnModificarActionPerformed
 
         String id = txtIdModificar.getText();
@@ -674,18 +539,14 @@ public class JplVendedor extends javax.swing.JPanel {
         String latitud = txtLatitudModificar.getText();
         String longitud = txtLongitudModificar.getText();
 
-        VendedorDto vendedorDto = new VendedorDto(id, nombre, direccion, latitud, longitud);
-
-        int confirmacion = JOptionPane.showConfirmDialog(
-                this,
+        Integer confirmacion = MensajeAlerta.mostrarConfirmacion(
                 "¿Está seguro de que desea modificar el vendedor con ID: " + id + "?",
-                "Confirmar modificación",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE);
+                "Confirmar modificación", this);
         if (confirmacion == JOptionPane.YES_OPTION) {
             try {
+                VendedorDto vendedorDto = vendedorController.crearVendedorDto(id, nombre, direccion, latitud, longitud);
                 vendedorController.modificarVendedor(vendedorDto);
-                List<Vendedor> vendedores = vendedorController.obtenerTodosLosVendedores();
+                List<VendedorDto> vendedores = vendedorController.obtenerTodosLosVendedores();
                 JOptionPane.showMessageDialog(null, "Vendedor modificado exitosamente");
                 mostrarTabla(vendedores);
                 btnLimpiarModificarActionPerformed(evt);
@@ -701,64 +562,21 @@ public class JplVendedor extends javax.swing.JPanel {
         vaciarCamposModificar();
     }// GEN-LAST:event_btnLimpiarModificarActionPerformed
 
-    private void vaciarCamposModificar() {
-        txtIdModificar.setText("");
-        txtNombreModificar.setText("");
-        txtDireccionModificar.setText("");
-        txtLatitudModificar.setText("");
-        txtLongitudModificar.setText("");
-    }
-
-    private void txtIdModificarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtIdModificarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtIdModificarActionPerformed
-
     private void btnLimpiarEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnLimpiarEliminarActionPerformed
         vaciarCamposEliminar();
     }// GEN-LAST:event_btnLimpiarEliminarActionPerformed
 
-    private void vaciarCamposEliminar() {
-        txtIdEliminar.setText("");
-        txtNombreEliminar.setText("");
-        txtDireccionEliminar.setText("");
-        txtLatitudEliminar.setText("");
-        txtLongitudEliminar.setText("");
-    }
-
-    private void txtIdEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtIdEliminarActionPerformed
-
-    }// GEN-LAST:event_txtIdEliminarActionPerformed
-
-    private void txtNombreEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtNombreEliminarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtNombreEliminarActionPerformed
-
-    private void txtDireccionEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtDireccionEliminarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtDireccionEliminarActionPerformed
-
-    private void txtLatitudEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtLatitudEliminarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtLatitudEliminarActionPerformed
-
-    private void txtLongitudEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtLongitudEliminarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtLongitudEliminarActionPerformed
-
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnEliminarActionPerformed
         String id = txtIdEliminar.getText();
 
-        int confirmacion = JOptionPane.showConfirmDialog(
-                this,
+        Integer confirmacion = MensajeAlerta.mostrarConfirmacion(
                 "¿Está seguro de que desea eliminar el vendedor con ID: " + id + "?",
-                "Confirmar eliminación",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE);
+                "Confirmar eliminación", this);
 
         if (confirmacion == JOptionPane.YES_OPTION) {
             try {
                 vendedorController.eliminarVendedor(id);
-                List<Vendedor> vendedores = vendedorController.obtenerTodosLosVendedores();
+                List<VendedorDto> vendedores = vendedorController.obtenerTodosLosVendedores();
                 MensajeAlerta.mostrarInformacion("Vendedor eliminado exitosamente", "Eliminar Vendedor");
                 mostrarTabla(vendedores);
                 btnLimpiarEliminarActionPerformed(evt);
@@ -775,33 +593,18 @@ public class JplVendedor extends javax.swing.JPanel {
         vaciarCamposBuscar();
     }// GEN-LAST:event_btnLimpiarBuscarActionPerformed
 
-    private void vaciarCamposBuscar() {
-        txtIdBuscar.setText("");
-        txtNombreBuscar.setText("");
-        mostrarTabla(vendedorController.obtenerTodosLosVendedores());
-    }
-
-    private void txtIdBuscarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtIdBuscarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtIdBuscarActionPerformed
-
-    private void txtNombreBuscarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtNombreBuscarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtNombreBuscarActionPerformed
-
-    public void mostrarTabla(List<Vendedor> listaVendedores) {
+    public void mostrarTabla(List<VendedorDto> listaVendedores) {
         logger.info("Vendedores de la tabla: " + listaVendedores);
         DefaultTableModel model = new DefaultTableModel();
-        String[] titulo = { "ID", "NOMBRE", "DIRECCION", "FECHA REGISTRO" };
+        String[] titulo = { "ID", "NOMBRE", "DIRECCION" };
         model.setColumnIdentifiers(titulo); // Establece los títulos de las columnas
 
         // Llena el modelo con los vendedores encontrados
-        for (Vendedor vendedor : listaVendedores) {
+        for (VendedorDto vendedor : listaVendedores) {
             Object[] fila = new Object[4];
             fila[0] = vendedor.getId();
             fila[1] = vendedor.getNombre();
             fila[2] = vendedor.getDireccion();
-            fila[3] = vendedor.getFechaRegistro();
 
             model.addRow(fila); // Añade la fila al modelo
         }
@@ -824,6 +627,35 @@ public class JplVendedor extends javax.swing.JPanel {
 
             tableColumn.setPreferredWidth(anchoPreferido);
         }
+    }
+
+    private void vaciarCamposAgregar() {
+        txtNombreAgregar.setText("");
+        txtDireccionAgregar.setText("");
+        txtLatitudAgregar.setText("");
+        txtLongitudAgregar.setText("");
+    }
+
+    private void vaciarCamposModificar() {
+        txtIdModificar.setText("");
+        txtNombreModificar.setText("");
+        txtDireccionModificar.setText("");
+        txtLatitudModificar.setText("");
+        txtLongitudModificar.setText("");
+    }
+
+    private void vaciarCamposEliminar() {
+        txtIdEliminar.setText("");
+        txtNombreEliminar.setText("");
+        txtDireccionEliminar.setText("");
+        txtLatitudEliminar.setText("");
+        txtLongitudEliminar.setText("");
+    }
+
+    private void vaciarCamposBuscar() {
+        txtIdBuscar.setText("");
+        txtNombreBuscar.setText("");
+        mostrarTabla(vendedorController.obtenerTodosLosVendedores());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

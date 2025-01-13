@@ -51,7 +51,7 @@ public class BebidaService extends ItemMenuService {
         return bebidas;
     }
 
-    public ItemMenu buscarBebidaPorId(Integer idBebida, Integer idVendedor) {
+    public Bebida buscarBebidaPorId(Integer idBebida, Integer idVendedor) {
         List<Bebida> bebidas = obtenerBebidaPorIdVendedor(idVendedor);
         for (Bebida bebida : bebidas) {
             if (bebida.getId().equals(idBebida)) {
@@ -62,35 +62,37 @@ public class BebidaService extends ItemMenuService {
     }
 
     public void registrarBebida(BebidaDto bebidaDto) {
-        parseBebidaDto(bebidaDto);
+        // parseBebidaDto(bebidaDto);
         super.registrarItemMenu(bebidaDto);
     }
 
     public void modificarBebida(BebidaDto bebidaDto) {
-        parseBebidaDto(bebidaDto);
+        // parseBebidaDto(bebidaDto);
         super.modificarItemMenu(bebidaDto);
     }
 
-    public void parseBebidaDto(BebidaDto bebidaDto) {
-        String graduacionAlcoholica = bebidaDto.getGraduacionAlcoholicaText();
-        if (!esNullOrBlank(graduacionAlcoholica)) {
-            bebidaDto.setGraduacionAlcoholica(Double.parseDouble(graduacionAlcoholica));
-        }
-
-        String tamano = bebidaDto.getTamanoText();
-        if (!esNullOrBlank(tamano)) {
-            bebidaDto.setTamano(Double.parseDouble(tamano));
-        }
-
-        String volumen = bebidaDto.getVolumenText();
-        if (!esNullOrBlank(volumen)) {
-            bebidaDto.setVolumen(Double.parseDouble(volumen));
-        }
-
-    }
-
-    private Boolean esNullOrBlank(String palabra) {
-        return palabra.trim() == null || palabra.isBlank();
-    }
+    /*
+     * public void parseBebidaDto(BebidaDto bebidaDto) {
+     * String graduacionAlcoholica = bebidaDto.getGraduacionAlcoholicaText();
+     * if (!esNullOrBlank(graduacionAlcoholica)) {
+     * bebidaDto.setGraduacionAlcoholica(Double.parseDouble(graduacionAlcoholica));
+     * }
+     * 
+     * String tamano = bebidaDto.getTamanoText();
+     * if (!esNullOrBlank(tamano)) {
+     * bebidaDto.setTamano(Double.parseDouble(tamano));
+     * }
+     * 
+     * String volumen = bebidaDto.getVolumenText();
+     * if (!esNullOrBlank(volumen)) {
+     * bebidaDto.setVolumen(Double.parseDouble(volumen));
+     * }
+     * 
+     * }
+     * 
+     * private Boolean esNullOrBlank(String palabra) {
+     * return palabra.trim() == null || palabra.isBlank();
+     * }
+     */
 
 }

@@ -1,6 +1,5 @@
 package com.mycompany.tp.dsw.service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import com.mycompany.tp.dsw.dao.CategoriaDao;
@@ -11,6 +10,7 @@ import com.mycompany.tp.dsw.dto.PlatoDto;
 import com.mycompany.tp.dsw.dto.VendedorDto;
 import com.mycompany.tp.dsw.exception.VendedorNoEncontradoException;
 import com.mycompany.tp.dsw.model.Bebida;
+import com.mycompany.tp.dsw.model.Categoria;
 import com.mycompany.tp.dsw.model.ItemMenu;
 import com.mycompany.tp.dsw.model.Plato;
 import com.mycompany.tp.dsw.model.Vendedor;
@@ -114,38 +114,41 @@ public class ItemMenuService {
     private ItemMenu parseItemMenu(ItemMenuDto itemMenuDto, Vendedor vendedor) {
         // 1. Parsear los datos del ItemMenu
 
-        String id = itemMenuDto.getIdText();
-        if (!esNullOrBlank(id)) {
-            itemMenuDto.setId(Integer.valueOf(id));
-        }
-
-        String precio = itemMenuDto.getPrecioText();
-        if (!esNullOrBlank(precio)) {
-            itemMenuDto.setPrecio(new BigDecimal(precio));
-        }
-
-        String categoria = itemMenuDto.getCategoriaText();
-        if (!esNullOrBlank(categoria)) {
-            itemMenuDto.setCategoria(categoriaDao.findByNombre(categoria));
-        }
+        Categoria categoria = categoriaDao.findByNombre(itemMenuDto.getCategoria());
 
         // 2. Crear el objeto
         switch (itemMenuDto.getClass().getSimpleName()) {
             case "PlatoDto":
                 PlatoDto platoDto = (PlatoDto) itemMenuDto;
-                return new Plato(platoDto, vendedor);
+                return Plato.builder()
+                        .calorias(platoDto.getCalorias())
+                        .aptoCeliaco(platoDto.getAptoCeliaco())
+                        .aptoVegetariano(platoDto.getAptoVegetariano())
+                        .aptoVegano(platoDto.getAptoVegano())
+                        .peso(platoDto.getPeso())
+                        .id(platoDto.getId())
+                        .nombre(platoDto.getNombre())
+                        .descripcion(platoDto.getDescripcion())
+                        .precio(platoDto.getPrecio())
+                        .categoria(categoria)
+                        .vendedor(vendedor)
+                        .build();
             case "BebidaDto":
                 BebidaDto bebidaDto = (BebidaDto) itemMenuDto;
-                Bebida bebida = new Bebida(bebidaDto, vendedor);
-                return bebida;
+                return Bebida.builder()
+                        .graduacionAlcoholica(bebidaDto.getGraduacionAlcoholica())
+                        .tamano(bebidaDto.getTamano())
+                        .volumen(bebidaDto.getVolumen())
+                        .id(bebidaDto.getId())
+                        .nombre(bebidaDto.getNombre())
+                        .descripcion(bebidaDto.getDescripcion())
+                        .precio(bebidaDto.getPrecio())
+                        .categoria(categoria)
+                        .vendedor(vendedor)
+                        .build();
 
             default:
                 return null;
         }
     }
-
-    private Boolean esNullOrBlank(String palabra) {
-        return palabra == null || palabra.isBlank();
-    }
-
 }

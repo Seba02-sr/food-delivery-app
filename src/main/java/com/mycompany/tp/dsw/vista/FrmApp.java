@@ -25,7 +25,7 @@ public class FrmApp extends javax.swing.JFrame {
         setResizable(false);
 
         vendedorPane = new JplVendedor(this);
-        clientePane = new JplCliente(this);
+        clientePane = new JplCliente(); // Si hay error puede ser por aca ##############
         itemMenuPane = new JplItemMenu(this);
 
         jTabbedPane.add(VENDEDORES, vendedorPane);

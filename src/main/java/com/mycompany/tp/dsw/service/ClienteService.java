@@ -91,32 +91,19 @@ public class ClienteService {
      */
     private Cliente parseCliente(ClienteDto clienteDto) {
 
-        String id = clienteDto.getIdText();
-        if (!esNullOrBlank(id)) {
-            clienteDto.setId(Integer.valueOf(id));
-        }
+        Coordenada coordenada = Coordenada.builder()
+                .latitud(clienteDto.getCoordenadaDto().getLatitud())
+                .longitud(clienteDto.getCoordenadaDto().getLongitud())
+                .build();
 
-        String latitudText = clienteDto.getLatitud();
-        Double latitud = null;
-        if (!esNullOrBlank(latitudText)) {
-            latitud = Double.parseDouble(latitudText);
-        }
-
-        String longitudText = clienteDto.getLongitud();
-        Double longitud = null;
-        if (!esNullOrBlank(longitudText)) {
-            longitud = Double.parseDouble(longitudText);
-        }
-
-        if (latitud != null && longitud != null) {
-            clienteDto.setCoordenada(Coordenada.builder().latitud(latitud).longitud(longitud).build());
-        }
-
-        return new Cliente(clienteDto);
-    }
-
-    private static Boolean esNullOrBlank(String palabra) {
-        return palabra == null || palabra.isBlank();
+        return Cliente.builder()
+                .id(clienteDto.getId())
+                .nombre(clienteDto.getNombre())
+                .cuit(clienteDto.getCuit())
+                .direccion(clienteDto.getDireccion())
+                .email(clienteDto.getEmail())
+                .coordenada(coordenada)
+                .build();
     }
 
 }

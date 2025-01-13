@@ -10,11 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class ItemPedidoDto {
+public class PedidoItemPedidoDto {
 
     private Integer id;
-    private Integer cantidad;
-    private ItemMenuDto itemMenuDto;
-    // private PedidoItemPedidoDto pedidoItemPedidoDto;
-
+    private PedidoDto pedidoDto;
+    private ItemPedidoDto itemPedidoDto;
 }

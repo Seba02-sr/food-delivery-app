@@ -4,7 +4,6 @@
  */
 package com.mycompany.tp.dsw.vista;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JTable;
@@ -12,12 +11,15 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import java.awt.Component;
+import java.math.BigDecimal;
 
+import com.mycompany.tp.dsw.controller.ClienteController;
 import com.mycompany.tp.dsw.controller.PedidoController;
+import com.mycompany.tp.dsw.dto.ClienteDto;
+import com.mycompany.tp.dsw.dto.PedidoDto;
+import com.mycompany.tp.dsw.exception.NoValidarException;
 import com.mycompany.tp.dsw.exception.PedidoNoEncontradoException;
-import com.mycompany.tp.dsw.model.Cliente;
 import com.mycompany.tp.dsw.model.Estado;
-import com.mycompany.tp.dsw.model.Pedido;
 import com.mycompany.tp.dsw.service.MensajeAlerta;
 import com.mycompany.tp.dsw.vista.util.CheckBoxEditor;
 import com.mycompany.tp.dsw.vista.util.CheckBoxRenderer;
@@ -31,7 +33,8 @@ import java.util.stream.IntStream;
 public class FrmVerPedidoVendedor extends javax.swing.JFrame {
 
     private String idVendedor;
-    PedidoController pedidoController;
+    private PedidoController pedidoController;
+    private ClienteController clienteController;
 
     public FrmVerPedidoVendedor() {
         initComponents();
@@ -41,6 +44,7 @@ public class FrmVerPedidoVendedor extends javax.swing.JFrame {
         initComponents();
 
         pedidoController = new PedidoController();
+        clienteController = new ClienteController();
         this.idVendedor = idVendedor;
         this.setLocationRelativeTo(null);
         setearTituloTabla();
@@ -49,9 +53,12 @@ public class FrmVerPedidoVendedor extends javax.swing.JFrame {
 
     public void initDatos() {
 
-        List<Pedido> pedidos = new ArrayList<>();
-        pedidos = pedidoController.obtenerPedidoPorIdVendedor(idVendedor);
-        mostrarTabla(pedidos);
+        List<PedidoDto> pedidos = pedidoController.obtenerPedidoPorIdVendedor(idVendedor);
+        try {
+            mostrarTabla(pedidos);
+        } catch (PedidoNoEncontradoException e) {
+            MensajeAlerta.mostrarError(e.getMessage(), "Error en inicializar los datos del pedido");
+        }
 
     }
 
@@ -184,23 +191,33 @@ public class FrmVerPedidoVendedor extends javax.swing.JFrame {
     private void btnAceptarPedidosActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnAceptarPedidosActionPerformed
         // Obtener el modelo de la tabla
         DefaultTableModel model = (DefaultTableModel) tbPedidos.getModel();
-
         // Filtrar filas con checkbox seleccionado
         IntStream.range(0, model.getRowCount())
                 .filter(i -> model.getValueAt(i, 6) instanceof Boolean && (Boolean) model.getValueAt(i, 6))
                 .mapToObj(i -> model.getValueAt(i, 0))
-                .map(pedidoId -> pedidoController.obtenerPedidoPorId(pedidoId.toString()))
+                .map(pedidoId -> {
+                    try {
+                        return pedidoController.obtenerPedidoPorId(pedidoId.toString());
+                    } catch (NoValidarException e) {
+                        MensajeAlerta.mostrarError(e.getMessage(), "Error al aceptar pedido");
+                        return null;
+                    }
+                })
                 .forEach(pedido -> { // Actualizar el estado del pedido
                     pedido.setEstado(Estado.ACEPTADO);
                     try {
-                        pedidoController.actualizarPedido(pedido);
+                        pedidoController.actualizarEstadoPedido(pedido);
                     } catch (PedidoNoEncontradoException e) {
                         MensajeAlerta.mostrarError(e.getMessage(), "Error Aceptar Pedidos");
                     }
                 });
 
         // Actualizar la tabla después de los cambios
-        mostrarTabla(pedidoController.obtenerPedidoPorIdVendedor(idVendedor));
+        try {
+            mostrarTabla(pedidoController.obtenerPedidoPorIdVendedor(idVendedor));
+        } catch (PedidoNoEncontradoException e) {
+            MensajeAlerta.mostrarError(e.getMessage(), "Error al aceptar pedidos");
+        }
     }// GEN-LAST:event_btnAceptarPedidosActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnCancelarActionPerformed
@@ -218,7 +235,7 @@ public class FrmVerPedidoVendedor extends javax.swing.JFrame {
         header.setDefaultRenderer(new HeaderFormatter());
     }
 
-    public void mostrarTabla(List<Pedido> pedidos) {
+    public void mostrarTabla(List<PedidoDto> pedidosDto) throws PedidoNoEncontradoException {
         // Asegurarse de que la tabla tenga el modelo configurado
         if (tbPedidos.getModel() == null || !(tbPedidos.getModel() instanceof DefaultTableModel)) {
             setearTituloTabla(); // Configura el encabezado y el modelo si no está configurado
@@ -229,18 +246,20 @@ public class FrmVerPedidoVendedor extends javax.swing.JFrame {
         // Limpiar el modelo
         model.setRowCount(0);
 
-        if (pedidos != null && !pedidos.isEmpty()) {
-            for (Pedido pedido : pedidos) {
-                Cliente cliente = pedido.getCliente();
-                Estado estado = pedido.getEstado();
+        if (pedidosDto != null && !pedidosDto.isEmpty()) {
+            for (PedidoDto pedidoDto : pedidosDto) {
+                Integer idCliente = pedidoDto.getClienteId();
+                ClienteDto clienteDto = clienteController.buscarClientePorId(idCliente);
+                Estado estado = pedidoDto.getEstado();
+                BigDecimal totalSinRecargo = pedidoController.calcularTotalSinRecargo(pedidoDto);
 
                 Object[] fila = new Object[7];
-                fila[0] = pedido.getId();
-                fila[1] = cliente.getNombre();
-                fila[2] = cliente.getDireccion();
-                fila[3] = cliente.getEmail();
+                fila[0] = pedidoDto.getId();
+                fila[1] = clienteDto.getNombre();
+                fila[2] = clienteDto.getDireccion();
+                fila[3] = clienteDto.getEmail();
                 fila[4] = estado;
-                fila[5] = pedido.totalSinRecargo();
+                fila[5] = totalSinRecargo;
                 fila[6] = estado.equals(Estado.RECIBIDO) ? Boolean.FALSE : "Aceptado";
 
                 model.addRow(fila);

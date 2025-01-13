@@ -4,10 +4,6 @@
  */
 package com.mycompany.tp.dsw.model;
 
-import java.math.BigDecimal;
-
-import com.mycompany.tp.dsw.dto.BebidaDto;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -43,27 +39,6 @@ public class Bebida extends ItemMenu {
     @Column(nullable = false)
     @Min(0)
     private Double volumen;
-
-    // Constructor para agregar Bebida
-    public Bebida(BebidaDto bebidaDto, Vendedor vendedor) {
-        super(bebidaDto.getId(),
-                bebidaDto.getNombre(),
-                bebidaDto.getDescripcion(),
-                bebidaDto.getPrecio(),
-                bebidaDto.getCategoria(),
-                vendedor);
-        this.graduacionAlcoholica = bebidaDto.getGraduacionAlcoholica();
-        this.tamano = bebidaDto.getTamano();
-        this.volumen = bebidaDto.getVolumen();
-    }
-
-    public Bebida(String nombre, Double graduacionAlcoholica, Double tamano, Double volumen,
-            Integer id, BigDecimal precio, String descripcion, Categoria categoria, Vendedor vendedor) {
-        super(id, nombre, descripcion, precio, categoria, vendedor);
-        this.graduacionAlcoholica = graduacionAlcoholica;
-        this.tamano = tamano;
-        this.volumen = volumen;
-    }
 
     /**
      * Calcula el peso de la bebida considerando su volumen, tipo y 20% por envases.

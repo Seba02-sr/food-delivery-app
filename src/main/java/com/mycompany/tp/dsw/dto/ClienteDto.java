@@ -1,19 +1,21 @@
 package com.mycompany.tp.dsw.dto;
 
-import com.mycompany.tp.dsw.model.Coordenada;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class ClienteDto {
     private Integer id;
     private String nombre;
     private String cuit;
     private String direccion;
     private String email;
-    private Coordenada coordenada;
+    private CoordenadaDto coordenadaDto;
 
     /**
      * Atributos para el manejo de los errores.
@@ -24,30 +26,34 @@ public class ClienteDto {
      * Al asegurarse que no contengan NULL, se parsea a Double/Integer
      * Luego setear el atributo
      */
-    private String longitud;
-    private String latitud;
-    private String IdText;
-
-    // Constructor para modificar
-    public ClienteDto(String idText, String nombre, String cuit, String direccion, String email, String latitud,
-            String longitud) {
-        this.nombre = nombre;
-        this.cuit = cuit;
-        this.direccion = direccion;
-        this.email = email;
-        this.longitud = longitud;
-        this.latitud = latitud;
-        this.IdText = idText;
-    }
-
-    // Constructor para crear
-    public ClienteDto(String nombre, String cuit, String direccion, String email, String latitud, String longitud) {
-        this.nombre = nombre;
-        this.cuit = cuit;
-        this.direccion = direccion;
-        this.email = email;
-        this.longitud = longitud;
-        this.latitud = latitud;
-    }
+    /*
+     * private String longitud;
+     * private String latitud;
+     * private String IdText;
+     * 
+     * // Constructor para modificar
+     * public ClienteDto(String idText, String nombre, String cuit, String
+     * direccion, String email, String latitud,
+     * String longitud) {
+     * this.nombre = nombre;
+     * this.cuit = cuit;
+     * this.direccion = direccion;
+     * this.email = email;
+     * this.longitud = longitud;
+     * this.latitud = latitud;
+     * this.IdText = idText;
+     * }
+     * 
+     * // Constructor para crear
+     * public ClienteDto(String nombre, String cuit, String direccion, String email,
+     * String latitud, String longitud) {
+     * this.nombre = nombre;
+     * this.cuit = cuit;
+     * this.direccion = direccion;
+     * this.email = email;
+     * this.longitud = longitud;
+     * this.latitud = latitud;
+     * }
+     */
 
 }

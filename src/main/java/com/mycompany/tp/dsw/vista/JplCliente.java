@@ -15,7 +15,6 @@ import javax.swing.table.TableColumn;
 import com.mycompany.tp.dsw.controller.ClienteController;
 import com.mycompany.tp.dsw.dto.ClienteDto;
 import com.mycompany.tp.dsw.exception.NoValidarException;
-import com.mycompany.tp.dsw.model.Cliente;
 import com.mycompany.tp.dsw.service.MensajeAlerta;
 import com.mycompany.tp.dsw.vista.cliente.FrmRealizarPedido;
 import com.mycompany.tp.dsw.vista.cliente.FrmVerPedidos;
@@ -28,15 +27,18 @@ import javax.swing.table.JTableHeader;
  */
 public class JplCliente extends javax.swing.JPanel {
 
-    FrmApp parentFrame;
-    ClienteController clienteController;
+    private ClienteController clienteController;
 
-    public JplCliente(FrmApp parentFrame) {
+    public JplCliente() {
         initComponents();
-        this.parentFrame = parentFrame;
         clienteController = new ClienteController();
-        mostrarTabla(clienteController.obtenerTodosLosClientes());
+        initTable();
         poputTable();
+    }
+
+    public void initTable() {
+        List<ClienteDto> clientesDto = clienteController.obtenerTodosLosClientes();
+        mostrarTabla(clientesDto);
     }
 
     public void poputTable() {
@@ -110,16 +112,6 @@ public class JplCliente extends javax.swing.JPanel {
         txtNombreBuscar2.setBorder(javax.swing.BorderFactory.createTitledBorder("Nombre"));
         txtNombreBuscar2.setFocusCycleRoot(true);
         txtNombreBuscar2.setName(""); // NOI18N
-        txtNombreBuscar2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNombreBuscar2ActionPerformed(evt);
-            }
-        });
-        txtNombreBuscar2.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtNombreBuscar2KeyReleased(evt);
-            }
-        });
 
         jmiCargarDatos.setText("Cargar Datos");
         jmiCargarDatos.addActionListener(new java.awt.event.ActionListener() {
@@ -204,22 +196,14 @@ public class JplCliente extends javax.swing.JPanel {
         txtDireccionAgregar.setBorder(javax.swing.BorderFactory.createTitledBorder("Dirección"));
         txtDireccionAgregar.setFocusCycleRoot(true);
         txtDireccionAgregar.setName(""); // NOI18N
-        txtDireccionAgregar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDireccionAgregarActionPerformed(evt);
-            }
-        });
+
         jPanelAgregar.add(txtDireccionAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 290, -1));
 
         txtNombreAgregar.setForeground(new java.awt.Color(51, 51, 51));
         txtNombreAgregar.setBorder(javax.swing.BorderFactory.createTitledBorder("Nombre"));
         txtNombreAgregar.setFocusCycleRoot(true);
         txtNombreAgregar.setName(""); // NOI18N
-        txtNombreAgregar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNombreAgregarActionPerformed(evt);
-            }
-        });
+
         jPanelAgregar.add(txtNombreAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 130, -1));
 
         jTabbedPane.addTab("Agregar", jPanelAgregar);
@@ -243,77 +227,49 @@ public class JplCliente extends javax.swing.JPanel {
         txtIDModificar.setBorder(javax.swing.BorderFactory.createTitledBorder("ID"));
         txtIDModificar.setFocusCycleRoot(true);
         txtIDModificar.setName(""); // NOI18N
-        txtIDModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtIDModificarActionPerformed(evt);
-            }
-        });
+
         jPanelModificar.add(txtIDModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 130, -1));
 
         txtNombreModificar.setForeground(new java.awt.Color(51, 51, 51));
         txtNombreModificar.setBorder(javax.swing.BorderFactory.createTitledBorder("Nombre"));
         txtNombreModificar.setFocusCycleRoot(true);
         txtNombreModificar.setName(""); // NOI18N
-        txtNombreModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNombreModificarActionPerformed(evt);
-            }
-        });
+
         jPanelModificar.add(txtNombreModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 130, -1));
 
         txtCuitModificar.setForeground(new java.awt.Color(51, 51, 51));
         txtCuitModificar.setBorder(javax.swing.BorderFactory.createTitledBorder("Cuit"));
         txtCuitModificar.setFocusCycleRoot(true);
         txtCuitModificar.setName(""); // NOI18N
-        txtCuitModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCuitModificarActionPerformed(evt);
-            }
-        });
+
         jPanelModificar.add(txtCuitModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 80, 130, -1));
 
         txtDireccionModificar.setForeground(new java.awt.Color(51, 51, 51));
         txtDireccionModificar.setBorder(javax.swing.BorderFactory.createTitledBorder("Dirección"));
         txtDireccionModificar.setFocusCycleRoot(true);
         txtDireccionModificar.setName(""); // NOI18N
-        txtDireccionModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDireccionModificarActionPerformed(evt);
-            }
-        });
+
         jPanelModificar.add(txtDireccionModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 290, -1));
 
         txtEmailModificar.setForeground(new java.awt.Color(51, 51, 51));
         txtEmailModificar.setBorder(javax.swing.BorderFactory.createTitledBorder("Email"));
         txtEmailModificar.setFocusCycleRoot(true);
         txtEmailModificar.setName(""); // NOI18N
-        txtEmailModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtEmailModificarActionPerformed(evt);
-            }
-        });
+
         jPanelModificar.add(txtEmailModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 290, -1));
 
         txtLatitudModificar.setForeground(new java.awt.Color(51, 51, 51));
         txtLatitudModificar.setBorder(javax.swing.BorderFactory.createTitledBorder("Latitud"));
         txtLatitudModificar.setFocusCycleRoot(true);
         txtLatitudModificar.setName(""); // NOI18N
-        txtLatitudModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtLatitudModificarActionPerformed(evt);
-            }
-        });
+
         jPanelModificar.add(txtLatitudModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, 130, -1));
 
         txtLongitudModificar.setForeground(new java.awt.Color(51, 51, 51));
         txtLongitudModificar.setBorder(javax.swing.BorderFactory.createTitledBorder("Longitud"));
         txtLongitudModificar.setFocusCycleRoot(true);
         txtLongitudModificar.setName(""); // NOI18N
-        txtLongitudModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtLongitudModificarActionPerformed(evt);
-            }
-        });
+
         jPanelModificar.add(txtLongitudModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 230, 130, -1));
 
         btnLimpiarModificar.setText("Limpiar");
@@ -326,16 +282,6 @@ public class JplCliente extends javax.swing.JPanel {
 
         jTabbedPane.addTab("Modificar", jPanelModificar);
 
-        jPanelEliminar.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                jPanelEliminarFocusGained(evt);
-            }
-        });
-        jPanelEliminar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanelEliminarMouseClicked(evt);
-            }
-        });
         jPanelEliminar.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 jPanelEliminarPropertyChange(evt);
@@ -355,77 +301,49 @@ public class JplCliente extends javax.swing.JPanel {
         txtIDEliminar.setBorder(javax.swing.BorderFactory.createTitledBorder("ID"));
         txtIDEliminar.setFocusCycleRoot(true);
         txtIDEliminar.setName(""); // NOI18N
-        txtIDEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtIDEliminarActionPerformed(evt);
-            }
-        });
+
         jPanelEliminar.add(txtIDEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 130, -1));
 
         txtNombreEliminar.setForeground(new java.awt.Color(51, 51, 51));
         txtNombreEliminar.setBorder(javax.swing.BorderFactory.createTitledBorder("Nombre"));
         txtNombreEliminar.setFocusCycleRoot(true);
         txtNombreEliminar.setName(""); // NOI18N
-        txtNombreEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNombreEliminarActionPerformed(evt);
-            }
-        });
+
         jPanelEliminar.add(txtNombreEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 130, -1));
 
         txtCuitEliminar.setForeground(new java.awt.Color(51, 51, 51));
         txtCuitEliminar.setBorder(javax.swing.BorderFactory.createTitledBorder("Cuit"));
         txtCuitEliminar.setFocusCycleRoot(true);
         txtCuitEliminar.setName(""); // NOI18N
-        txtCuitEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCuitEliminarActionPerformed(evt);
-            }
-        });
+
         jPanelEliminar.add(txtCuitEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 80, 130, -1));
 
         txtDireccionEliminar.setForeground(new java.awt.Color(51, 51, 51));
         txtDireccionEliminar.setBorder(javax.swing.BorderFactory.createTitledBorder("Dirección"));
         txtDireccionEliminar.setFocusCycleRoot(true);
         txtDireccionEliminar.setName(""); // NOI18N
-        txtDireccionEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDireccionEliminarActionPerformed(evt);
-            }
-        });
+
         jPanelEliminar.add(txtDireccionEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 290, -1));
 
         txtEmailEliminar.setForeground(new java.awt.Color(51, 51, 51));
         txtEmailEliminar.setBorder(javax.swing.BorderFactory.createTitledBorder("Email"));
         txtEmailEliminar.setFocusCycleRoot(true);
         txtEmailEliminar.setName(""); // NOI18N
-        txtEmailEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtEmailEliminarActionPerformed(evt);
-            }
-        });
+
         jPanelEliminar.add(txtEmailEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 290, -1));
 
         txtLatitudEliminar.setForeground(new java.awt.Color(51, 51, 51));
         txtLatitudEliminar.setBorder(javax.swing.BorderFactory.createTitledBorder("Latitud"));
         txtLatitudEliminar.setFocusCycleRoot(true);
         txtLatitudEliminar.setName(""); // NOI18N
-        txtLatitudEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtLatitudEliminarActionPerformed(evt);
-            }
-        });
+
         jPanelEliminar.add(txtLatitudEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, 130, -1));
 
         txtLongitudEliminar.setForeground(new java.awt.Color(51, 51, 51));
         txtLongitudEliminar.setBorder(javax.swing.BorderFactory.createTitledBorder("Longitud"));
         txtLongitudEliminar.setFocusCycleRoot(true);
         txtLongitudEliminar.setName(""); // NOI18N
-        txtLongitudEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtLongitudEliminarActionPerformed(evt);
-            }
-        });
+
         jPanelEliminar.add(txtLongitudEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 230, 130, -1));
 
         btnLimpiarEliminar.setText("Limpiar");
@@ -438,11 +356,6 @@ public class JplCliente extends javax.swing.JPanel {
 
         jTabbedPane.addTab("Eliminar", jPanelEliminar);
 
-        jPanelBuscar.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                jPanelBuscarPropertyChange(evt);
-            }
-        });
         jPanelBuscar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btnLimpiarBuscar.setText("Limpiar");
@@ -457,11 +370,7 @@ public class JplCliente extends javax.swing.JPanel {
         txtNombreBuscar.setBorder(javax.swing.BorderFactory.createTitledBorder("Nombre"));
         txtNombreBuscar.setFocusCycleRoot(true);
         txtNombreBuscar.setName(""); // NOI18N
-        txtNombreBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNombreBuscarActionPerformed(evt);
-            }
-        });
+
         txtNombreBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtNombreBuscarKeyReleased(evt);
@@ -536,29 +445,35 @@ public class JplCliente extends javax.swing.JPanel {
     private void jmiCargarDatosActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jmiCargarDatosActionPerformed
         int selectedRow = tbClientesDatos.getSelectedRow();
         String id = tbClientesDatos.getValueAt(selectedRow, 0).toString();
-        Cliente selectedCliente = clienteController.buscarClientePorId(id);
-        if (selectedCliente != null) {
-            if (jTabbedPane.getSelectedIndex() == 1) { // Modificar
-                txtIDModificar.setText(selectedCliente.getId().toString());
-                txtNombreModificar.setText(selectedCliente.getNombre());
-                txtCuitModificar.setText(selectedCliente.getCuit());
-                txtDireccionModificar.setText(selectedCliente.getDireccion());
-                txtEmailModificar.setText(selectedCliente.getEmail());
-                txtLatitudModificar.setText(selectedCliente.getCoordenada().getLatitud().toString());
-                txtLongitudModificar.setText(selectedCliente.getCoordenada().getLongitud().toString());
-            } else if (jTabbedPane.getSelectedIndex() == 2) { // Eliminar
-                txtIDEliminar.setText(selectedCliente.getId().toString());
-                txtNombreEliminar.setText(selectedCliente.getNombre());
-                txtCuitEliminar.setText(selectedCliente.getCuit());
-                txtDireccionEliminar.setText(selectedCliente.getDireccion());
-                txtEmailEliminar.setText(selectedCliente.getEmail());
-                txtLatitudEliminar.setText(selectedCliente.getCoordenada().getLatitud().toString());
-                txtLongitudEliminar.setText(selectedCliente.getCoordenada().getLongitud().toString());
-            } else {
-                MensajeAlerta.mostrarError("Solamente se puede cargar datos en 'Modificar' o 'Eliminar'.",
-                        "Error al cargar datos");
+
+        try {
+            ClienteDto selectedCliente = clienteController.buscarClientePorId(id);
+            if (selectedCliente != null) {
+                if (jTabbedPane.getSelectedIndex() == 1) { // Modificar
+                    txtIDModificar.setText(selectedCliente.getId().toString());
+                    txtNombreModificar.setText(selectedCliente.getNombre());
+                    txtCuitModificar.setText(selectedCliente.getCuit());
+                    txtDireccionModificar.setText(selectedCliente.getDireccion());
+                    txtEmailModificar.setText(selectedCliente.getEmail());
+                    txtLatitudModificar.setText(selectedCliente.getCoordenadaDto().getLatitud().toString());
+                    txtLongitudModificar.setText(selectedCliente.getCoordenadaDto().getLongitud().toString());
+                } else if (jTabbedPane.getSelectedIndex() == 2) { // Eliminar
+                    txtIDEliminar.setText(selectedCliente.getId().toString());
+                    txtNombreEliminar.setText(selectedCliente.getNombre());
+                    txtCuitEliminar.setText(selectedCliente.getCuit());
+                    txtDireccionEliminar.setText(selectedCliente.getDireccion());
+                    txtEmailEliminar.setText(selectedCliente.getEmail());
+                    txtLatitudEliminar.setText(selectedCliente.getCoordenadaDto().getLatitud().toString());
+                    txtLongitudEliminar.setText(selectedCliente.getCoordenadaDto().getLongitud().toString());
+                } else {
+                    MensajeAlerta.mostrarError("Solamente se puede cargar datos en 'Modificar' o 'Eliminar'.",
+                            "Error al cargar datos");
+                }
             }
+        } catch (NoValidarException e) {
+            MensajeAlerta.mostrarError(e.getMessage(), "Error en cargar datos");
         }
+
     }// GEN-LAST:event_jmiCargarDatosActionPerformed
 
     private void jmiRealizarPedidoActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jmiRealizarPedidoActionPerformed
@@ -574,58 +489,32 @@ public class JplCliente extends javax.swing.JPanel {
 
     }// GEN-LAST:event_jmiRealizarPedidoActionPerformed
 
-    private void txtNombreBuscar2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtNombreBuscar2ActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtNombreBuscar2ActionPerformed
-
-    private void txtNombreBuscar2KeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtNombreBuscar2KeyReleased
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtNombreBuscar2KeyReleased
-
     private void txtIDBuscarKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtIDBuscarKeyReleased
         String idText = txtIDBuscar.getText();
-        List<Cliente> clientes = new ArrayList<>();
+        List<ClienteDto> clientesDto = new ArrayList<>();
 
         if (!idText.isEmpty()) {
-            Cliente cliente = clienteController.buscarClientePorId(idText);
-            clientes.add(cliente);
-            txtNombreBuscar.setEnabled(false);
+
+            try {
+                ClienteDto clienteDto = clienteController.buscarClientePorId(idText);
+                clientesDto.add(clienteDto);
+                txtNombreBuscar.setEnabled(false);
+            } catch (NoValidarException e) {
+                MensajeAlerta.mostrarError(e.getMessage(), "Error en buscar por ID");
+            }
+
         } else {
-            clientes = clienteController.obtenerTodosLosClientes();
+            clientesDto = clienteController.obtenerTodosLosClientes();
             txtNombreBuscar.setEnabled(true);
         }
 
-        if (clientes == null) {
+        if (clientesDto == null) {
             mostrarTabla(new ArrayList<>());
         } else {
-            mostrarTabla(clientes);
+            mostrarTabla(clientesDto);
         }
 
     }// GEN-LAST:event_txtIDBuscarKeyReleased
-
-    private void txtIDModificarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtIDModificarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtIDModificarActionPerformed
-
-    private void txtCuitModificarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtCuitModificarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtCuitModificarActionPerformed
-
-    private void txtEmailModificarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtEmailModificarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtEmailModificarActionPerformed
-
-    private void txtIDEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtIDEliminarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtIDEliminarActionPerformed
-
-    private void txtCuitEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtCuitEliminarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtCuitEliminarActionPerformed
-
-    private void txtEmailEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtEmailEliminarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtEmailEliminarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnGuardarActionPerformed
         String nombre = txtNombreAgregar.getText();
@@ -635,13 +524,13 @@ public class JplCliente extends javax.swing.JPanel {
         String latitud = txtLatitudAgregar.getText();
         String longitud = txtLongitudAgregar.getText();
 
-        ClienteDto clienteDto = new ClienteDto(nombre, cuit, direccion, email, latitud, longitud);
-
         try {
+            ClienteDto clienteDto = clienteController.crearClienteDto(null, nombre, cuit, direccion, email, latitud,
+                    longitud);
             clienteController.guardarCliente(clienteDto);
-            List<Cliente> clientes = clienteController.obtenerTodosLosClientes();
+            List<ClienteDto> clientesDto = clienteController.obtenerTodosLosClientes();
             MensajeAlerta.mostrarInformacion("Cliente creado exitosamente", "Agregar Cliente");
-            mostrarTabla(clientes);
+            mostrarTabla(clientesDto);
 
             btnLimpiarAgregarActionPerformed(evt);
         } catch (NoValidarException e) {
@@ -659,30 +548,6 @@ public class JplCliente extends javax.swing.JPanel {
         txtLongitudAgregar.setText("");
     }// GEN-LAST:event_btnLimpiarAgregarActionPerformed
 
-    private void txtDireccionAgregarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtDireccionAgregarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtDireccionAgregarActionPerformed
-
-    private void txtNombreAgregarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtNombreAgregarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtNombreAgregarActionPerformed
-
-    private void txtNombreModificarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtNombreModificarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtNombreModificarActionPerformed
-
-    private void txtDireccionModificarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtDireccionModificarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtDireccionModificarActionPerformed
-
-    private void txtLatitudModificarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtLatitudModificarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtLatitudModificarActionPerformed
-
-    private void txtLongitudModificarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtLongitudModificarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtLongitudModificarActionPerformed
-
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnModificarActionPerformed
         String id = txtIDModificar.getText();
         String nombre = txtNombreModificar.getText();
@@ -692,17 +557,18 @@ public class JplCliente extends javax.swing.JPanel {
         String latitud = txtLatitudModificar.getText();
         String longitud = txtLongitudModificar.getText();
 
-        ClienteDto clienteDto = new ClienteDto(id, nombre, cuit, direccion, email, latitud, longitud);
         Integer confirmacion = MensajeAlerta.mostrarConfirmacion(
                 "¿Está seguro de que desea modificar el cliente con ID: " + id + "?", "Confirmar modificación", this);
 
         if (confirmacion == JOptionPane.YES_OPTION) {
             try {
+                ClienteDto clienteDto = clienteController.crearClienteDto(id, nombre, cuit, direccion, email, latitud,
+                        longitud);
                 clienteController.modificarCliente(clienteDto);
 
                 MensajeAlerta.mostrarInformacion("Vendedor modificado exitosamente", "Modificar Cliente");
-                List<Cliente> clientes = clienteController.obtenerTodosLosClientes();
-                mostrarTabla(clientes);
+                List<ClienteDto> clientesDto = clienteController.obtenerTodosLosClientes();
+                mostrarTabla(clientesDto);
                 btnLimpiarModificarActionPerformed(evt);
             } catch (NoValidarException e) {
                 MensajeAlerta.mostrarError(e.getMessage(), "Error en Modificar");
@@ -734,22 +600,6 @@ public class JplCliente extends javax.swing.JPanel {
         txtLongitudEliminar.setText("");
     }// GEN-LAST:event_btnLimpiarEliminarActionPerformed
 
-    private void txtNombreEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtNombreEliminarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtNombreEliminarActionPerformed
-
-    private void txtDireccionEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtDireccionEliminarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtDireccionEliminarActionPerformed
-
-    private void txtLatitudEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtLatitudEliminarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtLatitudEliminarActionPerformed
-
-    private void txtLongitudEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtLongitudEliminarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtLongitudEliminarActionPerformed
-
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnEliminarActionPerformed
         String idText = txtIDEliminar.getText();
 
@@ -760,22 +610,14 @@ public class JplCliente extends javax.swing.JPanel {
             try {
                 clienteController.eliminarCliente(idText);
                 MensajeAlerta.mostrarInformacion("Cliente Eliminado exitosamente", "Eliminar Mensaje");
-                List<Cliente> clientes = clienteController.obtenerTodosLosClientes();
-                mostrarTabla(clientes);
+                List<ClienteDto> clientesDto = clienteController.obtenerTodosLosClientes();
+                mostrarTabla(clientesDto);
                 btnLimpiarEliminarActionPerformed(evt);
             } catch (NoValidarException e) {
                 MensajeAlerta.mostrarError(e.getMessage(), "Error en Eliminar");
             }
         }
     }// GEN-LAST:event_btnEliminarActionPerformed
-
-    private void jPanelEliminarFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_jPanelEliminarFocusGained
-        // TODO add your handling code here:
-    }// GEN-LAST:event_jPanelEliminarFocusGained
-
-    private void jPanelEliminarMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jPanelEliminarMouseClicked
-        // TODO add your handling code here:
-    }// GEN-LAST:event_jPanelEliminarMouseClicked
 
     private void jPanelEliminarPropertyChange(java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_jPanelEliminarPropertyChange
         txtNombreEliminar.setEnabled(false);
@@ -789,13 +631,9 @@ public class JplCliente extends javax.swing.JPanel {
         txtIDBuscar.setText("");
     }// GEN-LAST:event_btnLimpiarBuscarActionPerformed
 
-    private void txtNombreBuscarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtNombreBuscarActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtNombreBuscarActionPerformed
-
     private void txtNombreBuscarKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtNombreBuscarKeyReleased
         String nombre = txtNombreBuscar.getText();
-        List<Cliente> clientes = new ArrayList<>();
+        List<ClienteDto> clientes = new ArrayList<>();
         if (nombre.isEmpty()) {
             clientes = clienteController.obtenerTodosLosClientes();
         } else {
@@ -810,26 +648,22 @@ public class JplCliente extends javax.swing.JPanel {
 
     }// GEN-LAST:event_txtNombreBuscarKeyReleased
 
-    private void jPanelBuscarPropertyChange(java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_jPanelBuscarPropertyChange
-        // TODO add your handling code here:
-    }// GEN-LAST:event_jPanelBuscarPropertyChange
-
-    public void mostrarTabla(List<Cliente> clientes) {
+    public void mostrarTabla(List<ClienteDto> clientesDto) {
         DefaultTableModel model = new DefaultTableModel();
-        String[] titulo = { "ID", "NOMBRE", "DIRECCION", "CUIT", "FECHA REGISTRO" };
+        String[] titulo = { "ID", "NOMBRE", "DIRECCION", "CUIT", "EMAIL" };
         model.setColumnIdentifiers(titulo); // Establece los títulos de las columnas
 
-        if (clientes.isEmpty() || clientes.get(0) == null) {
+        if (clientesDto.isEmpty() || clientesDto.get(0) == null) {
             // Tabla vacía
             tbClientesDatos.setModel(model);
         } else {
-            for (Cliente cliente : clientes) {
+            for (ClienteDto clienteDto : clientesDto) {
                 Object[] fila = new Object[5];
-                fila[0] = cliente.getId();
-                fila[1] = cliente.getNombre();
-                fila[2] = cliente.getDireccion();
-                fila[3] = cliente.getCuit();
-                fila[4] = cliente.getFechaRegistro();
+                fila[0] = clienteDto.getId();
+                fila[1] = clienteDto.getNombre();
+                fila[2] = clienteDto.getDireccion();
+                fila[3] = clienteDto.getCuit();
+                fila[4] = clienteDto.getEmail();
 
                 model.addRow(fila); // Añade la fila al modelo
             }

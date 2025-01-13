@@ -43,7 +43,7 @@ public class PlatoService extends ItemMenuService {
      * @param plato El plato a persistir
      */
     public void registrarPlato(PlatoDto platoDto) {
-        parsePlatoDto(platoDto);
+        // parsePlatoDto(platoDto);
         super.registrarItemMenu(platoDto);
     }
 
@@ -71,7 +71,7 @@ public class PlatoService extends ItemMenuService {
         return platos;
     }
 
-    public ItemMenu buscarPlatoPorId(Integer idPlato, Integer idVendedor) {
+    public Plato buscarPlatoPorId(Integer idPlato, Integer idVendedor) {
         List<Plato> platos = obtenerPlatoPorIdVendedor(idVendedor);
 
         for (Plato plato : platos) {
@@ -84,24 +84,26 @@ public class PlatoService extends ItemMenuService {
     }
 
     public void modificarPlato(PlatoDto platoDto) {
-        parsePlatoDto(platoDto);
+        // parsePlatoDto(platoDto);
         super.modificarItemMenu(platoDto);
     }
 
-    public void parsePlatoDto(PlatoDto platoDto) {
-
-        String calorias = platoDto.getCaloriasText();
-        if (!esNullOrBlank(calorias)) {
-            platoDto.setCalorias(Double.parseDouble(calorias));
-        }
-
-        String peso = platoDto.getPesoText();
-        if (!esNullOrBlank(peso)) {
-            platoDto.setPeso(Double.parseDouble(peso));
-        }
-    }
-
-    private Boolean esNullOrBlank(String palabra) {
-        return palabra == null || palabra.isBlank();
-    }
+    /*
+     * public void parsePlatoDto(PlatoDto platoDto) {
+     * 
+     * String calorias = platoDto.getCaloriasText();
+     * if (!esNullOrBlank(calorias)) {
+     * platoDto.setCalorias(Double.parseDouble(calorias));
+     * }
+     * 
+     * String peso = platoDto.getPesoText();
+     * if (!esNullOrBlank(peso)) {
+     * platoDto.setPeso(Double.parseDouble(peso));
+     * }
+     * }
+     * 
+     * private Boolean esNullOrBlank(String palabra) {
+     * return palabra == null || palabra.isBlank();
+     * }
+     */
 }

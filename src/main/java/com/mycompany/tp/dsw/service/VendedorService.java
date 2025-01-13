@@ -96,32 +96,18 @@ public class VendedorService {
      * @return El objeto 'Vendedor'
      */
     public static Vendedor parseVendedor(VendedorDto vendedorDto) {
-        String id = vendedorDto.getIdText();
-        if (!esNullOrBlank(id)) {
-            vendedorDto.setId(Integer.parseInt(id));
-        }
 
-        String longitudText = vendedorDto.getLongitud();
-        Double longitud = null;
-        if (!esNullOrBlank(longitudText)) {
-            longitud = Double.parseDouble(longitudText);
-        }
+        Coordenada coordenada = Coordenada.builder()
+                .latitud(vendedorDto.getCoordenadaDto().getLatitud())
+                .longitud(vendedorDto.getCoordenadaDto().getLongitud())
+                .build();
 
-        String latitudText = vendedorDto.getLatitud();
-        Double latitud = null;
-        if (!esNullOrBlank(latitudText)) {
-            latitud = Double.parseDouble(latitudText);
-        }
-
-        if (latitud != null && longitud != null) {
-            vendedorDto.setCoordenada(Coordenada.builder().latitud(latitud).longitud(longitud).build());
-        }
-
-        return new Vendedor(vendedorDto);
-    }
-
-    private static Boolean esNullOrBlank(String palabra) {
-        return palabra == null || palabra.isBlank();
+        return Vendedor.builder()
+                .id(vendedorDto.getId())
+                .nombre(vendedorDto.getNombre())
+                .direccion(vendedorDto.getDireccion())
+                .coordenada(coordenada)
+                .build();
     }
 
 }

@@ -7,12 +7,13 @@ package com.mycompany.tp.dsw.vista.cliente;
 import java.math.BigDecimal;
 
 import com.mycompany.tp.dsw.controller.ClienteController;
+import com.mycompany.tp.dsw.controller.PagoController;
 import com.mycompany.tp.dsw.controller.PedidoController;
+import com.mycompany.tp.dsw.dto.ClienteDto;
+import com.mycompany.tp.dsw.dto.MercadoPagoDto;
+import com.mycompany.tp.dsw.dto.PedidoDto;
+import com.mycompany.tp.dsw.exception.NoValidarException;
 import com.mycompany.tp.dsw.exception.PedidoNoEncontradoException;
-import com.mycompany.tp.dsw.model.Cliente;
-import com.mycompany.tp.dsw.model.Estado;
-import com.mycompany.tp.dsw.model.MercadoPago;
-import com.mycompany.tp.dsw.model.Pedido;
 import com.mycompany.tp.dsw.service.MensajeAlerta;
 
 /**
@@ -25,6 +26,7 @@ public class FrmMercadoPago extends javax.swing.JFrame {
     private String idCliente;
     private PedidoController pedidoController;
     private ClienteController clienteController;
+    private PagoController pagoController;
 
     public FrmMercadoPago() {
 
@@ -37,6 +39,7 @@ public class FrmMercadoPago extends javax.swing.JFrame {
         this.idCliente = idCliente;
         pedidoController = new PedidoController();
         clienteController = new ClienteController();
+        pagoController = new PagoController();
     }
 
     /**
@@ -60,11 +63,6 @@ public class FrmMercadoPago extends javax.swing.JFrame {
         jLabel1.setText("ALIAS :");
 
         txtAlias.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        txtAlias.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtAliasActionPerformed(evt);
-            }
-        });
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -121,39 +119,32 @@ public class FrmMercadoPago extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtAliasActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtAliasActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtAliasActionPerformed
-
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnCancelarActionPerformed
         this.dispose();
     }// GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnPagarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPagarActionPerformed
         try {
-            Pedido pedido = pedidoController.obtenerPedidoPorId(idPedido);
-            Cliente cliente = clienteController.buscarClientePorId(idCliente);
+            PedidoDto pedidoDto = pedidoController.obtenerPedidoPorId(idPedido);
+            ClienteDto clienteDto = clienteController.buscarClientePorId(idCliente);
 
             String alias = txtAlias.getText();
 
-            MercadoPago mercadoPago = MercadoPago.builder()
-                    .alias(alias)
-                    .build();
+            MercadoPagoDto mercadoPagoDto = pagoController.crearMercadoPagoDto(alias);
 
-            pedido.setFormaPago(mercadoPago);
+            pedidoDto.setFormaPagoDto(mercadoPagoDto);
 
-            pedido.addObserver(cliente);
-            pedido.setEstado(Estado.PAGADO);
-
-            BigDecimal totalAPagar = pedido.getFormaPago().pagar(pedido.total());
+            BigDecimal totalAPagar = pedidoController.calcularTotalAPagar(pedidoDto);
 
             MensajeAlerta.mostrarConfirmacion(
                     "Pagar con mercado pago tiene un recargo del 4%.\nMonto total a pagar: " + totalAPagar,
                     "Pagar con Transferencia", this);
 
-            pedidoController.actualizarPedido(pedido);
+            pedidoController.actualizarPedido(pedidoDto, clienteDto);
         } catch (PedidoNoEncontradoException e) {
             MensajeAlerta.mostrarError(e.getMessage(), "Error Pagar Mercado Pago");
+        } catch (NoValidarException e) {
+            MensajeAlerta.mostrarError(e.getMessage(), "Error al Pagar con Mercado Pago");
         }
         this.dispose();
 

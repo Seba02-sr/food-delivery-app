@@ -3,22 +3,36 @@ package com.mycompany.tp.dsw.service;
 import java.util.List;
 
 import com.mycompany.tp.dsw.dao.PedidoDao;
+import com.mycompany.tp.dsw.dto.ItemMenuDto;
+import com.mycompany.tp.dsw.dto.ItemPedidoDto;
+import com.mycompany.tp.dsw.dto.MercadoPagoDto;
+import com.mycompany.tp.dsw.dto.PagoDto;
 import com.mycompany.tp.dsw.dto.PedidoDto;
+import com.mycompany.tp.dsw.dto.PedidoItemPedidoDto;
+import com.mycompany.tp.dsw.dto.TransferenciaDto;
 import com.mycompany.tp.dsw.exception.ClienteNoEncontradoException;
 import com.mycompany.tp.dsw.exception.PedidoNoEncontradoException;
 import com.mycompany.tp.dsw.model.Cliente;
 import com.mycompany.tp.dsw.model.Estado;
+import com.mycompany.tp.dsw.model.ItemMenu;
+import com.mycompany.tp.dsw.model.ItemPedido;
+import com.mycompany.tp.dsw.model.MercadoPago;
+import com.mycompany.tp.dsw.model.Pago;
 import com.mycompany.tp.dsw.model.Pedido;
+import com.mycompany.tp.dsw.model.Transferencia;
+import com.mycompany.tp.dsw.model.relacion.PedidoItemPedido;
 
 public class PedidoService {
 
     private PedidoDao pedidoDao;
     private ClienteService clienteService;
     private ServiceManager serviceManager;
+    private ItemMenuService itemMenuService;
 
     public PedidoService() {
         serviceManager = ServiceManager.getInstance();
         clienteService = serviceManager.getClienteService();
+        itemMenuService = serviceManager.getItemMenuService();
         pedidoDao = new PedidoDao();
     }
 
@@ -34,8 +48,88 @@ public class PedidoService {
         return pedido;
     }
 
-    public void guardarPedido(Pedido pedido) {
+    public void guardarPedido(PedidoDto pedidoDto, List<PedidoItemPedidoDto> pedidoItemPedidoDtos) {
+        // Mapear PedidoDto a Pedido (modelo)
+        Pedido pedido = mapToPedidoModel(pedidoDto, pedidoItemPedidoDtos);
+
+        // Guardar el Pedido en la base de datos
         pedidoDao.save(pedido);
+    }
+
+    private Pedido mapToPedidoModel(PedidoDto pedidoDto, List<PedidoItemPedidoDto> pedidoItemPedidoDtos) {
+        // Mapear PedidoDto a Pedido
+        Pedido pedido = Pedido.builder()
+                .id(pedidoDto.getId()) // Si es nuevo, este valor será null
+                .estado(pedidoDto.getEstado())
+                .cliente(mapToCliente(pedidoDto.getClienteId()))
+                .formaPago(mapToPago(pedidoDto.getFormaPagoDto()))
+                .build();
+
+        // Mapear cada PedidoItemPedidoDto a PedidoItemPedido y agregar al Pedido
+        List<PedidoItemPedido> pedidoItemPedidos = pedidoItemPedidoDtos.stream()
+                .map(this::mapToPedidoItemPedidoModel)
+                .peek(pedidoItem -> pedidoItem.setPedido(pedido)) // Establecer la relación bidireccional
+                .toList();
+
+        pedido.setPedidoItemPedidos(pedidoItemPedidos);
+        return pedido;
+    }
+
+    private Cliente mapToCliente(Integer id) {
+        return clienteService.buscarClientePorId(id);
+    }
+
+    private Pago mapToPago(PagoDto pagoDto) {
+        switch (pagoDto.getClass().getSimpleName().toLowerCase()) {
+            case "mercadopago":
+                MercadoPagoDto mp = (MercadoPagoDto) pagoDto;
+                return MercadoPago.builder()
+                        .alias(mp.getAlias())
+                        .id(mp.getId())
+                        .fechaPago(mp.getFechaPago())
+                        .monto(mp.getMonto())
+                        .build();
+            case "transferencia":
+                TransferenciaDto t = (TransferenciaDto) pagoDto;
+                return Transferencia.builder()
+                        .cbu(t.getCbu())
+                        .cuit(t.getCuit())
+                        .id(t.getId())
+                        .fechaPago(t.getFechaPago())
+                        .monto(t.getMonto())
+                        .build();
+
+            default:
+                return null;
+        }
+    }
+
+    private PedidoItemPedido mapToPedidoItemPedidoModel(PedidoItemPedidoDto pedidoItemPedidoDto) {
+        return PedidoItemPedido.builder()
+                .id(pedidoItemPedidoDto.getId()) // Si es nuevo, este valor será null
+                .itemPedido(mapToItemPedidoModel(pedidoItemPedidoDto.getItemPedidoDto()))
+                .build();
+    }
+
+    private ItemPedido mapToItemPedidoModel(ItemPedidoDto itemPedidoDto) {
+        return ItemPedido.builder()
+                .cantidad(itemPedidoDto.getCantidad())
+                .itemMenu(mapToItemMenuModel(itemPedidoDto.getItemMenuDto()))
+                .build();
+    }
+
+    private ItemMenu mapToItemMenuModel(ItemMenuDto itemMenuDto) {
+        // Aquí necesitarás un mecanismo para obtener el `ItemMenu` desde la base de
+        // datos o crear uno nuevo
+
+        List<ItemMenu> itemMenus = itemMenuService.buscarItemMenuPorNombreYVendedor(itemMenuDto.getNombre(),
+                itemMenuDto.getIdVendedor());
+
+        if (itemMenus != null) {
+            return itemMenus.get(0);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -126,8 +220,7 @@ public class PedidoService {
 
     private Pedido parsePedido(PedidoDto pedidoDto) {
 
-        Integer idCliente = Integer.parseInt(pedidoDto.getIdCliente());
-        Cliente cliente = clienteService.buscarClientePorId(idCliente);
+        Cliente cliente = clienteService.buscarClientePorId(pedidoDto.getId());
 
         return Pedido.builder()
                 .cliente(cliente)

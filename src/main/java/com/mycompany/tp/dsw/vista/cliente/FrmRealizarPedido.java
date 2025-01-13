@@ -7,11 +7,10 @@ package com.mycompany.tp.dsw.vista.cliente;
 import com.mycompany.tp.dsw.controller.ItemMenuController;
 import com.mycompany.tp.dsw.controller.PedidoController;
 import com.mycompany.tp.dsw.controller.VendedorController;
-import com.mycompany.tp.dsw.model.ItemPedido;
-import com.mycompany.tp.dsw.model.ItemMenu;
-import com.mycompany.tp.dsw.model.Pedido;
-import com.mycompany.tp.dsw.model.Vendedor;
-import com.mycompany.tp.dsw.model.relacion.PedidoItemPedido;
+import com.mycompany.tp.dsw.dto.ItemMenuDto;
+import com.mycompany.tp.dsw.dto.ItemPedidoDto;
+import com.mycompany.tp.dsw.dto.PedidoDto;
+import com.mycompany.tp.dsw.dto.VendedorDto;
 import com.mycompany.tp.dsw.service.MensajeAlerta;
 import com.mycompany.tp.dsw.vista.util.HeaderFormatter;
 import com.mycompany.tp.dsw.vista.util.SpinnerCellEditor;
@@ -49,9 +48,9 @@ public class FrmRealizarPedido extends javax.swing.JFrame {
     }
 
     public void initDatos() {
-        List<Vendedor> vendedores = vendedorController.obtenerTodosLosVendedores();
+        List<VendedorDto> vendedores = vendedorController.obtenerTodosLosVendedores();
 
-        for (Vendedor v : vendedores) {
+        for (VendedorDto v : vendedores) {
             jComboBoxRestaurantes.addItem(v.getNombre());
         }
         jComboBoxRestaurantes.addActionListener(e -> actualizarTabla());
@@ -245,23 +244,15 @@ public class FrmRealizarPedido extends javax.swing.JFrame {
             MensajeAlerta.mostrarInformacion(mensaje.toString(), "Productos Seleccionados");
 
             // Generar y persistir el pedido, con el cliente
-            Pedido pedido = pedidoController.generarPedido(idCliente);
+            PedidoDto pedidoDto = pedidoController.generarPedido(idCliente);
 
-            List<ItemPedido> listaItemPedido = pedidoController.generarItemPedido(productosYCantidad);
+            List<ItemPedidoDto> listaItemPedidoDto = pedidoController.generarItemPedidoDto(productosYCantidad);
 
-            // Genera el itemPedido y agregarlo al pedido
-            for (ItemPedido itemPedido : listaItemPedido) {
-                PedidoItemPedido pedidoItemPedido = PedidoItemPedido.builder()
-                        .pedido(pedido)
-                        .itemPedido(itemPedido)
-                        .build();
+            pedidoController.guardarPedido(pedidoDto, listaItemPedidoDto);
 
-                pedido.getPedidoItemPedidos().add(pedidoItemPedido);
-            }
-
-            pedidoController.guardarPedido(pedido);
             MensajeAlerta.mostrarInformacion(String
-                    .format("Pedido realizado exitosamente.%nID Pedido: %d%nID Cliente: %s", pedido.getId(), idCliente),
+                    .format("Pedido realizado exitosamente.%nID Pedido: %d%nID Cliente: %s", pedidoDto.getId(),
+                            idCliente),
                     "Realizar Pedido");
             this.dispose();
         }
@@ -277,10 +268,10 @@ public class FrmRealizarPedido extends javax.swing.JFrame {
 
         if (selectedRestaurante != null) {
             // Buscar el vendedor correspondiente
-            Vendedor vendedor = vendedorController.buscarVendedorPorNombre(selectedRestaurante).get(0);
+            VendedorDto vendedor = vendedorController.buscarVendedorPorNombre(selectedRestaurante).get(0);
 
             // Obtener los items del menú asociados al vendedor
-            List<ItemMenu> items = itemMenuController.obtenerItemMenuPorIdVendedor(vendedor.getId());
+            List<ItemMenuDto> items = itemMenuController.obtenerItemMenuPorIdVendedor(vendedor.getId());
 
             // Mostrar los datos en la tabla
             mostrarTabla(items);
@@ -306,7 +297,7 @@ public class FrmRealizarPedido extends javax.swing.JFrame {
         header.setDefaultRenderer(new HeaderFormatter());
     }
 
-    public void mostrarTabla(List<ItemMenu> items) {
+    public void mostrarTabla(List<ItemMenuDto> items) {
 
         // Asegurarse de que la tabla tenga el modelo configurado
         if (tbProductos.getModel() == null || !(tbProductos.getModel() instanceof DefaultTableModel)) {
@@ -316,7 +307,7 @@ public class FrmRealizarPedido extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) tbProductos.getModel(); // Recupera el modelo
         model.setRowCount(0); // Vaciar la tabla
         if (items != null && !items.isEmpty()) {
-            for (ItemMenu item : items) {
+            for (ItemMenuDto item : items) {
                 Object[] fila = new Object[3];
                 fila[0] = item.getNombre();
                 fila[1] = item.getPrecio();

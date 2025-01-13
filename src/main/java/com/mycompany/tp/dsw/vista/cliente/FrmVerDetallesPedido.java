@@ -13,9 +13,12 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 
 import com.mycompany.tp.dsw.controller.PedidoController;
+import com.mycompany.tp.dsw.dto.ItemPedidoDto;
+import com.mycompany.tp.dsw.dto.PedidoDto;
+import com.mycompany.tp.dsw.exception.NoValidarException;
+import com.mycompany.tp.dsw.exception.PedidoNoEncontradoException;
 import com.mycompany.tp.dsw.model.Estado;
-import com.mycompany.tp.dsw.model.ItemPedido;
-import com.mycompany.tp.dsw.model.Pedido;
+import com.mycompany.tp.dsw.service.MensajeAlerta;
 import com.mycompany.tp.dsw.vista.util.HeaderFormatter;
 import javax.swing.JOptionPane;
 
@@ -28,7 +31,7 @@ public class FrmVerDetallesPedido extends javax.swing.JFrame {
     private String idPedido;
     private String idCliente;
     private PedidoController pedidoController;
-    private Pedido pedido;
+    private PedidoDto pedidoDto;
 
     public FrmVerDetallesPedido() {
 
@@ -39,15 +42,20 @@ public class FrmVerDetallesPedido extends javax.swing.JFrame {
         pedidoController = new PedidoController();
         this.idPedido = idPedido;
         this.idCliente = idCliente;
-        pedido = pedidoController.obtenerPedidoPorId(idPedido);
+
         this.setLocationRelativeTo(null);
         setearTituloTabla();
         initDatos();
     }
 
     public void initDatos() {
-        List<ItemPedido> itemsPedidos = pedido.getItems();
-        mostrarTabla(itemsPedidos);
+        try {
+            pedidoDto = pedidoController.obtenerPedidoPorId(idPedido);
+            List<ItemPedidoDto> itemsPedidos = pedidoController.obtenerItemPedidosPorPedido(pedidoDto);
+            mostrarTabla(itemsPedidos);
+        } catch (NoValidarException | PedidoNoEncontradoException e) {
+            MensajeAlerta.mostrarError(e.getMessage(), "Error en ver detalles");
+        }
 
     }
 
@@ -197,7 +205,7 @@ public class FrmVerDetallesPedido extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPagarTransferenciaActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPagarTransferenciaActionPerformed
-        if (pedido.getEstado().equals(Estado.ACEPTADO)) {
+        if (pedidoDto.getEstado().equals(Estado.ACEPTADO)) {
             FrmTransferencia transferenciaForm = new FrmTransferencia(idPedido, idCliente);
             transferenciaForm.setVisible(true);
             this.dispose();
@@ -207,7 +215,7 @@ public class FrmVerDetallesPedido extends javax.swing.JFrame {
     }// GEN-LAST:event_btnPagarTransferenciaActionPerformed
 
     private void btnPagarMercadoPagoActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPagarMercadoPagoActionPerformed
-        if (pedido.getEstado().equals(Estado.ACEPTADO)) {
+        if (pedidoDto.getEstado().equals(Estado.ACEPTADO)) {
             FrmMercadoPago mercadoPagoForm = new FrmMercadoPago(idPedido, idCliente);
             mercadoPagoForm.setVisible(true);
         } else {
@@ -230,7 +238,7 @@ public class FrmVerDetallesPedido extends javax.swing.JFrame {
         header.setDefaultRenderer(new HeaderFormatter());
     }
 
-    public void mostrarTabla(List<ItemPedido> itemsPedidos) {
+    public void mostrarTabla(List<ItemPedidoDto> itemsPedidos) {
         // Asegurarse de que la tabla tenga el modelo configurado
         if (tbDetallesPedido.getModel() == null || !(tbDetallesPedido.getModel() instanceof DefaultTableModel)) {
             setearTituloTabla(); // Configura el encabezado y el modelo si no está configurado
@@ -243,11 +251,11 @@ public class FrmVerDetallesPedido extends javax.swing.JFrame {
 
         BigDecimal total = BigDecimal.ZERO;
         if (itemsPedidos != null && !itemsPedidos.isEmpty()) {
-            for (ItemPedido item : itemsPedidos) {
+            for (ItemPedidoDto item : itemsPedidos) {
                 Object[] fila = new Object[3];
-                BigDecimal precio = item.getItemMenu().getPrecio();
+                BigDecimal precio = item.getItemMenuDto().getPrecio();
                 Integer cantidad = item.getCantidad();
-                fila[0] = item.getItemMenu().getNombre();
+                fila[0] = item.getItemMenuDto().getNombre();
                 fila[1] = precio;
                 fila[2] = cantidad;
                 model.addRow(fila);

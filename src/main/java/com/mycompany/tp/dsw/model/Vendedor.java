@@ -8,8 +8,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mycompany.tp.dsw.dto.VendedorDto;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -63,13 +61,15 @@ public class Vendedor {
     @Builder.Default
     private LocalDate fechaEliminacion = null;
 
-    public Vendedor(VendedorDto vendedorDto) {
-        this.id = vendedorDto.getId();
-        this.nombre = vendedorDto.getNombre();
-        this.direccion = vendedorDto.getDireccion();
-        this.coordenada = vendedorDto.getCoordenada();
-        activo = true;
-    }
+    /*
+     * public Vendedor(VendedorDto vendedorDto) {
+     * this.id = vendedorDto.getId();
+     * this.nombre = vendedorDto.getNombre();
+     * this.direccion = vendedorDto.getDireccion();
+     * this.coordenada = vendedorDto.getCoordenada();
+     * activo = true;
+     * }
+     */
 
     /**
      * Calculo de la distancia entre el Restaurante y el cliente
