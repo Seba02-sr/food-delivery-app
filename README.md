@@ -1,5 +1,5 @@
 # Food-Delivery-APP
-Este proyecto es una aplicación de delivery con un enfoque principalmente en el Backend.  Se trata de sistema monolítico de entrega de comida que permite a los restaurantes gestionar sus menús, pedidos y actualizaciones de estado. Los clientes pueden realizar pedidos, ver el historial y realizar pagos según la forma de pago seleccionada.
+Este proyecto es una aplicación de delivery con un enfoque principalmente en el Backend.  Se trata de un sistema monolítico de entrega de comida que permite a los restaurantes gestionar sus menús, pedidos y actualizaciones de estado. Los clientes pueden realizar pedidos, ver el historial y realizar pagos según la forma de pago seleccionada.
 
 ## Caracteristicas
 - Gestión de usuarios: vendedores (restaurantes/rotiserías) y compradores.
