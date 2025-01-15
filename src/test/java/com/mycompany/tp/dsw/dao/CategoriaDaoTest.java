@@ -18,13 +18,11 @@ public class CategoriaDaoTest {
 
     @Test
     void findByTipoCategoria_CategoriaEncontrada() throws CategoriaNoEncontradaException {
-        // Arrange
+
         String tipo = "Comida";
 
-        // Act
         List<Categoria> resultado = categoriaDAO.findByTipoCategoria(tipo);
 
-        // Assert
         assertNotNull(resultado);
         assertFalse(resultado.isEmpty());
         assertEquals("COMIDA", resultado.get(0).getTipo().name());
@@ -32,10 +30,9 @@ public class CategoriaDaoTest {
 
     @Test
     void findByTipoCategoria_CategoriaNoEncontrada() {
-        // Arrange
+
         String tipo = "INVALIDO";
 
-        // Act & Assert
         CategoriaNoEncontradaException exception = assertThrows(CategoriaNoEncontradaException.class, () -> {
             categoriaDAO.findByTipoCategoria(tipo);
         });

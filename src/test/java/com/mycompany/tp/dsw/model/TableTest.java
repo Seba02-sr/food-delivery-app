@@ -18,13 +18,11 @@ public class TableTest {
         Session session = null;
 
         try {
-            // 1. Abrir session en la Base de Datos
             session = sessionFactory.openSession();
             logger.info("Sesión abierta correctamente.");
         } catch (Exception e) {
             logger.info("Error al abrir la sesión");
         } finally {
-            // 2. Cerrar la session
             if (session != null) {
                 session.close();
                 logger.info("Sesión cerrada correctamente.");

@@ -196,7 +196,11 @@ public class FrmTransferencia extends javax.swing.JFrame {
 
                         pedidoDto.setFormaPagoDto(transferenciaDto);
 
-                        BigDecimal totalAPagar = pedidoController.calcularTotalAPagar(pedidoDto);
+                        BigDecimal totalAPagar = pedidoController.calcularTotalAPagar(pedidoDto); // pasar subtipo
+                                                                                                  // pagoDto, pasar a
+                                                                                                  // model, asignarle al
+                                                                                                  // pedido ese pago y
+                                                                                                  // calcular el pago.
 
                         MensajeAlerta.mostrarConfirmacion(
                                         "Pagar con transferencia tiene un recargo del 2%.\nMonto total a pagar: "
@@ -210,7 +214,6 @@ public class FrmTransferencia extends javax.swing.JFrame {
                 } catch (NoValidarException e) {
                         MensajeAlerta.mostrarError(e.getMessage(), "Error al Pagar con Transferencia");
                 }
-                this.dispose();
         }// GEN-LAST:event_btnPagarActionPerformed
 
         /**

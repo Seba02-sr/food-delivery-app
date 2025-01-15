@@ -17,7 +17,8 @@ public class ItemMenuDao extends GenericDAO<ItemMenu, Integer> {
     // Delete --> Usar deleteLogico
     // findAll --> Usar findAllActive
     // findById --> Usar findByIdAndActive
-    public List<ItemMenu> findActiveByNombre(String nombre) { // Creo que no se usa
+
+    public List<ItemMenu> findActiveByNombre(String nombre) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM ItemMenu im " +
                     "WHERE im.nombre LIKE :nombre " +

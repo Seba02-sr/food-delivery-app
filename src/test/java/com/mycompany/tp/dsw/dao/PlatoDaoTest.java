@@ -15,9 +15,8 @@ public class PlatoDaoTest {
 
     @Test
     void testFindActiveByIdVendedor() {
-        Integer vendedorId = 1; // Por ejemplo, si el ID del vendedor es 1, usa ese valor.
+        Integer vendedorId = 1;
 
-        // Ejecutar el método que quieres probar
         List<Plato> platos = platoService.obtenerPlatoPorIdVendedor(vendedorId);
 
         logger.info("Platos encontrados: " + platos);

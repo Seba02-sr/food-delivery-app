@@ -33,16 +33,15 @@ public class ItemMenuService {
     /**
      * Crea y persiste un ItemMenu.
      * - ItemMenu = Plato o Bebida.
-     * - Manejo de id unicos con currentID.
-     * - Parseo Solo los atributos de ItemMenu.
+     * - Convierte solo los atributos de ItemMenu.
      * - Los de la subclase en su respectivo service.
      * 
-     * @param itemMenu
+     * @param itemMenuDto Objeto DTO del ItemMenu
      */
     protected void registrarItemMenu(ItemMenuDto itemMenuDto) {
 
         Vendedor vendedor = vendedorService.buscarPorIdConListaItem(itemMenuDto.getIdVendedor());
-        ItemMenu itemMenu = parseItemMenu(itemMenuDto, vendedor);
+        ItemMenu itemMenu = mapToModel(itemMenuDto, vendedor);
         vendedor.getItemsMenu().add(itemMenu);
         itemMenuDao.save(itemMenu);
     }
@@ -51,8 +50,9 @@ public class ItemMenuService {
      * Busca el item filtrado por el nombre.
      * - Ignora mayusculas y minusculas.
      * 
-     * @param nombre
-     * @return Lista de los items que coincide con el @param.
+     * @param nombre Nombre del item
+     * @param id     ID del vendedor
+     * @return Lista de los items que coinciden con el nombre
      */
     public List<ItemMenu> buscarItemMenuPorNombreYVendedor(String nombre, Integer id) {
         return itemMenuDao.findActiveByNombreAndVendedor(nombre, id);
@@ -62,23 +62,23 @@ public class ItemMenuService {
      * Modifica los datos de un item especifico.
      * - Del objeto itemMenu pasado como parametro.
      * - Solo los datos a modificar permanecen no nulos.
-     * - Parseo solo los atributos de Item Menu.
+     * - Convierte solo los atributos de ItemMenu.
      * - Los de la subclase en su respectivo service.
      * 
-     * @param itemMenu El objeto item con los datos modificados.
+     * @param itemMenuDto Objeto DTO del ItemMenu con los datos modificados
      */
     protected void modificarItemMenu(ItemMenuDto itemMenuDto) {
         Vendedor vendedor = vendedorService.buscarPorIdConListaItem(itemMenuDto.getIdVendedor());
-        ItemMenu itemMenu = parseItemMenu(itemMenuDto, vendedor); // ver si puede ser null el vendedor
+        ItemMenu itemMenu = mapToModel(itemMenuDto, vendedor); // ver si puede ser null el vendedor
         vendedor.getItemsMenu().add(itemMenu);
         itemMenuDao.update(itemMenu);
     }
 
     /**
-     * Elimina un item del restaurante, segun el id.
+     * Elimina logicamente un item del restaurante, segun el id.
      * - Eliminar = setear atributo activo a false.
      * 
-     * @param id
+     * @param id ID del item a eliminar
      */
     public void eliminarItemMenu(Integer id) {
         ItemMenu item = itemMenuDao.findByIdAndActive(id);
@@ -86,37 +86,49 @@ public class ItemMenuService {
     }
 
     /**
-     * Obtiene una lista de todos los item ACTIVOS del sistema
-     * - OJO no son los item de un restaurante
-     * - Mirar metodo filtrarPorVendedor()
+     * Obtiene una lista de todos los items activos del sistema.
+     * - No son los items de un restaurante especifico.
+     * - Mirar metodo filtrarPorVendedor().
      * 
-     * @return Lista con los items
+     * @return Lista con los items activos
      */
     public List<ItemMenu> obtenerTodosLosItemMenu() {
         return itemMenuDao.findAllActive();
     }
 
     /**
-     * Busca los item segun un Restaurante
+     * Busca los items segun un restaurante.
      * 
-     * @param vendedor El restaurante a buscar los item
-     * @return Lista de item que tiene el restaurante
-     * @throws VendedorNoEncontradoException Si no encuentra el Restaurante
+     * @param vendedorDto DTO del restaurante
+     * @return Lista de items que tiene el restaurante
+     * @throws VendedorNoEncontradoException Si no se encuentra el restaurante
      */
     public List<ItemMenu> filtrarPorVendedor(VendedorDto vendedorDto) throws VendedorNoEncontradoException {
         return itemMenuDao.findByVendedorId(vendedorDto.getId());
     }
 
+    /**
+     * Busca un item especifico por su ID.
+     * 
+     * @param idItem ID del item a buscar
+     * @return ItemMenu correspondiente al ID
+     */
     public ItemMenu buscarPorId(Integer idItem) {
         return itemMenuDao.findById(idItem);
     }
 
-    private ItemMenu parseItemMenu(ItemMenuDto itemMenuDto, Vendedor vendedor) {
-        // 1. Parsear los datos del ItemMenu
-
+    /**
+     * Convierte un ItemMenuDto en un objeto ItemMenu.
+     * - Incluye la asignacion de categoria y vendedor.
+     * - Maneja subtipos como Plato y Bebida.
+     * 
+     * @param itemMenuDto DTO del ItemMenu
+     * @param vendedor    Objeto Vendedor asociado
+     * @return Objeto ItemMenu correspondiente al DTO
+     */
+    private ItemMenu mapToModel(ItemMenuDto itemMenuDto, Vendedor vendedor) {
         Categoria categoria = categoriaDao.findByNombre(itemMenuDto.getCategoria());
 
-        // 2. Crear el objeto
         switch (itemMenuDto.getClass().getSimpleName()) {
             case "PlatoDto":
                 PlatoDto platoDto = (PlatoDto) itemMenuDto;

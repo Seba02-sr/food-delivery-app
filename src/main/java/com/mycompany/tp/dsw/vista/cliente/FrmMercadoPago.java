@@ -141,12 +141,12 @@ public class FrmMercadoPago extends javax.swing.JFrame {
                     "Pagar con Transferencia", this);
 
             pedidoController.actualizarPedido(pedidoDto, clienteDto);
+            this.dispose();
         } catch (PedidoNoEncontradoException e) {
             MensajeAlerta.mostrarError(e.getMessage(), "Error Pagar Mercado Pago");
         } catch (NoValidarException e) {
             MensajeAlerta.mostrarError(e.getMessage(), "Error al Pagar con Mercado Pago");
         }
-        this.dispose();
 
     }// GEN-LAST:event_btnPagarActionPerformed
 

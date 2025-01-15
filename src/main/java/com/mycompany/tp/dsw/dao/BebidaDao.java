@@ -12,8 +12,6 @@ import com.mycompany.tp.dsw.service.HibernateUtil;
 
 public class BebidaDao extends ItemMenuDao {
 
-    // Sobrescribir findAll para devolver List<ItemMenu>, pero solo con objetos
-    // Bebida
     @Override
     public List<ItemMenu> findAllActive() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -21,7 +19,6 @@ public class BebidaDao extends ItemMenuDao {
                     "WHERE p.activo = true";
             List<ItemMenu> itemsMenu = session.createQuery(hql, ItemMenu.class).getResultList();
 
-            // Filtrar para devolver solo los objetos Bebida
             List<ItemMenu> bebidas = new ArrayList<>();
             for (ItemMenu item : itemsMenu) {
                 if (item instanceof Bebida) {

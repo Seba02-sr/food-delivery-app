@@ -16,58 +16,51 @@ public class ClienteService {
     }
 
     /**
-     * Crea y persiste un cliente
-     * - Menejo de id unicos con currentID
+     * Registra y persiste un nuevo cliente en el sistema.
      * 
-     * @param clientedto El cliente a persistir
+     * @param clienteDto DTO con la informacion del cliente a registrar.
      */
     public void registrarCliente(ClienteDto clientedto) {
-        // 1. Crear la instancia Cliente
-        Cliente cliente = parseCliente(clientedto);
-
-        // 2. Persistir el dato
+        Cliente cliente = mapToModel(clientedto);
         clienteDao.save(cliente);
     }
 
     /**
-     * Busca clientes filtrado por el nombre
-     * - Ignora mayusculas y minusculas
+     * Busca clientes activos cuyo nombre coincida parcialmente con el criterio.
+     * - Ignora mayusculas y minusculas.
      * 
-     * @param nombre
-     * @return Lista de clientes que coinciden con el @param
+     * @param nombre Nombre o parte del nombre a buscar.
+     * @return Lista de clientes que cumplen con el criterio de busqueda.
      */
     public List<Cliente> buscarClientePorNombre(String nombre) {
         return clienteDao.findActiveByNombre(nombre);
     }
 
     /**
-     * Modifica los datos de un cliente especifico
+     * Actualiza la informacion de un cliente existente.
+     * - Sobrescribe los datos del cliente con los valores proporcionados en el DTO.
      * 
-     * @param clienteDto El objeto 'ClienteDTO' con los datos modificados
+     * @param clienteDto DTO con los datos actualizados del cliente.
      */
     public void modificarCliente(ClienteDto clienteDto) {
-        // 1. Crear la instancia cliente
-        Cliente cliente = parseCliente(clienteDto);
-
-        // 2. Persistir el cambio
+        Cliente cliente = mapToModel(clienteDto);
         clienteDao.update(cliente);
     }
 
     /**
-     * Busca un cliente ACTIVO segun el id
+     * Busca un cliente activo segun su identificador unico.
      * 
-     * @param id
-     * @return El cliente que corresponde al @param
+     * @param id Identificador unico del cliente.
+     * @return Cliente encontrado o null si no existe.
      */
     public Cliente buscarClientePorId(Integer id) {
         return clienteDao.findByIdAndActive(id);
     }
 
     /**
-     * Elimina LOGICAMENTE un cliente, segun el id.
-     * - seteando ACTIVO en false.
+     * Elimina logicamente un cliente estableciendo su estado como inactivo.
      * 
-     * @param id
+     * @param id Identificador unico del cliente a eliminar.
      */
     public void eliminarCliente(Integer id) {
         Cliente cliente = clienteDao.findById(id);
@@ -75,21 +68,21 @@ public class ClienteService {
     }
 
     /**
-     * Obtiene una lista de todos los clientes ACTIVOS del sistema.
+     * Obtiene todos los clientes activos en el sistema.
      * 
-     * @return Lista de los clientes del sistema.
+     * @return Lista de clientes activos.
      */
     public List<Cliente> obtenerTodosLosClientes() {
         return clienteDao.findAllActive();
     }
 
     /**
-     * Realiza la creacion del objeto 'Cliente' a partir de su DTO
+     * Convierte un objeto ClienteDto en un modelo Cliente.
      * 
-     * @param clienteDto El DTO que se quiere crear cliente
-     * @return El objeto cliente
+     * @param clienteDto DTO con la informacion a convertir.
+     * @return Objeto Cliente listo para persistir o manipular.
      */
-    private Cliente parseCliente(ClienteDto clienteDto) {
+    private Cliente mapToModel(ClienteDto clienteDto) {
 
         Coordenada coordenada = Coordenada.builder()
                 .latitud(clienteDto.getCoordenadaDto().getLatitud())

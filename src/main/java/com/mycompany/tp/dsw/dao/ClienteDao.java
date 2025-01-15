@@ -9,13 +9,14 @@ import com.mycompany.tp.dsw.service.HibernateUtil;
 
 public class ClienteDao extends GenericDAO<Cliente, Integer> {
 
+    // Delete --> Usar deleteLogico
+    // findById --> Usar findByIdAndActive
+    // finaAll --> Usar findAllActive
+
     public ClienteDao() {
         super(Cliente.class);
     }
 
-    // Delete --> Usar deleteLogico
-    // findById --> Usar findByIdAndActive
-    // finaAll --> Usar findAllActive
     public List<Cliente> findActiveByNombre(String nombre) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM Cliente c " +

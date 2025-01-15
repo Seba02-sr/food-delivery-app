@@ -53,10 +53,10 @@ public class FrmVerPedidoVendedor extends javax.swing.JFrame {
 
     public void initDatos() {
 
-        List<PedidoDto> pedidos = pedidoController.obtenerPedidoPorIdVendedor(idVendedor);
         try {
+            List<PedidoDto> pedidos = pedidoController.obtenerPedidoPorIdVendedor(idVendedor);
             mostrarTabla(pedidos);
-        } catch (PedidoNoEncontradoException e) {
+        } catch (PedidoNoEncontradoException | NoValidarException e) {
             MensajeAlerta.mostrarError(e.getMessage(), "Error en inicializar los datos del pedido");
         }
 
@@ -215,7 +215,7 @@ public class FrmVerPedidoVendedor extends javax.swing.JFrame {
         // Actualizar la tabla después de los cambios
         try {
             mostrarTabla(pedidoController.obtenerPedidoPorIdVendedor(idVendedor));
-        } catch (PedidoNoEncontradoException e) {
+        } catch (PedidoNoEncontradoException | NoValidarException e) {
             MensajeAlerta.mostrarError(e.getMessage(), "Error al aceptar pedidos");
         }
     }// GEN-LAST:event_btnAceptarPedidosActionPerformed

@@ -51,6 +51,10 @@ public class FrmVerDetallesPedido extends javax.swing.JFrame {
     public void initDatos() {
         try {
             pedidoDto = pedidoController.obtenerPedidoPorId(idPedido);
+            if (!pedidoDto.getEstado().equals(Estado.ACEPTADO)) {
+                btnPagarMercadoPago.setEnabled(false);
+                btnPagarTransferencia.setEnabled(false);
+            }
             List<ItemPedidoDto> itemsPedidos = pedidoController.obtenerItemPedidosPorPedido(pedidoDto);
             mostrarTabla(itemsPedidos);
         } catch (NoValidarException | PedidoNoEncontradoException e) {
@@ -218,6 +222,7 @@ public class FrmVerDetallesPedido extends javax.swing.JFrame {
         if (pedidoDto.getEstado().equals(Estado.ACEPTADO)) {
             FrmMercadoPago mercadoPagoForm = new FrmMercadoPago(idPedido, idCliente);
             mercadoPagoForm.setVisible(true);
+            this.dispose();
         } else {
             JOptionPane.showMessageDialog(null, "Espere que su pedido sea aceptado por el restaurante");
         }

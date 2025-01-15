@@ -33,11 +33,7 @@
             create-drop : crea el esquema, lo borra al final -->
         <property name="hibernate.hbm2ddl.auto">create</property>
 
-        <!-- Importar SQL, siempre tiene que llamarse import.sql, si se cambia el nombre hay que indicarle que lo reconozca -->
-        <!-- Ejemplo de un archivo extra llamado data.sql -->
-        <!-- <property name="hibernate.hbm2ddl.import_files">data.sql</property> -->
-
-        <!-- Entities -->
+        <!-- Entity -->
         <mapping class="com.mycompany.tp.dsw.model.Bebida"/>
         <mapping class="com.mycompany.tp.dsw.model.Categoria"/>
         <mapping class="com.mycompany.tp.dsw.model.Cliente"/>
@@ -53,7 +49,5 @@
 
         <mapping class="com.mycompany.tp.dsw.model.relacion.PedidoItemPedido"/>
         
-
-
     </session-factory>
 </hibernate-configuration>

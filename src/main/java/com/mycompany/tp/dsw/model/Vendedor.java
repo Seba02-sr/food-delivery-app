@@ -61,16 +61,6 @@ public class Vendedor {
     @Builder.Default
     private LocalDate fechaEliminacion = null;
 
-    /*
-     * public Vendedor(VendedorDto vendedorDto) {
-     * this.id = vendedorDto.getId();
-     * this.nombre = vendedorDto.getNombre();
-     * this.direccion = vendedorDto.getDireccion();
-     * this.coordenada = vendedorDto.getCoordenada();
-     * activo = true;
-     * }
-     */
-
     /**
      * Calculo de la distancia entre el Restaurante y el cliente
      * - Implementado utilizando la formula de Haversine

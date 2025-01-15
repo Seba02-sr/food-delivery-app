@@ -24,8 +24,6 @@ public class BebidaService extends ItemMenuService {
     public List<Bebida> obtenerTodasLasBebidas() {
         List<ItemMenu> items = bebidaDao.findAllActive();
 
-        // Parsear los items a bebidas
-
         List<Bebida> bebidas = new ArrayList<>();
         for (ItemMenu item : items) {
             if (item instanceof Bebida) {
@@ -36,10 +34,23 @@ public class BebidaService extends ItemMenuService {
         return bebidas;
     }
 
+    /**
+     * Obtiene una lista de bebidas filtradas por el id del vendedor.
+     * 
+     * @param id Id del vendedor
+     * @return Lista de bebidas del vendedor
+     */
     public List<Bebida> obtenerBebidaPorIdVendedor(Integer id) {
         return bebidaDao.findActiveByIdVendedor(id);
     }
 
+    /**
+     * Busca bebidas filtradas por su nombre y el id del vendedor.
+     * 
+     * @param nombre Nombre de la bebida
+     * @param id     Id del vendedor
+     * @return Lista de bebidas que coinciden con el nombre y el vendedor
+     */
     public List<Bebida> buscarBebidaPorNombreYVendedor(String nombre, Integer id) {
         List<ItemMenu> items = buscarItemMenuPorNombreYVendedor(nombre, id);
         List<Bebida> bebidas = new ArrayList<>();
@@ -51,6 +62,13 @@ public class BebidaService extends ItemMenuService {
         return bebidas;
     }
 
+    /**
+     * Busca una bebida especifica por su id y el id del vendedor.
+     * 
+     * @param idBebida   Id de la bebida
+     * @param idVendedor Id del vendedor
+     * @return Bebida correspondiente o null si no se encuentra
+     */
     public Bebida buscarBebidaPorId(Integer idBebida, Integer idVendedor) {
         List<Bebida> bebidas = obtenerBebidaPorIdVendedor(idVendedor);
         for (Bebida bebida : bebidas) {
@@ -61,38 +79,22 @@ public class BebidaService extends ItemMenuService {
         return null;
     }
 
+    /**
+     * Registra una nueva bebida en el sistema.
+     * 
+     * @param bebidaDto DTO de la bebida a registrar
+     */
     public void registrarBebida(BebidaDto bebidaDto) {
-        // parseBebidaDto(bebidaDto);
         super.registrarItemMenu(bebidaDto);
     }
 
+    /**
+     * Modifica los datos de una bebida existente.
+     * 
+     * @param bebidaDto DTO de la bebida con los datos actualizados
+     */
     public void modificarBebida(BebidaDto bebidaDto) {
-        // parseBebidaDto(bebidaDto);
         super.modificarItemMenu(bebidaDto);
     }
-
-    /*
-     * public void parseBebidaDto(BebidaDto bebidaDto) {
-     * String graduacionAlcoholica = bebidaDto.getGraduacionAlcoholicaText();
-     * if (!esNullOrBlank(graduacionAlcoholica)) {
-     * bebidaDto.setGraduacionAlcoholica(Double.parseDouble(graduacionAlcoholica));
-     * }
-     * 
-     * String tamano = bebidaDto.getTamanoText();
-     * if (!esNullOrBlank(tamano)) {
-     * bebidaDto.setTamano(Double.parseDouble(tamano));
-     * }
-     * 
-     * String volumen = bebidaDto.getVolumenText();
-     * if (!esNullOrBlank(volumen)) {
-     * bebidaDto.setVolumen(Double.parseDouble(volumen));
-     * }
-     * 
-     * }
-     * 
-     * private Boolean esNullOrBlank(String palabra) {
-     * return palabra.trim() == null || palabra.isBlank();
-     * }
-     */
 
 }

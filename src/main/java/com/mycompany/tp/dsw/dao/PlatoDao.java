@@ -52,8 +52,6 @@ public class PlatoDao extends ItemMenuDao {
 
     }
 
-    // Sobrescribir findAll para devolver List<ItemMenu>, pero solo con objetos
-    // Plato
     @Override
     public List<ItemMenu> findAllActive() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {

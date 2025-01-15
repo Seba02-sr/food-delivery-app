@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.tp.dsw.model;
 
 import jakarta.persistence.Column;
@@ -45,35 +41,6 @@ public class Plato extends ItemMenu {
     @DecimalMin(value = "0.05", message = "El peso debe ser al menos 50g")
     @DecimalMax(value = "10.00", message = "El peso no puede exceder 10kg")
     private Double peso;
-
-    // Constructor para modificar Plato
-    /*
-     * public Plato(PlatoDto platoDto, Vendedor vendedor) {
-     * super(platoDto.getId(),
-     * platoDto.getNombre(),
-     * platoDto.getDescripcion(),
-     * platoDto.getPrecio(),
-     * platoDto.getCategoria(),
-     * vendedor);
-     * this.calorias = platoDto.getCalorias();
-     * this.aptoCeliaco = platoDto.getAptoCeliaco();
-     * this.aptoVegetariano = platoDto.getAptoVegetariano();
-     * this.aptoVegano = platoDto.getAptoVegano();
-     * this.peso = platoDto.getPeso();
-     * }
-     * 
-     * public Plato(String nombre, Double calorias, Boolean aptoCeliaco, Boolean
-     * aptoVegetariano, Boolean aptoVegano,
-     * Double peso, Vendedor vendedor,
-     * Integer id, BigDecimal precio, String descripcion, Categoria categoria) {
-     * super(id, nombre, descripcion, precio, categoria, vendedor);
-     * this.calorias = calorias;
-     * this.aptoCeliaco = aptoCeliaco;
-     * this.aptoVegetariano = aptoVegetariano;
-     * this.aptoVegano = aptoVegano;
-     * this.peso = peso;
-     * }
-     */
 
     /**
      * Metodo que setea si el Plato es apto vegetariano

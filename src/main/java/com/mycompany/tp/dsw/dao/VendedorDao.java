@@ -10,23 +10,23 @@ import com.mycompany.tp.dsw.service.HibernateUtil;
 
 public class VendedorDao extends GenericDAO<Vendedor, Integer> {
 
+    // Delete --> Usar deleteLogico
+    // FindById --> Usar findByIdAndActive
+    // FindAll --> Usar findAllActive
+
     public VendedorDao() {
         super(Vendedor.class);
     }
 
     public List<Vendedor> findActiveByNombre(String nombre) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            // Crear la consulta HQL
             String hql = "FROM Vendedor v " +
                     "WHERE v.activo = true " +
                     "AND LOWER(v.nombre) LIKE :nombre";
             Query<Vendedor> query = session.createQuery(hql, Vendedor.class);
 
-            // Asignar el parámetro de búsqueda, asegurándose de que se busque de forma
-            // insensible a mayúsculas
             query.setParameter("nombre", "%" + nombre.toLowerCase() + "%");
 
-            // Ejecutar la consulta y devolver los resultados
             List<Vendedor> resultados = query.list();
 
             return resultados;
@@ -51,9 +51,5 @@ public class VendedorDao extends GenericDAO<Vendedor, Integer> {
             throw new RuntimeException(errorMessage, e);
         }
     }
-
-    // Delete --> Usar deleteLogico
-    // FindById --> Usar findByIdAndActive
-    // FindAll --> Usar findAllActive
 
 }

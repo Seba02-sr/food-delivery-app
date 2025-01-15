@@ -11,6 +11,7 @@ import com.mycompany.tp.dsw.dto.ItemMenuDto;
 import com.mycompany.tp.dsw.dto.ItemPedidoDto;
 import com.mycompany.tp.dsw.dto.PedidoDto;
 import com.mycompany.tp.dsw.dto.VendedorDto;
+import com.mycompany.tp.dsw.exception.NoValidarException;
 import com.mycompany.tp.dsw.service.MensajeAlerta;
 import com.mycompany.tp.dsw.vista.util.HeaderFormatter;
 import com.mycompany.tp.dsw.vista.util.SpinnerCellEditor;
@@ -227,34 +228,39 @@ public class FrmRealizarPedido extends javax.swing.JFrame {
 
     private void btnRealizarPedidoActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnRealizarPedidoActionPerformed
         Map<String, List<Integer>> productosYCantidad = obtenerProductosPedidos();
+        try {
+            if (productosYCantidad.isEmpty()) {
+                MensajeAlerta.mostrarInformacion("No se ha seleccionado ningún producto.", "Realizar pedido");
+            } else {
+                double totalGeneral = calcularTotalGeneral(productosYCantidad);
 
-        if (productosYCantidad.isEmpty()) {
-            MensajeAlerta.mostrarInformacion("No se ha seleccionado ningún producto.", "Realizar pedido");
-        } else {
-            double totalGeneral = calcularTotalGeneral(productosYCantidad);
+                // Construir un mensaje
+                StringBuilder mensaje = new StringBuilder();
+                productosYCantidad.forEach((producto, detalles) -> mensaje.append(producto)
+                        .append(": Cantidad = ").append(detalles.get(0).intValue())
+                        .append(", Subtotal = $").append(String.format("%.2f", detalles.get(1).doubleValue()))
+                        .append("\n"));
+                mensaje.append("TOTAL: $").append(String.format("%.2f", totalGeneral));
 
-            // Construir un mensaje
-            StringBuilder mensaje = new StringBuilder();
-            productosYCantidad.forEach((producto, detalles) -> mensaje.append(producto)
-                    .append(": Cantidad = ").append(detalles.get(0).intValue())
-                    .append(", Subtotal = $").append(String.format("%.2f", detalles.get(1).doubleValue()))
-                    .append("\n"));
-            mensaje.append("TOTAL: $").append(String.format("%.2f", totalGeneral));
+                MensajeAlerta.mostrarInformacion(mensaje.toString(), "Productos Seleccionados");
 
-            MensajeAlerta.mostrarInformacion(mensaje.toString(), "Productos Seleccionados");
+                // Generar y persistir el pedido, con el cliente
+                PedidoDto pedidoDto;
 
-            // Generar y persistir el pedido, con el cliente
-            PedidoDto pedidoDto = pedidoController.generarPedido(idCliente);
+                pedidoDto = pedidoController.generarPedido(idCliente);
 
-            List<ItemPedidoDto> listaItemPedidoDto = pedidoController.generarItemPedidoDto(productosYCantidad);
+                List<ItemPedidoDto> listaItemPedidoDto = pedidoController.generarItemPedidoDto(productosYCantidad);
 
-            pedidoController.guardarPedido(pedidoDto, listaItemPedidoDto);
+                pedidoController.guardarPedido(pedidoDto, listaItemPedidoDto);
 
-            MensajeAlerta.mostrarInformacion(String
-                    .format("Pedido realizado exitosamente.%nID Pedido: %d%nID Cliente: %s", pedidoDto.getId(),
-                            idCliente),
-                    "Realizar Pedido");
-            this.dispose();
+                MensajeAlerta.mostrarInformacion(String
+                        .format("Pedido realizado exitosamente.%nID Pedido: %d%nID Cliente: %s", pedidoDto.getId(),
+                                idCliente),
+                        "Realizar Pedido");
+                this.dispose();
+            }
+        } catch (NoValidarException e) {
+            MensajeAlerta.mostrarError(e.getMessage(), "Error al realizar pedido");
         }
     }// GEN-LAST:event_btnRealizarPedidoActionPerformed
 

@@ -12,7 +12,6 @@ import com.mycompany.tp.dsw.exception.PedidoNoEncontradoException;
 import com.mycompany.tp.dsw.service.MensajeAlerta;
 import com.mycompany.tp.dsw.vista.util.HeaderFormatter;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
@@ -174,13 +173,13 @@ public class FrmVerPedidos extends javax.swing.JFrame {
 
     private void jmiVerDetallesActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jmiVerDetallesActionPerformed
         int selectedRow = tbPedidos.getSelectedRow();
-
         if (selectedRow != -1) {
             String idPedido = tbPedidos.getValueAt(selectedRow, 0).toString();
             FrmVerDetallesPedido verDetallePedidoForm = new FrmVerDetallesPedido(idPedido, idCliente);
             verDetallePedidoForm.setVisible(true);
+            this.dispose();
         } else {
-            JOptionPane.showMessageDialog(null, "Seleccione un cliente");
+            MensajeAlerta.mostrarInformacion("Por favor seleccione un pedido", "Error al ver detalles del pedido");
         }
     }// GEN-LAST:event_jmiVerDetallesActionPerformed
 
@@ -212,7 +211,7 @@ public class FrmVerPedidos extends javax.swing.JFrame {
                     Object[] fila = new Object[5];
                     fila[0] = pedido.getId();
                     fila[1] = pedidoController.obtenerNombreVendedor(pedido);
-                    fila[2] = pedidoController.calcularTotalAPagar(pedido);
+                    fila[2] = pedidoController.calcularTotalAPagarSinRecargo(pedido);
                     fila[3] = pedidoController.obtenerCantidadItems(pedido);
                     fila[4] = pedido.getEstado();
                     model.addRow(fila);

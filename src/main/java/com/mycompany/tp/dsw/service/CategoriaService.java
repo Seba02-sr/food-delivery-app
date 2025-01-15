@@ -15,26 +15,31 @@ public class CategoriaService {
         }
 
         /**
-         * Obtiene una categoria basada en su nombre.
-         * - No hay posibilidad de error por no encontrar categoria
-         * - Tenido en cuenta en la interfaz
+         * Busca una categoria basada en su nombre.
          * 
-         * @param nombre El nombre que se desea obtener
-         * @return La categoria correspondiente al nombre
+         * @param nombre Nombre de la categoria a buscar.
+         * @return Categoria correspondiente al nombre proporcionado.
          */
         public Categoria obtenerCategoriaPorNombre(String nombre) {
                 return categoriaDao.findByNombre(nombre);
         }
 
         /**
-         * Obtiene todas las categorias persistidas
+         * Obtiene la lista de todas las categorias persistidas en el sistema.
          * 
-         * @return
+         * @return Lista de todas las categorias disponibles.
          */
         public List<Categoria> obtenerTodasLasCategorias() {
                 return categoriaDao.findAll();
         }
 
+        /**
+         * Busca categorias filtradas por su tipo.
+         * 
+         * @param tipo Tipo de categoria a buscar.
+         * @return Lista de categorias que coinciden con el tipo especificado.
+         * @throws CategoriaNoEncontradaException Si no se encuentran categorias.
+         */
         public List<Categoria> buscarPorTipoCategoria(String tipo) throws CategoriaNoEncontradaException {
                 return categoriaDao.findByTipoCategoria(tipo);
         }

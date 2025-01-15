@@ -43,6 +43,12 @@ public class ItemMenuController {
         vendedorService = serviceManager.getVendedorService();
     }
 
+    /**
+     * Persiste un nuevo item en el menú, ya sea un plato o una bebida.
+     *
+     * @param item          El item a guardar en el menú.
+     * @param tipoCategoria El tipo de categoría (Plato o Bebida) del item.
+     */
     public void guardarItemMenu(ItemMenuDto item, String tipoCategoria) {
         switch (tipoCategoria) {
             case "Plato":
@@ -58,8 +64,18 @@ public class ItemMenuController {
         }
     }
 
-    public void eliminarItemMenu(String idText, String tipoCategoria) {
-        Integer id = Integer.parseInt(idText);
+    /**
+     * Elimina logicamente un item del menú basado en su ID y tipo de categoría.
+     *
+     * @param idText        El ID del item a eliminar.
+     * @param tipoCategoria El tipo de categoría del item (Plato o Bebida).
+     * @throws NoValidarException Si el ID no es válido.
+     */
+    public void eliminarItemMenu(String idText, String tipoCategoria) throws NoValidarException {
+        Integer id = null;
+        if (idText != null) {
+            id = idValido(idText);
+        }
         switch (tipoCategoria) {
             case "Plato":
                 platoService.eliminarItemMenu(id);
@@ -70,6 +86,12 @@ public class ItemMenuController {
         }
     }
 
+    /**
+     * Modifica un item existente en el menú, ya sea un plato o una bebida.
+     *
+     * @param item          El item a modificar.
+     * @param tipoCategoria El tipo de categoría (Plato o Bebida) del item.
+     */
     public void modificarItemMenu(ItemMenuDto item, String tipoCategoria) {
         switch (tipoCategoria) {
             case "Plato":
@@ -85,12 +107,30 @@ public class ItemMenuController {
         }
     }
 
-    public VendedorDto obtenerVendedor(String idText) {
-        Integer id = Integer.parseInt(idText);
+    /**
+     * Obtiene un vendedor por su ID.
+     *
+     * @param idText El ID del vendedor.
+     * @return Un DTO de Vendedor con los detalles del vendedor.
+     * @throws NoValidarException Si el ID no es válido.
+     */
+    public VendedorDto obtenerVendedor(String idText) throws NoValidarException {
+        Integer id = null;
+        if (idText != null) {
+            id = idValido(idText);
+        }
         Vendedor vendedor = vendedorService.buscarVendedorPorId(id);
         return mapToDto(vendedor);
     }
 
+    /**
+     * Obtiene los valores del tipo de categoria.
+     *
+     * @param tipoCategoria El tipo de categoría (Plato o Bebida).
+     * @return Una lista de nombres de categorías.
+     * @throws CategoriaNoEncontradaException Si no se encuentra ninguna categoría
+     *                                        para el tipo proporcionado.
+     */
     public List<String> getValoresComboBoxCategoria(String tipoCategoria) throws CategoriaNoEncontradaException {
         if (tipoCategoria.equals("Plato")) {
             tipoCategoria = "Comida";
@@ -110,16 +150,35 @@ public class ItemMenuController {
 
     }
 
+    /**
+     * Obtiene los platos disponibles de un vendedor basado en su ID.
+     *
+     * @param vendedorDto El DTO del vendedor con el ID.
+     * @return Una lista de DTOs de platos del vendedor.
+     */
     public List<PlatoDto> obtenerPlatoPorIdVendedor(VendedorDto vendedorDto) {
         List<Plato> platos = platoService.obtenerPlatoPorIdVendedor(vendedorDto.getId());
         return platos.stream().map(this::mapToDto).toList();
     }
 
+    /**
+     * Obtiene las bebidas disponibles de un vendedor basado en su ID.
+     *
+     * @param vendedorDto El DTO del vendedor con el ID.
+     * @return Una lista de DTOs de bebidas del vendedor.
+     */
     public List<BebidaDto> obtenerBebidaPorIdVendedor(VendedorDto vendedorDto) {
         List<Bebida> bebidas = bebidaService.obtenerBebidaPorIdVendedor(vendedorDto.getId());
         return bebidas.stream().map(this::mapToDto).toList();
     }
 
+    /**
+     * Obtiene todos los items del menú (platos y bebidas) para un vendedor
+     * específico.
+     *
+     * @param id El ID del vendedor.
+     * @return Una lista de DTOs de items del menú (platos y bebidas).
+     */
     public List<ItemMenuDto> obtenerItemMenuPorIdVendedor(Integer id) {
         List<ItemMenu> retItems = new ArrayList<>();
         retItems.addAll(platoService.obtenerPlatoPorIdVendedor(id));
@@ -128,42 +187,103 @@ public class ItemMenuController {
         return retItems.stream().map(this::mapToDto).toList();
     }
 
-    public ItemMenuDto obtenerPlatoVendedorPorId(String idPlatoText, VendedorDto vendedorDto) {
-        Integer idPlato = Integer.parseInt(idPlatoText);
+    /**
+     * Obtiene un plato específico de un vendedor por su ID de plato.
+     *
+     * @param idPlatoText El ID del plato.
+     * @param vendedorDto El DTO del vendedor.
+     * @return Un DTO de Plato.
+     * @throws NoValidarException Si el ID del plato no es válido.
+     */
+    public ItemMenuDto obtenerPlatoVendedorPorId(String idPlatoText, VendedorDto vendedorDto)
+            throws NoValidarException {
+        Integer idPlato = null;
+        if (idPlatoText != null) {
+            idPlato = idValido(idPlatoText);
+        }
 
         Plato plato = platoService.buscarPlatoPorId(idPlato, vendedorDto.getId());
 
         return mapToDto(plato);
     }
 
-    public BebidaDto obtenerBebidaVendedorPorId(String idText, VendedorDto vendedorDto) {
+    /**
+     * Obtiene una bebida específica de un vendedor por su ID de bebida.
+     *
+     * @param idText      El ID de la bebida.
+     * @param vendedorDto El DTO del vendedor.
+     * @return Un DTO de Bebida.
+     * @throws NoValidarException Si el ID de la bebida no es válido.
+     */
+    public BebidaDto obtenerBebidaVendedorPorId(String idText, VendedorDto vendedorDto) throws NoValidarException {
 
-        Integer idBebida = Integer.parseInt(idText);
+        Integer idBebida = null;
+        if (idText != null) {
+            idBebida = idValido(idText);
+        }
         Bebida bebida = bebidaService.buscarBebidaPorId(idBebida, vendedorDto.getId());
         return mapToDto(bebida);
     }
 
-    public ItemMenuDto obtenerItemPorId(String idText) {
-        Integer id = Integer.parseInt(idText);
+    /**
+     * Obtiene un item del menú por su ID.
+     *
+     * @param idText El ID del item.
+     * @return Un DTO de ItemMenu.
+     * @throws NoValidarException Si el ID no es válido.
+     */
+    public ItemMenuDto obtenerItemPorId(String idText) throws NoValidarException {
+        Integer id = null;
+        if (idText != null) {
+            id = idValido(idText);
+        }
         ItemMenu itemMenu = platoService.buscarPorId(id);
         return mapToDto(itemMenu);
     }
 
+    /**
+     * Busca un plato por su nombre y el ID de vendedor.
+     *
+     * @param nombre El nombre del plato.
+     * @param id     El ID del vendedor.
+     * @return Una lista de DTOs de platos que coinciden con el nombre y el
+     *         vendedor.
+     */
     public List<PlatoDto> buscarPlatoPorNombreYVendedor(String nombre, Integer id) {
         List<Plato> platos = platoService.buscarPlatoPorNombreYVendedor(nombre, id);
         return platos.stream().map(this::mapToDto).toList();
     }
 
+    /**
+     * Busca una bebida por su nombre y el ID de vendedor.
+     *
+     * @param nombre El nombre de la bebida.
+     * @param id     El ID del vendedor.
+     * @return Una lista de DTOs de bebidas que coinciden con el nombre y el
+     *         vendedor.
+     */
     public List<BebidaDto> buscarBebidaPorNombreYVendedor(String nombre, Integer id) {
         List<Bebida> bebidas = bebidaService.buscarBebidaPorNombreYVendedor(nombre, id);
         return bebidas.stream().map(this::mapToDto).toList();
     }
 
+    /**
+     * Busca un item del menú por su nombre.
+     *
+     * @param nombre El nombre del item.
+     * @return Una lista de DTOs de items del menú que coinciden con el nombre.
+     */
     public List<ItemMenuDto> buscarPorNombre(String nombre) {
         List<ItemMenu> itemMenus = itemMenuDao.findActiveByNombre(nombre);
         return itemMenus.stream().map(this::mapToDto).toList();
     }
 
+    /**
+     * Mapea un objeto ItemMenu a su correspondiente DTO basado en la categoría.
+     *
+     * @param itemMenu El objeto ItemMenu a mapear.
+     * @return Un DTO correspondiente al itemMenu.
+     */
     public ItemMenuDto mapToDto(ItemMenu itemMenu) {
         switch (itemMenu.getCategoria().getTipo().toString().toLowerCase()) {
             case "comida":
@@ -178,6 +298,12 @@ public class ItemMenuController {
 
     }
 
+    /**
+     * Mapea un objeto Plato a su correspondiente DTO.
+     * 
+     * @param plato El objeto Plato a mapear.
+     * @return Un DTO correspondiente al Plato.
+     */
     private PlatoDto mapToDto(Plato plato) {
         return PlatoDto.builder()
                 .id(plato.getId())
@@ -194,6 +320,12 @@ public class ItemMenuController {
                 .build();
     }
 
+    /**
+     * Mapea un objeto Bebida a su correspondiente DTO.
+     * 
+     * @param plato El objeto Bebida a mapear.
+     * @return Un DTO correspondiente al Bebida.
+     */
     private BebidaDto mapToDto(Bebida bebida) {
         return BebidaDto.builder()
                 .graduacionAlcoholica(bebida.getGraduacionAlcoholica())
@@ -208,6 +340,12 @@ public class ItemMenuController {
                 .build();
     }
 
+    /**
+     * Mapea un objeto Vendedor a su correspondiente DTO.
+     * 
+     * @param plato El objeto Vendedor a mapear.
+     * @return Un DTO correspondiente al Vendedor.
+     */
     private VendedorDto mapToDto(Vendedor vendedor) {
         CoordenadaDto coordenadaDto = CoordenadaDto.builder()
                 .Id(vendedor.getCoordenada().getId())
@@ -222,15 +360,42 @@ public class ItemMenuController {
                 .build();
     }
 
+    /**
+     * Crea un DTO de Plato a partir de los parámetros proporcionados.
+     *
+     * @return Un DTO de Plato con los datos validados y mapeados.
+     * @throws NoValidarException Si alguno de los datos no es válido.
+     */
     public PlatoDto crearPlatoDto(String idText, String nombre, String descripcion, String precioText, String categoria,
             Integer idVendedor, String caloriasText, Boolean aptoCeliaco, boolean aptoVegetariano, boolean aptoVegano,
             String pesoText) throws NoValidarException {
-        Integer id = idValido(idText);
-        nombreValido(nombre);
-        BigDecimal precio = precioValido(precioText);
-        descripcionValido(descripcion);
-        Double calorias = caloriasValido(caloriasText);
-        Double peso = pesoValido(pesoText);
+        Integer id = null;
+        BigDecimal precio = null;
+        Double calorias = null;
+        Double peso = null;
+        if (idText != null) {
+            id = idValido(idText);
+        }
+
+        if (nombre != null) {
+            nombreValido(nombre);
+        }
+
+        if (precioText != null) {
+            precio = precioValido(precioText);
+        }
+
+        if (descripcion != null) {
+            descripcionValido(descripcion);
+        }
+
+        if (caloriasText != null) {
+            calorias = caloriasValido(caloriasText);
+        }
+
+        if (pesoText != null) {
+            peso = pesoValido(pesoText);
+        }
 
         return PlatoDto.builder()
                 .id(id)
@@ -248,10 +413,11 @@ public class ItemMenuController {
 
     }
 
+    // Validaciones de los atributos para realizar la creacion de un Plato.
     public Double pesoValido(String peso) throws NoValidarException {
 
         try {
-            if (esNullOrEmpty(peso)) {
+            if (isEmpty(peso)) {
                 throw new NoValidarException("El peso no puede estar vacío");
             }
             return Double.parseDouble(peso);
@@ -263,7 +429,7 @@ public class ItemMenuController {
     private Double caloriasValido(String calorias) throws NoValidarException {
 
         try {
-            if (esNullOrEmpty(calorias)) {
+            if (isEmpty(calorias)) {
                 throw new NoValidarException("Error: El compo calorias no puede estar vacío");
             }
             return Double.parseDouble(calorias);
@@ -275,7 +441,7 @@ public class ItemMenuController {
 
     private BigDecimal precioValido(String precio) throws NoValidarException {
         try {
-            if (esNullOrEmpty(precio)) {
+            if (isEmpty(precio)) {
                 throw new NoValidarException("Error: El campo precio no puede estar vacío");
             }
             return new BigDecimal(precio);
@@ -285,7 +451,7 @@ public class ItemMenuController {
     }
 
     private void descripcionValido(String descripcion) throws NoValidarException {
-        if (esNullOrEmpty(descripcion)) {
+        if (isEmpty(descripcion)) {
             throw new NoValidarException("La descripcion no puede estar vacía");
         }
         if (!letrasNumeros(descripcion)) {
@@ -294,7 +460,7 @@ public class ItemMenuController {
     }
 
     private void nombreValido(String nombre) throws NoValidarException {
-        if (esNullOrEmpty(nombre)) {
+        if (isEmpty(nombre)) {
             throw new NoValidarException("Error: El nombre no puede estar vacío");
         }
         if (!soloLetras(nombre)) {
@@ -304,7 +470,7 @@ public class ItemMenuController {
 
     private Integer idValido(String idText) throws NoValidarException {
         try {
-            if (esNullOrEmpty(idText)) {
+            if (isEmpty(idText)) {
                 throw new NoValidarException("Error: El id no puede estar vacío");
             }
             return Integer.parseInt(idText);
@@ -321,21 +487,53 @@ public class ItemMenuController {
         return palabra.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$");
     }
 
-    public Boolean esNullOrEmpty(String palabra) {
-        return (palabra == null || palabra.trim().isEmpty());
+    public Boolean isEmpty(String palabra) {
+        return (palabra.trim().isEmpty());
     }
 
+    /**
+     * Crea un DTO de Bebida a partir de los parámetros proporcionados.
+     *
+     * @return Un DTO de Bebida con los datos validados y mapeados.
+     * @throws NoValidarException Si alguno de los datos no es válido.
+     */
     public BebidaDto crearBebidaDto(String idText, String nombre, String descripcion, String precioText,
             String categoria,
             Integer idVendedor, String graduacionAlcoholicaText, String tamanoText, String volumenText)
             throws NoValidarException {
-        Integer id = idValido(idText);
-        nombreValido(nombre);
-        descripcionValido(descripcion);
-        BigDecimal precio = precioValido(precioText);
-        Double graduacionAlcoholica = graduacionAlcoholicaValida(graduacionAlcoholicaText);
-        Double tamano = tamanoValido(tamanoText);
-        Double volumen = volumenValido(volumenText);
+
+        Integer id = null;
+        BigDecimal precio = null;
+        Double graduacionAlcoholica = null;
+        Double tamano = null;
+        Double volumen = null;
+        if (idText != null) {
+            id = idValido(idText);
+        }
+
+        if (nombre != null) {
+            nombreValido(nombre);
+        }
+
+        if (precioText != null) {
+            precio = precioValido(precioText);
+        }
+
+        if (descripcion != null) {
+            descripcionValido(descripcion);
+        }
+
+        if (graduacionAlcoholicaText != null) {
+            graduacionAlcoholica = graduacionAlcoholicaValida(graduacionAlcoholicaText);
+        }
+
+        if (tamanoText != null) {
+            tamano = tamanoValido(tamanoText);
+        }
+
+        if (volumenText != null) {
+            volumen = volumenValido(volumenText);
+        }
 
         return BebidaDto.builder()
                 .id(id)
@@ -350,10 +548,11 @@ public class ItemMenuController {
                 .build();
     }
 
+    // Validaciones de los atributos para realizar la creacion de una Bebida.
     public Double graduacionAlcoholicaValida(String graduacionAlcoholicaText) throws NoValidarException {
 
         try {
-            if (esNullOrEmpty(graduacionAlcoholicaText)) {
+            if (isEmpty(graduacionAlcoholicaText)) {
                 throw new NoValidarException("El campo de graduacion alcoholica no puede estar vacio");
             }
 
@@ -371,7 +570,7 @@ public class ItemMenuController {
     public Double tamanoValido(String tamano) throws NoValidarException {
 
         try {
-            if (esNullOrEmpty(tamano)) {
+            if (isEmpty(tamano)) {
                 throw new NoValidarException("El campo de tamano no puede estar vacio");
             }
             return Double.parseDouble(tamano);
@@ -384,7 +583,7 @@ public class ItemMenuController {
     public Double volumenValido(String volumen) throws NoValidarException {
 
         try {
-            if (esNullOrEmpty(volumen)) {
+            if (isEmpty(volumen)) {
                 throw new NoValidarException("El campo de volumen no puede estar vacio");
             }
             return Double.parseDouble(volumen);

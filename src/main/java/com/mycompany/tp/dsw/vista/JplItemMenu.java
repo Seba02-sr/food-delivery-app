@@ -956,11 +956,11 @@ public class JplItemMenu extends javax.swing.JPanel {
                     mostrarItemMenuEnPantalla(bebidas);
                     break;
             }
+            vaciarFormAgregar();
         } catch (NoValidarException e) {
             MensajeAlerta.mostrarError(e.getMessage(), "Error en guardar item del menu");
         }
 
-        vaciarFormAgregar();
     }// GEN-LAST:event_btnGuardarActionPerformed
 
     private Map<String, Boolean> setearAptoAlimentacion(String categoria) {
@@ -1025,11 +1025,11 @@ public class JplItemMenu extends javax.swing.JPanel {
                     MensajeAlerta.mostrarInformacion("Se ha modicado la bebida con exito.", "Modificar Bebida");
                     break;
             }
+            vaciarFormModificar();
         } catch (NoValidarException e) {
             MensajeAlerta.mostrarError(e.getMessage(), "Error en modificar un item del menu");
         }
 
-        vaciarFormModificar();
     }// GEN-LAST:event_btnModificarActionPerformed
 
     private void jPanelModificarPropertyChange(java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_jPanelModificarPropertyChange
@@ -1038,32 +1038,37 @@ public class JplItemMenu extends javax.swing.JPanel {
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnEliminarActionPerformed
         String idText = txtIDEliminar.getText();
-        itemMenuController.eliminarItemMenu(idText, tipoCategoria);
-        switch (tipoCategoria) {
-            case "Plato":
-                List<PlatoDto> platos = itemMenuController.obtenerPlatoPorIdVendedor(vendedorDto);
-                if (platos == null || platos.isEmpty()) {
-                    // Si la lista es null o vacía, pasamos una lista vacía
-                    mostrarItemMenuEnPantalla(new ArrayList<>());
-                } else {
-                    // Si la lista no es null ni vacía, mostramos los platos
-                    mostrarItemMenuEnPantalla(platos);
-                }
-                MensajeAlerta.mostrarInformacion("Se ha eliminado el plato con exito.", "Eliminar Plato");
-                break;
-            case "Bebida":
-                List<BebidaDto> bebidas = itemMenuController.obtenerBebidaPorIdVendedor(vendedorDto);
-                if (bebidas == null || bebidas.isEmpty()) {
-                    // Si la lista es null o vacía, pasamos una lista vacía
-                    mostrarItemMenuEnPantalla(new ArrayList<>());
-                } else {
-                    // Si la lista no es null ni vacía, mostramos los platos
-                    mostrarItemMenuEnPantalla(bebidas);
-                }
-                MensajeAlerta.mostrarInformacion("Se ha eliminado la bebida con exito.", "Eliminar Bebida");
-                break;
+        try {
+            itemMenuController.eliminarItemMenu(idText, tipoCategoria);
+
+            switch (tipoCategoria) {
+                case "Plato":
+                    List<PlatoDto> platos = itemMenuController.obtenerPlatoPorIdVendedor(vendedorDto);
+                    if (platos == null || platos.isEmpty()) {
+                        // Si la lista es null o vacía, pasamos una lista vacía
+                        mostrarItemMenuEnPantalla(new ArrayList<>());
+                    } else {
+                        // Si la lista no es null ni vacía, mostramos los platos
+                        mostrarItemMenuEnPantalla(platos);
+                    }
+                    MensajeAlerta.mostrarInformacion("Se ha eliminado el plato con exito.", "Eliminar Plato");
+                    break;
+                case "Bebida":
+                    List<BebidaDto> bebidas = itemMenuController.obtenerBebidaPorIdVendedor(vendedorDto);
+                    if (bebidas == null || bebidas.isEmpty()) {
+                        // Si la lista es null o vacía, pasamos una lista vacía
+                        mostrarItemMenuEnPantalla(new ArrayList<>());
+                    } else {
+                        // Si la lista no es null ni vacía, mostramos los platos
+                        mostrarItemMenuEnPantalla(bebidas);
+                    }
+                    MensajeAlerta.mostrarInformacion("Se ha eliminado la bebida con exito.", "Eliminar Bebida");
+                    break;
+            }
+            vaciarFormEliminar();
+        } catch (NoValidarException e) {
+            MensajeAlerta.mostrarError(e.getMessage(), "Error al eliminar el item del menu");
         }
-        vaciarFormEliminar();
     }// GEN-LAST:event_btnEliminarActionPerformed
 
     private void jPanelEliminarPropertyChange(java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_jPanelEliminarPropertyChange
@@ -1090,37 +1095,41 @@ public class JplItemMenu extends javax.swing.JPanel {
     private void txtIdBuscarKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtIdBuscarKeyReleased
         String idText = txtIdBuscar.getText().trim();
         List<? extends ItemMenuDto> items = new ArrayList<>();
-        switch (tipoCategoria) {
-            case "Plato":
-                if (!idText.isEmpty()) {
-                    ItemMenuDto itemEncontrado = itemMenuController.obtenerPlatoVendedorPorId(idText, vendedorDto);
-                    List<ItemMenuDto> temp = new ArrayList<>();
-                    temp.add(itemEncontrado);
-                    if (itemEncontrado != null) {
-                        items = temp;
+        try {
+            switch (tipoCategoria) {
+                case "Plato":
+                    if (!idText.isEmpty()) {
+                        ItemMenuDto itemEncontrado = itemMenuController.obtenerPlatoVendedorPorId(idText, vendedorDto);
+                        List<ItemMenuDto> temp = new ArrayList<>();
+                        temp.add(itemEncontrado);
+                        if (itemEncontrado != null) {
+                            items = temp;
+                        }
+                        txtNombreBuscar.setEnabled(false);
+                    } else {
+                        items = itemMenuController.obtenerPlatoPorIdVendedor(vendedorDto);
+                        txtNombreBuscar.setEnabled(true);
                     }
-                    txtNombreBuscar.setEnabled(false);
-                } else {
-                    items = itemMenuController.obtenerPlatoPorIdVendedor(vendedorDto);
-                    txtNombreBuscar.setEnabled(true);
-                }
-                break;
-            case "Bebida":
-                if (!idText.isEmpty()) {
-                    ItemMenuDto itemEncontrado = itemMenuController.obtenerBebidaVendedorPorId(idText, vendedorDto);
-                    List<ItemMenuDto> temp = new ArrayList<>();
-                    temp.add(itemEncontrado);
-                    if (itemEncontrado != null) {
-                        items = temp;
+                    break;
+                case "Bebida":
+                    if (!idText.isEmpty()) {
+                        ItemMenuDto itemEncontrado = itemMenuController.obtenerBebidaVendedorPorId(idText, vendedorDto);
+                        List<ItemMenuDto> temp = new ArrayList<>();
+                        temp.add(itemEncontrado);
+                        if (itemEncontrado != null) {
+                            items = temp;
+                        }
+                        txtNombreBuscar.setEnabled(false);
+                    } else {
+                        items = itemMenuController.obtenerBebidaPorIdVendedor(vendedorDto);
+                        txtNombreBuscar.setEnabled(true);
                     }
-                    txtNombreBuscar.setEnabled(false);
-                } else {
-                    items = itemMenuController.obtenerBebidaPorIdVendedor(vendedorDto);
-                    txtNombreBuscar.setEnabled(true);
-                }
-                break;
+                    break;
+            }
+            mostrarItemMenuEnPantalla(items);
+        } catch (NoValidarException e) {
+            MensajeAlerta.mostrarError(e.getMessage(), "Error al buscar Por Id");
         }
-        mostrarItemMenuEnPantalla(items);
     }// GEN-LAST:event_txtIdBuscarKeyReleased
 
     private void txtNombreBuscarKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtNombreBuscarKeyReleased
@@ -1149,10 +1158,14 @@ public class JplItemMenu extends javax.swing.JPanel {
         int selectedRow = tbItemMenuDatos.getSelectedRow();
 
         // Verificar si hay una fila seleccionada
-        if (selectedRow != -1) {
-            String id = tbItemMenuDatos.getValueAt(selectedRow, 0).toString();
-            ItemMenuDto selectedItem = itemMenuController.obtenerItemPorId(id);
-            cargarDatos(selectedItem);
+        try {
+            if (selectedRow != -1) {
+                String id = tbItemMenuDatos.getValueAt(selectedRow, 0).toString();
+                ItemMenuDto selectedItem = itemMenuController.obtenerItemPorId(id);
+                cargarDatos(selectedItem);
+            }
+        } catch (NoValidarException e) {
+            MensajeAlerta.mostrarError(e.getMessage(), "Error al cargar los datos");
         }
     }// GEN-LAST:event_btnCargarDatosActionPerformed
 

@@ -46,9 +46,7 @@ public class GenericDAO<T, ID extends Serializable> {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-
-            // Actualizar la entidad directamente
-            session.update(entity); // Hibernate buscará la entidad por el ID y la actualizará si existe
+            session.update(entity);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
@@ -120,6 +118,13 @@ public class GenericDAO<T, ID extends Serializable> {
         }
     }
 
+    /**
+     * Obtiene todas las entidades activas en el sistema.
+     * Entidad activa: atributo activo en true.
+     * 
+     * @return
+     */
+
     public List<T> findAllActive() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM " + persistentClass.getName() + " WHERE activo = true";
@@ -141,7 +146,7 @@ public class GenericDAO<T, ID extends Serializable> {
                 isActivoMethod.setAccessible(true);
                 Boolean activo = (Boolean) isActivoMethod.invoke(entity);
                 if (activo == null || !activo) {
-                    return null; // Si no está activo o es null, retorna null
+                    return null;
                 }
             }
             return entity;

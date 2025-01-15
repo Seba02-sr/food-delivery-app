@@ -17,11 +17,11 @@ public class VendedorService {
     }
 
     /**
-     * Crea y persiste un restaurante
-     * - Manejo de id unicos con currentId
-     * - El parametro es del tipo VendedorDto, no Vendedor
+     * Registra un nuevo vendedor en el sistema.
+     * Convierte el DTO recibido en objeto dominio y se persiste.
      * 
-     * @param vendedorDto El objeto 'Vendedor' a persistir
+     * @param vendedorDto El objeto DTO que contiene los datos del vendedor a
+     *                    registrar.
      */
     public void registrarVendedor(VendedorDto vendedorDto) {
         Vendedor vendedor = parseVendedor(vendedorDto);
@@ -29,27 +29,32 @@ public class VendedorService {
     }
 
     /**
-     * Obtiene un restaurante ACTIVO, filtrado por su nombre
-     * - Los nombres son unicos, ya que son restaurantes
+     * Busca vendedores activos por nombre.
      * 
-     * @param nombre El nombre del restaurante a buscar
-     * @return Los restaurante que contengan en su nombre el parametro
-     * @throws VendedorNoEncontradoException
+     * @param nombre El texto a buscar dentro de los nombres de los vendedores.
+     * @return Una lista de vendedores activos que coincidan con el criterio de
+     *         busqueda.
      */
     public List<Vendedor> buscarVendedorPorNombre(String nombre) {
         return vendedorDao.findActiveByNombre(nombre);
     }
 
+    /**
+     * Busca un vendedor activo por su ID e incluye su lista de items del menu.
+     * 
+     * @param id El ID del vendedor a buscar.
+     * @return El objeto Vendedor que contiene la informacion del vendedor y sus
+     *         items.
+     */
     public Vendedor buscarPorIdConListaItem(Integer id) {
         return vendedorDao.findActiveByIdWithItemsMenu(id);
     }
 
     /**
-     * Modifica los datos de un restaurante especifico
-     * - Del objeto vendedor pasado como parametro
-     * - Solo los datos a modificar permanecen no nulos
+     * Modifica los datos de un vendedor especifico.
+     * Solo actualiza los campos no nulos proporcionados en el DTO.
      * 
-     * @param vendedorModificado El restaurante con los datos a modificar
+     * @param vendedorDto El objeto DTO con los datos del vendedor a modificar.
      */
     public void modificarVendedor(VendedorDto vendedorDto) {
 
@@ -58,22 +63,23 @@ public class VendedorService {
     }
 
     /**
-     * Obtiene un restaurante, filtrando por su id
-     * - El restaurante debe estar activo ( No borrado logicamente )
+     * Busca un vendedor activo por su ID.
      * 
-     * @param id El id del restaurante a buscar
-     * @return El restaurante con id del @param, caso no encontrar NULL
+     * @param id El ID del vendedor a buscar.
+     * @return El objeto Vendedor encontrado, o null si no existe un vendedor con
+     *         ese ID.
      */
     public Vendedor buscarVendedorPorId(Integer id) {
         return vendedorDao.findByIdAndActive(id);
     }
 
     /**
-     * Elimina un restaurante del sistema
-     * - Eliminacion logica, es decir se marca como inactivo solamente
+     * Realiza la eliminacion logica de un vendedor.
+     * Marca el vendedor como inactivo en lugar de eliminarlo fisicamente.
      * 
-     * @param id El id del restaurante a por eliminar
-     * @throws VendedorNoEncontradoException Si no encuentra el restaurante
+     * @param id El ID del vendedor a eliminar.
+     * @throws VendedorNoEncontradoException Si el vendedor no existe o ya esta
+     *                                       eliminado.
      */
     public void eliminarVendedor(Integer id) {
         Vendedor vendedor = buscarVendedorPorId(id);
@@ -81,19 +87,19 @@ public class VendedorService {
     }
 
     /**
-     * Obtiene una lista de todos los restaurantes ACTIVOS del sistema
+     * Obtiene una lista de todos los vendedores activos en el sistema.
      * 
-     * @return Lista de todos los restaurantes
+     * @return Una lista con todos los vendedores activos.
      */
     public List<Vendedor> obtenerTodosLosVendedores() {
         return vendedorDao.findAllActive();
     }
 
     /**
-     * Realiza la creacion del objeto 'Vendedor' a partir de su DTO
+     * Convierte un objeto DTO de Vendedor a un objeto de dominio Vendedor.
      * 
-     * @param vendedorDto El DTO que se quiere crear Vendedor
-     * @return El objeto 'Vendedor'
+     * @param vendedorDto El DTO que contiene los datos del vendedor.
+     * @return Un objeto de dominio Vendedor creado a partir del DTO.
      */
     public static Vendedor parseVendedor(VendedorDto vendedorDto) {
 

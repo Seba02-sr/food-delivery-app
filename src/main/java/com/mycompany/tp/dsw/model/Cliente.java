@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.tp.dsw.model;
 
 import java.math.BigDecimal;
@@ -60,18 +56,6 @@ public class Cliente implements Observer<Pedido> {
     @Column(name = "fecha_eliminacion")
     @Builder.Default
     private LocalDate fechaEliminacion = null;
-
-    /*
-     * public Cliente(ClienteDto clienteDto) {
-     * this.id = clienteDto.getId();
-     * this.nombre = clienteDto.getNombre();
-     * this.cuit = clienteDto.getCuit();
-     * this.direccion = clienteDto.getDireccion();
-     * this.coordenada = clienteDto.getCoordenada();
-     * this.email = clienteDto.getEmail();
-     * this.activo = true;
-     * }
-     */
 
     /**
      * Metodo que actua como observador del Cliente

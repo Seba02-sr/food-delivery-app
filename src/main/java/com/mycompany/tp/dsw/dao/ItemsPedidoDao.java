@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package com.mycompany.tp.dsw.dao;
 
 import java.math.BigDecimal;
@@ -13,10 +9,6 @@ import com.mycompany.tp.dsw.exception.ItemNoEncontradoException;
 import com.mycompany.tp.dsw.model.ItemPedido;
 import com.mycompany.tp.dsw.service.HibernateUtil;
 
-/**
- *
- * @author User
- */
 public class ItemsPedidoDao extends GenericDAO<ItemPedido, Integer> {
 
     public ItemsPedidoDao() {

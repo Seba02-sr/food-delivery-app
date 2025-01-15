@@ -57,15 +57,12 @@ public class PedidoDao extends GenericDAO<Pedido, Integer> {
 
     public List<Pedido> findByIdVendedor(Integer idVendedor) throws PedidoNoEncontradoException {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            // Consulta HQL para obtener los pedidos asociados al vendedor con el ID dado
             String hql = "SELECT p FROM Pedido p " +
                     "JOIN FETCH p.pedidoItemPedidos pip " +
                     "JOIN FETCH pip.itemPedido ip " +
                     "JOIN FETCH ip.itemMenu im " +
                     "WHERE im.vendedor.activo = true " +
                     "AND im.vendedor.id = :idVendedor";
-
-            // Ejecutar la consulta y devolver la lista de pedidos
             List<Pedido> pedidos = session.createQuery(hql, Pedido.class)
                     .setParameter("idVendedor", idVendedor)
                     .getResultList();
@@ -78,13 +75,11 @@ public class PedidoDao extends GenericDAO<Pedido, Integer> {
 
     public Pedido findPedidoByIdWithItem(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            // Consulta HQL para obtener los pedidos asociados al vendedor con el ID dado
             String hql = "SELECT p FROM Pedido p " +
                     "JOIN FETCH p.pedidoItemPedidos pip " +
                     "JOIN FETCH pip.itemPedido ip " +
                     "WHERE p.id = :id ";
 
-            // Ejecutar la consulta y devolver la lista de pedidos
             Pedido pedidos = session.createQuery(hql, Pedido.class)
                     .setParameter("id", id)
                     .uniqueResult();
